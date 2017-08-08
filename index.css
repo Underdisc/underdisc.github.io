@@ -1,3 +1,6 @@
+body{
+  /*margin: 0px;*/
+}
 
 div#header_wrapper{
   width: 100%;
@@ -5,7 +8,7 @@ div#header_wrapper{
 }
 
 div#header{
-  position: absolute;
+  /*position: absolute;*/
   width: 100%;
   top: 0px;
   left: 0px;
@@ -19,7 +22,7 @@ div.banner_image{
 }
 
 .title{
-  position: absolute;
+  /*position: absolute;*/
   font-size: 32px;
   font-family: Helvetica;
   color: white;
@@ -42,6 +45,11 @@ td.menu_element{
   font-family: Courier;
   background-color: #157203;
   height: 50px;
+}
+
+td.menu_element:hover{
+  background-color: #4cb538;
+  cursor: pointer;
 }
 
 div.my_picture{
