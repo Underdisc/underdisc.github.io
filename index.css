@@ -31,7 +31,7 @@ table.menu{
 td.menu_element{
   text-align: center;
   color: white;
-  font-size: 20px;
+  font-size: 30px;
   font-family: Helvetica;
   height: 50px;
 }
@@ -40,11 +40,12 @@ td.menu_element.name{
   color: #211a1d;
   background-color: #3da35d;
   font-weight: bolder;
+  font-style: italic;
 }
 
 td.menu_element.current
 {
-  color: black;
+  color: #211a1d;
   background-color: #d0cfcf;
 }
 
@@ -58,10 +59,20 @@ td.menu_element.link:hover
 /* CONTENT */
 div.my_picture{
   float: left;
+  border-style: solid;
+  border-width: 4px;
+  border-color: #211a1d;
   margin: 10px 10px 10px 10px;
 }
 
+h1.content_header{
+  font-style: italic;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  border-bottom-color: #7a7d7d;
+}
+
 div.content{
-  padding-left: 5px;
-  font-size: 25px;
+  margin: 10px 10px 10px 10px;
+  font-size: 30px;
 }
