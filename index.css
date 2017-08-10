@@ -3,33 +3,20 @@ body{
   background-color: #d0cfcf;
 }
 
+/******************************************************************************/
 /* HEADER */
 
 div#header{
   width: 100%;
-  height: 350px;
+  height: auto;
   top: 0px;
   left: 0px;
 }
 
-div.banner_image{
-  background-image: url("test.png");
-  height: 300px;
-}
-
-div.name{
-  position: absolute;
-  padding: 0px 20px 0px 20px;
-  margin-top: 20px;
-  margin-left: 20px;
-  border-width: 5px;
-  border-style: solid;
-  border-radius: 20px;
-  text-align: center;
-  font-size: 40px;
-  color: black;
-  background-color: rgba(208, 207, 207, 0.7);
-  border-color: #3da35d;
+div.banner_image img{
+  width: 100%;
+  height: auto;
+  position: relative;
 }
 
 div.menu_bar{
@@ -38,31 +25,40 @@ div.menu_bar{
 }
 
 table.menu{
-  width: 75%;
+  width: 100%;
 }
 
 td.menu_element{
   text-align: center;
   color: white;
   font-size: 20px;
-  font-family: Courier;
+  font-family: Helvetica;
   height: 50px;
 }
 
-td.menu_element.home
+td.menu_element.name{
+  color: #211a1d;
+  background-color: #3da35d;
+  font-weight: bolder;
+}
+
+td.menu_element.current
 {
   color: black;
   background-color: #d0cfcf;
 }
 
-td.menu_element:hover{
+td.menu_element.link:hover
+{
   background-color: #7a7d7d;
   cursor: pointer;
 }
 
+/******************************************************************************/
 /* CONTENT */
 div.my_picture{
   float: left;
+  margin: 10px 10px 10px 10px;
 }
 
 div.content{
