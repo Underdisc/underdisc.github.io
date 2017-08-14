@@ -71,18 +71,15 @@ td.menu_element.link:hover
 /******************************************************************************/
 /* CONTENT */
 
-h1.content_header{
-  padding-bottom: 10px;
-  margin: 20px 20px 20px 20px
-  font-style: italic;
-  border-bottom-style: solid;
-  border-bottom-width: 3px;
-  border-bottom-color: #7a7d7d;
-}
-
-div.content{
-  margin: 10px 30px 10px 30px;
-  text-indent: 60px;
-  line-height: 50px;
+article.piece
+{
+  padding: 10px 10px 10px 10px;
+  margin: 20px 20px 20px 20px;
+  border-style: solid;
+  border-color: #211a1d;
+  border-radius: 10px;
+  background-color: #ededed;
+  color: #211a1d;
   font-size: 30px;
+  line-height: 30px;
 }
