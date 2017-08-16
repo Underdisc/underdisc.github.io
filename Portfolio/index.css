@@ -122,6 +122,7 @@ table td.piece_language.zero
 
 table td.piece_name
 {
+  width: 17%;
   color: white;
   font-size: 30px;
   font-weight: bold;
@@ -136,6 +137,7 @@ table td.piece_description
 
 table td.piece_more
 {
+  width: 10%;
   border-radius: 0px 8px 8px 0px;
   font-size: 23px;
   color: white;
