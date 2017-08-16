@@ -62,6 +62,11 @@ td.link a:visited
   color: white;
 }
 
+td.link a:link
+{
+  color: white;
+}
+
 td.menu_element.link:hover
 {
   background-color: #7a7d7d;
@@ -70,6 +75,68 @@ td.menu_element.link:hover
 
 /******************************************************************************/
 /* CONTENT */
+
+table.piece
+{
+  margin-top: 20px;
+  margin-left: 2%;
+  margin-right: 2%;
+  min-width: 96%;
+  max-width: 96%;
+  height: 100px;
+  border-style: solid;
+  border-color: #211A1D;
+  border-width: 1px;
+  border-radius: 10px;
+  background-color: #211a1d;
+  color: #d0cfcf;
+}
+
+table td.piece_element
+{
+  font-family: Helvetica;
+  padding: 20px 20px 20px 20px;
+}
+
+table td.piece_language
+
+{
+ background-color: #78C0E0;
+ color: #211A1D;
+ border-radius: 8px 0px 0px 8px;
+ font-size: 30px;
+ font-weight: bold;
+}
+
+table td.piece_name
+{
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+table td.piece_description
+{
+  font-size: 23px;
+  background-color: white;
+  color: #211A1D;
+}
+
+table td.piece_more
+{
+  font-size: 23px;
+  color: white;
+}
+
+
+.language
+{
+}
+
+.more
+{
+
+}
 
 article.piece
 {
@@ -80,6 +147,12 @@ article.piece
   border-radius: 10px;
   background-color: #ededed;
   color: #211a1d;
-  font-size: 30px;
+  font-size: 25px;
   line-height: 30px;
+}
+
+span.piece_name
+{
+  font-weight: bolder;
+  font-size: 30px;
 }
