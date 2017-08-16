@@ -81,6 +81,7 @@ table.piece
   margin-top: 20px;
   margin-left: 2%;
   margin-right: 2%;
+  margin-bottom: 15px;
   min-width: 96%;
   max-width: 96%;
   height: 100px;
@@ -96,16 +97,27 @@ table td.piece_element
 {
   font-family: Helvetica;
   padding: 20px 20px 20px 20px;
+  align: center;
 }
 
 table td.piece_language
 
 {
- background-color: #78C0E0;
- color: #211A1D;
- border-radius: 8px 0px 0px 8px;
- font-size: 30px;
- font-weight: bold;
+  width: 13%;
+  border-radius: 8px 0px 0px 8px;
+  color: #211A1D;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+table td.piece_language.cpp
+{
+  background-color: #78C0E0;
+}
+
+table td.piece_language.zero
+{
+  background-color: #FA8334;
 }
 
 table td.piece_name
@@ -124,35 +136,13 @@ table td.piece_description
 
 table td.piece_more
 {
+  border-radius: 0px 8px 8px 0px;
   font-size: 23px;
   color: white;
 }
 
-
-.language
+table td.piece_more:hover
 {
-}
-
-.more
-{
-
-}
-
-article.piece
-{
-  padding: 10px 10px 10px 10px;
-  margin: 20px 20px 20px 20px;
-  border-style: solid;
-  border-color: #211a1d;
-  border-radius: 10px;
-  background-color: #ededed;
-  color: #211a1d;
-  font-size: 25px;
-  line-height: 30px;
-}
-
-span.piece_name
-{
-  font-weight: bolder;
-  font-size: 30px;
+  background-color: #7a7d7d;
+  cursor: pointer;
 }
