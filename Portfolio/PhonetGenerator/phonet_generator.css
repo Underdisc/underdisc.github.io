@@ -51,6 +51,12 @@ div.description
   font-size: 25px;
 }
 
+div.description ul
+{
+  text-indent: 0px;
+}
+
+
 div.description h1.content_header
 {
   padding-bottom: 10px;
