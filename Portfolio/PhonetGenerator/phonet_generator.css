@@ -1,6 +1,6 @@
 div.overview
 {
-  margin: 20px;
+  margin: 40px;
   border-style: solid;
   border-radius: 10px;
   border-color: #211a1d;
@@ -11,7 +11,7 @@ div.overview
 
 div.overview h1
 {
-  margin: 5px;
+  margin: 0px;
   padding: 0px;
   background-color: #211a1d;
   color: white;
@@ -20,25 +20,26 @@ div.overview h1
   text-align: center;
 }
 
-div.overview ul
+div.overview .table_field
 {
   border-radius: 10px;
-  margin: 0px;
-  background: white;
-}
-
-div.overview p
-{
-  border-radius: 10px;
-  margin: 0px;
-  background: white;
+  margin: 5px;
+  padding: 0px;
+  background: #d0cfcf;
   font-size: 27px;
   text-align: center;
 }
 
-div.overview li
+div.overview .table_field p
 {
-  font-size: 25px;
+  margin: 0px;
+  padding: 5px;
+}
+
+div.overview .table_field p.table_field_list
+{
+  border-bottom-style: solid;
+  border-bottom-color: #67696d;
 }
 
 div.description
@@ -46,7 +47,7 @@ div.description
   margin: 20px;
   text-indent: 60px;
   line-height: 45px;
-  font-size: 25px;
+  font-size: 30px;
 }
 
 div.description ul
