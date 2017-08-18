@@ -1,0 +1,500 @@
+=========={Phonet}
+/ir/:/th+/
+----------[Pronunciation]
+m<irr>or : <th>is
+----------[Spelling]
+ereth
+eerth
+irrth
+ereth
+ereth
+=========={Phonet}
+/or/:/th+/:/ōō/:/th+/
+----------[Pronunciation]
+f<or> : <th>is : m<oo>n : <th>is
+----------[Spelling]
+orthooth
+orthuth
+oorthuth
+orethooth
+orethuth
+=========={Phonet}
+/s/:/ō/:/j/:/ow/:/d/:/ow/
+----------[Pronunciation]
+<s>un : b<oa>t : <j>et : c<ow> : <d>og : c<ow>
+----------[Spelling]
+coajowedow
+scoudgeoudou
+scoajouddow
+ssoadgeoudou
+seougeoudow
+=========={Phonet}
+/j/:/o/
+----------[Pronunciation]
+<j>et : h<o>t
+----------[Spelling]
+dgeo
+jau
+gea
+dgeaw
+dgea
+=========={Phonet}
+/u/:/ch/:/a/
+----------[Pronunciation]
+<u>p : <ch>ip : h<a>t
+----------[Spelling]
+utchau
+ucha
+ocha
+otchau
+ocha
+=========={Phonet}
+/j/:/ār/:/g/
+----------[Pronunciation]
+<j>et : <air> : <g>o
+----------[Spelling]
+gairg
+geareg
+gairg
+dgeearg
+gearg
+=========={Phonet}
+/ng/:/ōō/:/ng/:/oy/
+----------[Pronunciation]
+ri<ng> : m<oo>n : ri<ng> : t<oy>
+----------[Spelling]
+ngoongoy
+ngueoongoi
+ngueoongueoi
+ngueoongueoi
+ngungoy
+=========={Phonet}
+/u/:/r/:/ir/:/y/
+----------[Pronunciation]
+<u>p : <r>un : m<irr>or : <y>es
+----------[Spelling]
+urreeri
+uwrirri
+urirri
+orerey
+owrirri
+=========={Phonet}
+/n/:/ē/:/y/:/ar/
+----------[Pronunciation]
+<n>o : m<e> : <y>es : c<ar>
+----------[Spelling]
+neyiar
+gneayar
+kneeyar
+kneyiar
+neayar
+=========={Phonet}
+/or/:/ch/:/ū/:/t/:/or/
+----------[Pronunciation]
+f<or> : <ch>ip : ch<ew> : <t>op : f<or>
+----------[Spelling]
+orechuedore
+oretchewedoor
+oretchutor
+oortchewedoor
+ortchutoor
+=========={Phonet}
+/y/:/ē/:/f/:/r/:/ir/:/y/
+----------[Pronunciation]
+<y>es : m<e> : <f>ish : <r>un : m<irr>or : <y>es
+----------[Spelling]
+yeeffwrerei
+yeyffwrerei
+yiephrreeri
+ieyffrirry
+ieefrirry
+=========={Phonet}
+/p/:/ū/:/th-/:/i/:/h/:/u/
+----------[Pronunciation]
+<p>ie : ch<ew> : <th>in : <i>f : <h>ot : <u>p
+----------[Spelling]
+pputhihu
+pewthiho
+ppewthiho
+puthiho
+pputhiho
+=========={Phonet}
+/ōō/:/m/:/ār/:/w/
+----------[Pronunciation]
+m<oo>n : <m>ad : <air> : <w>et
+----------[Spelling]
+umairwh
+umbairwh
+oommearwh
+ummairwh
+ummarewh
+=========={Phonet}
+/ī/:/v/:/o/:/y/:/ē/:/l/
+----------[Pronunciation]
+f<i>nd : <v>et : h<o>t : <y>es : m<e> : <l>eg
+----------[Spelling]
+yvayeell
+yvaiel
+ighvauyel
+ivauiell
+ieveawyiell
+=========={Phonet}
+/h/:/ow/:/th-/
+----------[Pronunciation]
+<h>ot : c<ow> : <th>in
+----------[Spelling]
+howth
+houth
+howth
+howth
+howth
+=========={Phonet}
+/w/:/ū/:/w/:/oy/:/d/
+----------[Pronunciation]
+<w>et : ch<ew> : <w>et : t<oy> : <d>og
+----------[Spelling]
+whewwoydd
+whuwoyed
+whuwoid
+wewwoid
+whewwhoyed
+=========={Phonet}
+/t/:/o/
+----------[Pronunciation]
+<t>op : h<o>t
+----------[Spelling]
+edo
+edough
+tta
+edau
+tau
+=========={Phonet}
+/i/:/ch/:/a/:/s/:/oy/:/ng/
+----------[Pronunciation]
+<i>f : <ch>ip : h<a>t : <s>un : t<oy> : ri<ng>
+----------[Spelling]
+ichassoingue
+itchascoyng
+ichaucoyng
+itchassoingue
+itchacoyngue
+=========={Phonet}
+/zh/:/o/:/b/:/i/:/zh/
+----------[Pronunciation]
+gara<ge> : h<o>t : <b>ig : <i>f : gara<ge>
+----------[Spelling]
+sioughbige
+geaubisi
+siawbisi
+siawbige
+geaubisi
+=========={Phonet}
+/ā/:/th+/:/i/:/th-/
+----------[Pronunciation]
+b<a>con : <th>is : <i>f : <th>in
+----------[Spelling]
+eythith
+eithith
+athith
+eithith
+eithith
+=========={Phonet}
+/e/:/th-/:/i/:/n/:/o/:/k/
+----------[Pronunciation]
+b<e>d : <th>in : <i>f : <n>o : h<o>t : <c>at
+----------[Spelling]
+eathiknauck
+ehthiknauk
+ehthinnauque
+ehthignawk
+ethignoughcc
+=========={Phonet}
+/ōō/:/k/:/l/:/ē/:/th+/
+----------[Pronunciation]
+m<oo>n : <c>at : <l>eg : m<e> : <th>is
+----------[Spelling]
+uqueleyth
+ooquelieth
+ooquelieth
+oockleeth
+uccllyth
+=========={Phonet}
+/b/:/o/:/n/:/o/:/y/
+----------[Pronunciation]
+<b>ig : h<o>t : <n>o : h<o>t : <y>es
+----------[Spelling]
+bbonnawi
+bboughknoughi
+bboughnnoughy
+bbagnay
+bbawknoi
+=========={Phonet}
+/f/:/ow/:/b/
+----------[Pronunciation]
+<f>ish : c<ow> : <b>ig
+----------[Spelling]
+ffoub
+ffowbb
+phowb
+ffoubb
+fowbb
+=========={Phonet}
+/f/:/or/:/zh/:/ī/:/z/:/oy/
+----------[Pronunciation]
+<f>ish : f<or> : gara<ge> : f<i>nd : <z>ip : t<oy>
+----------[Spelling]
+phorgeyxoi
+ffoorgeyzzoy
+foorgeighseoi
+foorgeighxoi
+fforesiiexoi
+=========={Phonet}
+/ō/:/w/:/ar/:/j/:/a/
+----------[Pronunciation]
+b<oa>t : <w>et : c<ar> : <j>et : h<a>t
+----------[Spelling]
+owarga
+oawhargea
+ouwhardgea
+ouwargau
+oawhargea
+=========={Phonet}
+/e/:/z/:/ōō/
+----------[Pronunciation]
+b<e>d : <z>ip : m<oo>n
+----------[Spelling]
+ehzeoo
+easu
+ehzeoo
+ehzeoo
+eazu
+=========={Phonet}
+/ch/:/ōō/:/d/:/ū/:/t/
+----------[Pronunciation]
+<ch>ip : m<oo>n : <d>og : ch<ew> : <t>op
+----------[Spelling]
+choodewt
+tchooddewtt
+tchudewtt
+tchuddued
+chooddutt
+=========={Phonet}
+/z/:/ī/:/zh/
+----------[Pronunciation]
+<z>ip : f<i>nd : gara<ge>
+----------[Spelling]
+zziesi
+xiege
+xighsi
+zeige
+zzysi
+=========={Phonet}
+/k/:/i/:/k/:/oo/:/t/:/ū/
+----------[Pronunciation]
+<c>at : <i>f : <c>at : c<oul>d : <t>op : ch<ew>
+----------[Spelling]
+kickoulttu
+chiccooedu
+kichooedu
+ciqueouledu
+queiccootu
+=========={Phonet}
+/d/:/e/:/y/:/ir/:/m/:/ā/
+----------[Pronunciation]
+<d>og : b<e>d : <y>es : m<irr>or : <m>ad : b<a>con
+----------[Spelling]
+dehiirrmbey
+edehiirrmmai
+edehieermmay
+edeaiirrmai
+ddeaieremmei
+=========={Phonet}
+/l/:/e/:/r/:/ār/
+----------[Pronunciation]
+<l>eg : b<e>d : <r>un : <air>
+----------[Spelling]
+lerrair
+llewrare
+lerrare
+lerrear
+lehwrare
+=========={Phonet}
+/e/:/z/
+----------[Pronunciation]
+b<e>d : <z>ip
+----------[Spelling]
+ease
+ese
+ehs
+ease
+ex
+=========={Phonet}
+/w/:/ū/:/g/
+----------[Pronunciation]
+<w>et : ch<ew> : <g>o
+----------[Spelling]
+whewgg
+whugg
+wugg
+whug
+whug
+=========={Phonet}
+/m/:/oy/:/ch/:/oy/
+----------[Pronunciation]
+<m>ad : t<oy> : <ch>ip : t<oy>
+----------[Spelling]
+mboitchoi
+mmoytchoi
+moychoi
+moitchoi
+moytchoi
+=========={Phonet}
+/w/:/o/:/zh/:/o/
+----------[Pronunciation]
+<w>et : h<o>t : gara<ge> : h<o>t
+----------[Spelling]
+whoughsiaw
+wageau
+whoughsiough
+wawsio
+whasiough
+=========={Phonet}
+/th-/:/ī/:/d/:/ur/
+----------[Pronunciation]
+<th>in : f<i>nd : <d>og : b<ur>n
+----------[Spelling]
+thydar
+thieedor
+thiedear
+thighdear
+thiddear
+=========={Phonet}
+/y/:/a/:/v/:/ī/
+----------[Pronunciation]
+<y>es : h<a>t : <v>et : f<i>nd
+----------[Spelling]
+yauvie
+yauvie
+iavie
+yaveigh
+iaveigh
+=========={Phonet}
+/p/:/ur/:/y/:/ē/:/sh/
+----------[Pronunciation]
+<p>ie : b<ur>n : <y>es : m<e> : <sh>ip
+----------[Spelling]
+piryeess
+ppiriiess
+periiesh
+puriyci
+pporyiess
+=========={Phonet}
+/ār/:/v/:/ū/:/z/:/oy/
+----------[Pronunciation]
+<air> : <v>et : ch<ew> : <z>ip : t<oy>
+----------[Spelling]
+earveuxoi
+areveuzeoy
+areveewzeoi
+airvuzoy
+airvusoy
+=========={Phonet}
+/ū/:/k/:/or/:/v/:/u/
+----------[Pronunciation]
+ch<ew> : <c>at : f<or> : <v>et : <u>p
+----------[Spelling]
+uchoorveo
+uckoreveu
+ucoorvu
+ewchorveu
+ukorevo
+=========={Phonet}
+/u/:/p/
+----------[Pronunciation]
+<u>p : <p>ie
+----------[Spelling]
+upp
+upp
+up
+up
+upp
+=========={Phonet}
+/t/:/u/:/z/
+----------[Pronunciation]
+<t>op : <u>p : <z>ip
+----------[Spelling]
+tuz
+tozz
+edos
+ttozz
+edozz
+=========={Phonet}
+/y/:/oy/:/th-/:/ir/
+----------[Pronunciation]
+<y>es : t<oy> : <th>in : m<irr>or
+----------[Spelling]
+ioythirr
+yoythirr
+ioithirr
+yoithirr
+yoithere
+=========={Phonet}
+/d/:/ir/
+----------[Pronunciation]
+<d>og : m<irr>or
+----------[Spelling]
+dirr
+edere
+ddeer
+edirr
+deer
+=========={Phonet}
+/o/:/g/:/ow/
+----------[Pronunciation]
+h<o>t : <g>o : c<ow>
+----------[Spelling]
+auggow
+auggow
+oughgou
+augou
+oggou
+=========={Phonet}
+/p/:/ōō/:/s/:/i/
+----------[Pronunciation]
+<p>ie : m<oo>n : <s>un : <i>f
+----------[Spelling]
+poosei
+ppusi
+ppoosi
+poosei
+ppoosci
+=========={Phonet}
+/ī/:/r/
+----------[Pronunciation]
+f<i>nd : <r>un
+----------[Spelling]
+ir
+ighrr
+iwr
+ywr
+ighwr
+=========={Phonet}
+/j/:/ē/
+----------[Pronunciation]
+<j>et : m<e>
+----------[Spelling]
+jie
+ge
+gy
+ge
+geee
+=========={Phonet}
+/s/:/oo/:/ch/:/oo/
+----------[Pronunciation]
+<s>un : c<oul>d : <ch>ip : c<oul>d
+----------[Spelling]
+ceuchu
+coochu
+ceutchu
+coultchoul
+scoultchoo

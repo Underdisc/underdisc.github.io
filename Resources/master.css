@@ -1,3 +1,6 @@
+/******************************************************************************/
+/* MAIN SETTINGS */
+
 body{
   margin: 0px;
   background-color: #d0cfcf;
@@ -83,6 +86,6 @@ h1.content_header{
 div.content{
   margin: 10px 30px 10px 30px;
   text-indent: 60px;
-  line-height: 50px;
+  line-height: 45px;
   font-size: 30px;
 }
