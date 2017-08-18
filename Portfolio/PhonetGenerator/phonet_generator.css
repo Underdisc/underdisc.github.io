@@ -1,1 +1,62 @@
+div.overview
+{
+  margin: 20px;
+  float: right;
+  width: 25%;
+  border-style: solid;
+  border-radius: 10px;
+  border-color: #211a1d;
+  background-color: #211a1d;
+  font-family: Helvetica;
+}
 
+
+div.overview h1
+{
+  margin: 5px;
+  padding: 0px;
+  background-color: #211a1d;
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+  text-align: center;
+}
+
+div.overview ul
+{
+  border-radius: 10px;
+  margin: 0px;
+  background: white;
+}
+
+div.overview p
+{
+  border-radius: 10px;
+  margin: 0px;
+  background: white;
+  font-size: 27px;
+  text-align: center;
+}
+
+div.overview li
+{
+  font-size: 25px;
+}
+
+div.description
+{
+  margin: 20px;
+  text-indent: 60px;
+  line-height: 45px;
+  font-size: 25px;
+}
+
+div.description h1.content_header
+{
+  padding-bottom: 10px;
+  margin: 20px 20px 20px 20px
+  font-style: italic;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  border-bottom-color: #7a7d7d;
+}
