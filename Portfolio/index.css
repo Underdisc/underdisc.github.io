@@ -1,3 +1,6 @@
+/******************************************************************************/
+/* MAIN SETTINGS */
+
 body{
   margin: 0px;
   background-color: #d0cfcf;
@@ -137,9 +140,29 @@ table td.piece_description
 
 table td.piece_more
 {
+  overflow: hidden;
   width: 10%;
   border-radius: 0px 8px 8px 0px;
   font-size: 23px;
+  color: white;
+}
+
+table td.piece_more a
+{
+  margin: -10em;
+  padding: 10em;
+  display: block;
+  text-decoration: none;
+  text-decoration-color: none;
+}
+
+table td.piece_more a:visited
+{
+  color: white;
+}
+
+table td.piece_more a:link
+{
   color: white;
 }
 
