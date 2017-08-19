@@ -1,0 +1,19 @@
+div.contact_info
+{
+  margin-top: 20px;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+div.contact_card
+{
+  border-style: solid;
+  border-color: #211a1d;
+  border-radius: 10px;
+  background-color: #211a1d;
+  color: white;
+  font-family: Helvetica;
+  font-size: 30px;
+  padding-left: 10%;
+  padding-right: 10%;
+}
