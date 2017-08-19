@@ -1,3 +1,5 @@
+/******************************************************************************/
+/* OVERVIEW TABLE */
 div.overview
 {
   margin: 40px;
@@ -42,6 +44,14 @@ p.underline_section
   border-bottom-color: #67696d
 }
 
+span.member_name
+{
+  font-weight: bold;
+}
+
+/******************************************************************************/
+/* DESCRIPTION */
+
 div.description
 {
   margin: 40px;
@@ -50,11 +60,15 @@ div.description
   font-size: 30px;
 }
 
+div.description .main_header
+{
+  text-align: center;
+}
+
 div.description ul
 {
   text-indent: 0px;
 }
-
 
 div.description h1.content_header
 {
@@ -63,4 +77,14 @@ div.description h1.content_header
   border-bottom-style: solid;
   border-bottom-width: 3px;
   border-bottom-color: #7a7d7d;
+}
+
+/******************************************************************************/
+/* OTHER ELEMENTS */
+
+iframe.youtube_video
+{
+  width: 100%;
+  height: 56.25vw;
+  border-style: none;
 }
