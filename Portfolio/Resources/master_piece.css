@@ -84,7 +84,8 @@ div.description h1.content_header
 
 iframe.youtube_video
 {
+  margin: 0px;
+  border-style: none;
   width: 100%;
   height: 56.25vw;
-  border-style: none;
 }
