@@ -31,7 +31,8 @@
         takes the roll of the gunner and manages all of the ships weapon systems. This
         game was created entirely in C++.</p>
       <ul>
-        <li><a href="xcraft_setup(x86).exe" download>Download X-Craft Installer</a></li>
+        <li><a href="x-craft_setup(x86).exe" download>Download X-Craft Installer</a></li>
+        <li><a href="x-craft_source.zip" download>Download X-Craft Source</a></li>
       </ul>
       <iframe class="youtube_video" src="https://youtube.com/embed/gNnC1__7by8" allowfullscreen></iframe>
     </div>
@@ -39,7 +40,8 @@
       <h1>Role</h1>
       <div class="table_field">
         <p class="underline_section">Technical Director</p>
-        <p>Lead Graphics Programmer</p>
+        <p class="underline_section">Graphics Programmer</p>
+        <p>Programmer</p>
       </div>
       <h1>Team Size</h1>
       <div class="table_field">
@@ -57,25 +59,50 @@
       <div class="table_field">
         <p class="underline_section">Designed and created 2 OpenGL graphics pipelines</p>
         <p class="underline_section">Established a core engine architecture for managing a game engine and game objects</p>
-        <p>Formulated a space management system for rendering multiple game displays in a single frame</p>
+        <p class="underline_section">Formulated a space management system for rendering multiple game displays in a single frame</p>
+        <p>Developed a shader to render top down water to a screen</p>
       </div>
-      <h1>Team Members</h1>
+      <h1>Other Team Members</h1>
       <div class="table_field">
         <p class="underline_section"><span class="member_name">Gabe Miller</span> - Producer, Programmer</p>
-        <p class="underline_section"><span class="member_name">Zach Dolph</span> - Lead Audio Programmer, Programmer</p>
-        <p class="underline_section"><span class="member_name">Calvin Hughes</span> - Lead Designer</p>
-        <p class="underline_section"><span class="member_name">Jonathan Somethin</span> - Level Designer</p>
-        <p class="underline_section"><span class="member_name">Lars Arhus</span> - Lead Sound Designer</p>
-        <p><span class="member_name">Matt Chasegnou</span> - Designer, Programmer</p>
+        <p class="underline_section"><span class="member_name">Zach Dolph</span> - Audio Programmer, Programmer</p>
+        <p class="underline_section"><span class="member_name">Calvin Hughes</span> - Lead Artist, Game Director</p>
+        <p class="underline_section"><span class="member_name">Jonathan Williams</span> - Level Designer</p>
+        <p class="underline_section"><span class="member_name">Lars Aarhus</span> - Lead Sound Designer</p>
+        <p><span class="member_name">Sukayana Ratanotayanon</span> - Graphics Programmer</p>
       </div>
     </div>
     <div class="description">
+      <h1 class="content_header">Graphics Pipeline</h1>
+      <p>While working on this game, my primary contribution was the graphics
+      pipeline I created to render the game. You may have noticed that I said
+      I created two graphics pipelines in the table above. It's true, I actually
+      did create two, but the first was so incredibly terrible that I needed
+      to go back and refactor it from the ground up.</p>
+      <h1 class="content_header">Water Technology</h1>
+      <p>This project was the first project that I used custom shaders in.
+      One of these was the water shader used in the game. Though it is
+      not very complex, I worked on a few features in order
+      to give the water a stylized look that can be changed with ease.
+      <p>There were a few goals that I had to meet when creating this shader.
+      It had to match the art style of the game fairly well, represent a water
+      surface, and scroll across the screen to accurately represent the motion
+      experienced by the player's ship</p>
+      <p>Below, there is a download link to the shader's source files and a link
+      to an Imgur ablum with some gifs showing the results of the water shader. The
+      bulk of the shader code is in water.frag. This file has also been fully
+      commented to provide an in depth explanation of the shader and how it
+      works.</p>
+      <ul>
+        <li><a href="water_shader_source.zip">Water Shader Source Files</a></li>
+        <li><a href="#">WATER GIFS HERE</a></li>
+      </ul>
       <h1 class="content_header">Looking Back</h1>
       <p>I do not think that X-Craft turned out to be the best game that I
-      had the pleasure of working, but I am definitely the most proud of it. Before
-      X-Craft, I had only made games in engines and Visual Basic. X-Craft, however,
+      had the pleasure of working on, but I am definitely proud of it. Before
+      X-Craft, I had only made games in pre-built engines and Visual Basic. X-Craft, however,
       was the first game that I worked on from the ground up in C++ with seven other
-      teammates. Before starting this project, I didn't know what glGenBuffers(1, &vbo)
+      talented teammates. Before starting this project, I didn't know what glGenBuffers(1, &vbo)
       meant or what it was supposed to do. I had no idea why matrix transformations could
       move graphics on the screen. I wasn't even fully comfortable with typing and entering
       git push origin [branch_name]. Now I have that aliased because it was too many

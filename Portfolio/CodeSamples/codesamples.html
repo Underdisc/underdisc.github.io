@@ -25,17 +25,38 @@
     </div>
     <div class="description">
       <h1 class="main_header content_header">Code Samples</h1>
-      <p>This page is seperated into multiple sections. In each section you will
-      find a download link for a code sample file and a brief description about
-      the code you will see in the file.</p>
+      <p>In each section on this page you will find a download link for a zip
+      file containing a code sample and a brief description about
+      the code you will see in the files within the archive.</p>
       <h1 class="content_header">Transform</h1>
-      <p>This file contains the implementation for a simple 2D transformation class
-      that uses glm for vector a matrix containers</p>
-      <h1 class="content_header">Context</h1>
-      <p>This contains the implementation for an SDL interface. This file handles
-      interfacing with both the Window management and Input.</p>
-      <h1 class="content_header">Space Manager</h1>
-      <p>This is a space management system</p>
+      <p><a href="transform.zip" download>Download Transform</a></p>
+      <p>These files contain the interface and implementation for a simple 2D
+      transformation class that uses glm for vector and matrix containers and operations.
+      The Transform class features the ability to create matrices for translations,
+      scalings, and 2D rotations. It also features the ability to have parent and child
+      relationships with other instances of the transform class. On top of this,
+      the class also comes with unique syntax options that can be used to modify
+      the translation, scale, and rotation properties of the matrix.
+      <h1 class="content_header">Rendering Pipeline</h1>
+      <p><a href="rendering_pipeline.zip" download>Download Rendering Pipeline</a></p>
+      <p>In these files, you will find a RendererPool class and a Renderer class.
+      These classes were built in order to solve the problem of rendering multiple
+      spaces to a screen. For example, most games have a HUD which is displayed
+      over the actual game. In the engine this pipeline was built for, that HUD
+      would be in a different space than the space that the game is in. This rendering pipeline
+      makes it possible to render one space on top of another using one static RendererPool
+      class and multiple Renderer instances. If you would like to see more about the Engine
+      this file was used for, you can find it on the <a href="../XCraft/xcraft.html">X-Craft page</a>. It was built specifically
+      for the game.</p>
+      <h1 class="content_header">Object Allocator</h1>
+      <p><a href="object_allocator.zip">Download Object Allocator</a></p>
+      <p>At DigiPen, there is one assignment that is infamous among students for
+      being extremely lengthy. This assignment is the Object Allocator,
+      but it also goes by the name of memory manager since that's what it is. This
+      memory manager aims to replace malloc() and free() or new and delete and instead
+      use a custom system for managing memory. The Object Allocator still uses
+      new and delete for creating a freeing memory pages, but besides this, the Object
+      Allocator manages everything in the page on its own. </p>
     </div>
   </body>
 </html>
