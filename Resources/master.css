@@ -60,6 +60,11 @@ td.link a
   text-decoration-color: none;
 }
 
+td.link a:link
+{
+  color: white;
+}
+
 td.link a:visited
 {
   color: white;

@@ -1,6 +1,6 @@
 /******************************************************************************/
-/* CONTACT CARD TABLE */
-div.card
+/* COSTER TABLE */
+div.table
 {
   margin: 40px;
   border-style: solid;
@@ -10,7 +10,8 @@ div.card
   font-family: Helvetica;
 }
 
-div.card h1
+
+div.table h1
 {
   margin: 0px;
   padding: 0px;
@@ -21,7 +22,7 @@ div.card h1
   text-align: center;
 }
 
-div.card .table_field
+div.table .cell_contents
 {
   border-radius: 10px;
   margin: 5px;
@@ -31,18 +32,44 @@ div.card .table_field
   text-align: center;
 }
 
-div.card .table_field p
+div.table .cell_contents p
 {
   margin: 0px;
   padding: 5px;
 }
 
+p.underline_section
+{
+  border-bottom-style: solid;
+  border-bottom-color: #67696d
+}
+
 /******************************************************************************/
-/* CONTACT DESCRIPTION */
-div.description
+/* DESCRIPTION */
+
+div.text
 {
   margin: 40px;
   text-indent: 60px;
   line-height: 45px;
   font-size: 30px;
+}
+
+div.text .main_header
+{
+  text-align: center;
+}
+
+div.text ul
+{
+  text-indent: 0px;
+}
+
+div.text h1.content_header
+{
+  padding-bottom: 10px;
+  margin: 20px 20px 20px 20px;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  border-bottom-color: #7a7d7d;
 }

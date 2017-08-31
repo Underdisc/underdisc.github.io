@@ -1,0 +1,75 @@
+/******************************************************************************/
+/* CONTENT */
+
+table.hobby
+{
+  margin-top: 20px;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-bottom: 15px;
+  min-width: 96%;
+  max-width: 96%;
+  height: 100px;
+  border-style: solid;
+  border-color: #211A1D;
+  border-width: 1px;
+  border-radius: 10px;
+  background-color: #211a1d;
+  color: #d0cfcf;
+}
+
+table td.hobby_element
+{
+  font-family: Helvetica;
+  padding: 20px 20px 20px 20px;
+  align: center;
+}
+
+table td.hobby_name
+{
+  width: 20%;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+table td.hobby_description
+{
+  font-size: 23px;
+  background-color: white;
+  color: #211A1D;
+}
+
+table td.hobby_more
+{
+  overflow: hidden;
+  width: 12%;
+  border-radius: 0px 8px 8px 0px;
+  font-size: 23px;
+  color: white;
+}
+
+table td.hobby_more a
+{
+  margin: -10em;
+  padding: 10em;
+  display: block;
+  text-decoration: none;
+  text-decoration-color: none;
+}
+
+table td.hobby_more a:visited
+{
+  color: white;
+}
+
+table td.hobby_more a:link
+{
+  color: white;
+}
+
+table td.hobby_more:hover
+{
+  background-color: #7a7d7d;
+  cursor: pointer;
+}
