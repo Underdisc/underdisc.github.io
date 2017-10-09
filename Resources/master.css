@@ -79,6 +79,38 @@ td.menu_element.link:hover
 /******************************************************************************/
 /* OTHER */
 
+/* -------------------------------------------------------------------------- */
+/* Text content */
+div.text
+{
+  margin: 40px;
+  text-indent: 60px;
+  line-height: 45px;
+  font-size: 30px;
+}
+
+div.text .main_header
+{
+  text-align: center;
+}
+
+div.text ul
+{
+  text-indent: 0px;
+}
+
+div.text h1.content_header
+{
+  padding-bottom: 10px;
+  margin: 20px 20px 20px 20px;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  border-bottom-color: #7a7d7d;
+}
+/* -------------------------------------------------------------------------- */
+
+
+/* -------------------------------------------------------------------------- */
 /* Spanning button */
 /* Button spans the entire width of the browser */
 table.spanning_button
@@ -133,3 +165,5 @@ table.spanning_button a:visited
 {
   color: white;
 }
+
+/* -------------------------------------------------------------------------- */
