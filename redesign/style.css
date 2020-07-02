@@ -1,17 +1,14 @@
 body {
   margin: 0px;
+  overflow: hidden;
 }
 
 div.main {
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: 20em auto;
   grid-template-rows: 4em auto;
-  width: 100%;
-  height: 100%;
-}
-
-div.item {
-  background-color: rgba(10, 10, 10, 0.5);
 }
 
 div.header_cell {
@@ -31,12 +28,21 @@ div.header_content {
   color: rgb(22, 22, 22);
 }
 
-.sidebar_content {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(22, 22, 22);
+div.sidebar_content {
   font-size: 1.3em;
   font-family: "Arial Black", Gadget, sans-serif;
   color: rgb(190, 190, 190);
+  background-color: rgb(22, 22, 22);
+  overflow-y: scroll;
+}
+
+div.content {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  font-size: 1.5em;
+  background-color: rgba(190, 190, 190);
+  overflow-y: scroll;
 }
 
