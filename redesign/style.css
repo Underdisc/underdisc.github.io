@@ -3,7 +3,7 @@ body {
   overflow: hidden;
 }
 
-div.main {
+div.main_grid {
   width: 100%;
   height: 100%;
   display: grid;
@@ -19,8 +19,8 @@ div.header_content {
   width: 100%;
   height: 100%;
   display: flex;
-  background-color: rgb(0, 153, 0);
   align-items: center;
+  background-color: rgb(0, 153, 0);
   text-indent: 1em;
   font-size: 2em;
   font-family: Impact, Charcoal, sans-serif;
@@ -28,21 +28,36 @@ div.header_content {
   color: rgb(22, 22, 22);
 }
 
-div.sidebar_content {
+div.sidebar_grid {
   font-size: 1.3em;
-  font-family: "Arial Black", Gadget, sans-serif;
-  color: rgb(190, 190, 190);
+  display: grid;
+  grid-template-rows: 1em repeat(10, 1.6em);
   background-color: rgb(22, 22, 22);
   overflow-y: scroll;
 }
+div.sidebar_element {
+  display: flex;
+  align-items: center;
+  padding-left: 1.5em;
+  font-family: "Arial Black", Gadget, sans-serif;
+  color: rgb(190, 190, 190);
+  transition: 0.05s;
+  transition-timing-function: ease-out;
+}
+div.sidebar_element:hover {
+  color: rgb(255, 255, 255);
+  padding-left: 2.0em;
+  cursor: pointer;
+}
 
-div.content {
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  font-size: 1.5em;
-  background-color: rgba(190, 190, 190);
+div.page_content {
+  width: calc(100% - 4em);
+  height: calc(100% - 4em);
+  font-size: 1.4em;
+  font-family: Arial;
   overflow-y: scroll;
+  padding: 1em;
+  border: 1em solid rgb(180, 180, 180);
+  background-color: rgb(255, 255, 255);
 }
 
