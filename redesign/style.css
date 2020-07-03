@@ -67,3 +67,26 @@ div.page_content {
   overflow-y: scroll;
 }
 
+@media only screen and (max-width: 50em) {
+  div.main_grid {
+    grid-template-columns: auto;
+    grid-template-rows: 4em auto;
+  }
+  div.header_content {
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+  div.sidebar_grid {
+    display: none;
+  }
+  div.page_content {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    width: calc(100% - 2em);
+    height: calc(100% - 2em);
+    border: none;
+  }
+}
+
