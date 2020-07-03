@@ -31,7 +31,7 @@ div.header_content {
 div.sidebar_grid {
   font-size: 1.3em;
   display: grid;
-  grid-template-rows: 1em repeat(10, 1.6em);
+  grid-template-rows: 1em repeat(4, 1.6em);
   background-color: rgb(22, 22, 22);
   overflow-y: scroll;
 }
