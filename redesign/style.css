@@ -40,12 +40,14 @@ div.sidebar_element {
   padding-left: 1.5em;
   font-family: "Arial Black", Gadget, sans-serif;
   color: rgb(190, 190, 190);
+  background-color: rgb(22, 22, 22);
   transition: 0.05s;
   transition-timing-function: ease-out;
 }
 div.sidebar_element:hover {
-  color: rgb(255, 255, 255);
   padding-left: 2.0em;
+  color: rgb(22, 22, 22);
+  background-color: rgb(110, 110, 110);
   cursor: pointer;
 }
 
