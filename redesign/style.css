@@ -69,7 +69,7 @@ div.page_content {
   grid-row-end: 3;
   width: calc(100% - 4em);
   height: calc(100% - 2em);
-  font-size: 1.4em;
+  font-size: 1.3em;
   font-family: Arial;
   padding: 1em;
   border-left: 1em solid var(--color-gray);
@@ -104,4 +104,3 @@ div.page_content {
     overflow: visible;
   }
 }
-
