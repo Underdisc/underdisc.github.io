@@ -3,15 +3,18 @@
   src: url(racing_sans_one_regular.ttf);
 }
 
-body {
-  margin: 0px;
-  overflow: hidden;
-
+html {
   --color-green: rgb(0, 153, 0);
   --color-black: rgb(22, 22, 22);
   --color-gray: rgb(110, 110, 110);
   --color-light-gray: rgb(190, 190, 190);
   --color-white: rgb(255, 255, 255);
+}
+
+body {
+  margin: 0px;
+  overflow: hidden;
+  overflow-x: hidden;
 }
 
 div.main_grid {
@@ -32,6 +35,7 @@ div.header_content {
   font-size: 2em;
   font-family: Racing, Impact, sans-serif;
   color: var(--color-black);
+  user-select: none;
 }
 
 div.sidebar_grid {
@@ -49,6 +53,7 @@ div.sidebar_element {
   background-color: var(--color-black);
   transition: 0.05s;
   transition-timing-function: ease-out;
+  user-select: none;
 }
 div.sidebar_element:hover {
   padding-left: 2.0em;
@@ -74,6 +79,9 @@ div.page_content {
 }
 
 @media screen and (max-width: 70em) {
+  body {
+    overflow-y: scroll;
+  }
   div.main_grid {
     grid-template-columns: auto;
     grid-template-rows: 4em auto;
@@ -90,9 +98,10 @@ div.page_content {
     grid-column-end: 2;
     grid-row-start: 2;
     grid-row-end: 3;
-    width: calc(100% - 2em);
-    height: calc(100% - 2em);
     border: none;
+    width: calc(100% - 2em);
+    height: 100%;
+    overflow: visible;
   }
 }
 
