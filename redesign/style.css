@@ -6,6 +6,12 @@
 body {
   margin: 0px;
   overflow: hidden;
+
+  --color-green: rgb(0, 153, 0);
+  --color-black: rgb(22, 22, 22);
+  --color-gray: rgb(110, 110, 110);
+  --color-light-gray: rgb(190, 190, 190);
+  --color-white: rgb(255, 255, 255);
 }
 
 div.main_grid {
@@ -19,35 +25,35 @@ div.main_grid {
 div.header_content {
   width: 100%;
   height: 100%;
-  background-color: rgb(0, 153, 0);
+  background-color: var(--color-green);
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2em;
   font-family: Racing, Impact, sans-serif;
-  color: rgb(22, 22, 22);
+  color: var(--color-black);
 }
 
 div.sidebar_grid {
   font-size: 1.3em;
   display: grid;
   grid-template-rows: 1em repeat(4, 1.6em);
-  background-color: rgb(22, 22, 22);
+  background-color: var(--color-black);
 }
 div.sidebar_element {
   display: flex;
   align-items: center;
   padding-left: 1.5em;
   font-family: "Arial Black", Gadget, sans-serif;
-  color: rgb(190, 190, 190);
-  background-color: rgb(22, 22, 22);
+  color: var(--color-light-gray);
+  background-color: var(--color-black);
   transition: 0.05s;
   transition-timing-function: ease-out;
 }
 div.sidebar_element:hover {
   padding-left: 2.0em;
-  color: rgb(22, 22, 22);
-  background-color: rgb(110, 110, 110);
+  color: var(--color-black);
+  background-color: var(--color-gray);
   cursor: pointer;
 }
 
@@ -61,13 +67,13 @@ div.page_content {
   font-size: 1.4em;
   font-family: Arial;
   padding: 1em;
-  border-left: 1em solid rgb(110, 110, 110);
-  border-right: 1em solid rgb(110, 110, 110);
-  background-color: rgb(255, 255, 255);
+  border-left: 1em solid var(--color-gray);
+  border-right: 1em solid var(--color-gray);
+  background-color: var(--color-white);
   overflow-y: scroll;
 }
 
-@media only screen and (max-width: 50em) {
+@media screen and (max-width: 70em) {
   div.main_grid {
     grid-template-columns: auto;
     grid-template-rows: 4em auto;
