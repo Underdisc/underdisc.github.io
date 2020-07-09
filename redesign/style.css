@@ -35,7 +35,7 @@ div.header_dropdown_button {
   flex-grow: 1;
   background-color: var(--color-gray);
   border: 10px solid var(--color-black);
-  transition: 0.05s;
+  transition: 0.03s;
   transition-timing-function: ease-out;
 }
 div.header_dropdown_button:hover {
@@ -60,18 +60,18 @@ div.sidebar_grid {
   grid-template-rows: 1em repeat(4, 1.6em);
   background-color: var(--color-black);
 }
-div.sidebar_element {
+a.sidebar_element {
   display: flex;
   align-items: center;
   padding-left: 1.5em;
   font-family: "Arial Black", Gadget, sans-serif;
   color: var(--color-light-gray);
   background-color: var(--color-black);
-  transition: 0.05s;
+  transition: 0.03s;
   transition-timing-function: ease-out;
   user-select: none;
 }
-div.sidebar_element:hover {
+a.sidebar_element:hover {
   padding-left: 2.0em;
   color: var(--color-black);
   background-color: var(--color-gray);
