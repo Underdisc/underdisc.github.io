@@ -26,6 +26,8 @@ div.main_grid {
 }
 
 div.header_container {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
   background-color: var(--color-green);
@@ -55,10 +57,17 @@ div.header_text {
 }
 
 div.sidebar_grid {
+  position: relative;
+  z-index: 0;
   font-size: 1.3em;
-  display: grid;
-  grid-template-rows: 1em repeat(4, 1.6em);
   background-color: var(--color-black);
+
+  --element-count: 4;
+  --buffer-height: 1em;
+  --element-height: 1.6em;
+  display: grid;
+  grid-template-rows: var(--buffer-height)
+    repeat(var(--element-count), var(--element-height));
 }
 a.sidebar_element {
   display: flex;
@@ -79,6 +88,7 @@ a.sidebar_element:hover {
 }
 
 div.page_content {
+  position: relative;
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 1;
