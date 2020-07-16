@@ -1,0 +1,22 @@
+{
+  "name": "website_builder",
+  "version": "0.0.0",
+  "description": "Builds my website with a specific collection of markdown and other plain text files.",
+  "main": "build.js",
+  "scripts": {
+    "test": "node build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Underdisc/underdisc.github.io.git"
+  },
+  "author": "Underdisc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Underdisc/underdisc.github.io/issues"
+  },
+  "homepage": "https://github.com/Underdisc/underdisc.github.io#readme",
+  "dependencies": {
+    "showdown": "^1.9.1"
+  }
+}
