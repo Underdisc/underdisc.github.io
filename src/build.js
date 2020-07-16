@@ -7,14 +7,14 @@ function GetFileContent(filename)
   return fs.readFileSync(filename, 'utf8')
 }
 
-const homeFilename = 'home.md';
+const indexFilename = 'index.md';
 const autobiographyFilename = 'autobiography.md'
-let homeContent = GetFileContent(homeFilename);
+let indexContent = GetFileContent(indexFilename);
 let autobiographyContent = GetFileContent(autobiographyFilename);
 
-let homeHtml = converter.makeHtml(homeContent);
+let indexHtml = converter.makeHtml(indexContent);
 let autobiographyHtml = converter.makeHtml(autobiographyContent);
 
-console.log(homeHtml);
+console.log(indexHtml);
 console.log(autobiographyHtml);
 
