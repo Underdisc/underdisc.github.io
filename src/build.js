@@ -1,20 +1,32 @@
-let showdown = require('showdown');
-let converter = new showdown.Converter();
 const fs = require('fs');
-
 function GetFileContent(filename)
 {
   return fs.readFileSync(filename, 'utf8')
 }
 
-const indexFilename = 'index.md';
-const autobiographyFilename = 'autobiography.md'
-let indexContent = GetFileContent(indexFilename);
-let autobiographyContent = GetFileContent(autobiographyFilename);
+let templateHtml = GetFileContent('template.html');
+const cheerio = require('cheerio');
+let template = cheerio.load(templateHtml);
+let showdown = require('showdown');
+let converter = new showdown.Converter();
+function RenderMarkdown(input, destination)
+{
+  let markdown = fs.readFileSync(input, 'utf8');
+  let html = converter.makeHtml(markdown);
+  let container = '<div class=\'page_content\'></div>';
+  template('div.main_grid').append(container);
+  template('div.page_content').append(html);
+  let filenameEnd = input.indexOf('.');
+  let outputFile = input.slice(0, filenameEnd);
+  outputFile = destination + outputFile + '.html';
+  fs.writeFileSync(outputFile, template.html(), 'utf8');
+  template('div.page_content').remove();
+}
 
-let indexHtml = converter.makeHtml(indexContent);
-let autobiographyHtml = converter.makeHtml(autobiographyContent);
+RenderMarkdown('index.md', '../');
+RenderMarkdown('autobiography.md', '../');
+RenderMarkdown('blog.md', '../');
+RenderMarkdown('portfolio.md', '../');
+RenderMarkdown('contact.md', '../');
 
-console.log(indexHtml);
-console.log(autobiographyHtml);
 
