@@ -24,7 +24,6 @@ function RenderMarkdown(input, destination)
 }
 
 RenderMarkdown('index.md', '../');
-RenderMarkdown('autobiography.md', '../');
 RenderMarkdown('blog.md', '../');
 RenderMarkdown('portfolio.md', '../');
 RenderMarkdown('contact.md', '../');
