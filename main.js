@@ -47,7 +47,6 @@ function ToggleDropdown()
   if (dropdown_open === false)
   {
     sidebar.style.bottom = dropdown_offset + 'px';
-    sidebar.style.display = 'grid';
     content.style.bottom = dropdown_offset + 'px';
     start_pos = dropdown_offset;
     end_pos = 0;
@@ -75,16 +74,8 @@ function ToggleDropdown()
     if (time_passed >= animation_time)
     {
       dropdown_in_motion = false;
-      if(dropdown_open === false)
-      {
-        sidebar.style.display = 'none';
-        content.style.bottom = '0px';
-      }
-      else
-      {
-        sidebar.style.bottom = end_pos + 'px';
-        content.style.bottom = end_pos + 'px';
-      }
+      sidebar.style.bottom = end_pos + 'px';
+      content.style.bottom = end_pos + 'px';
       clearInterval(animation);
       return;
     }
@@ -106,12 +97,13 @@ function WindowResize()
   {
     dropdown_open = false;
     compact_mode = true;
-    sidebar.style.display = 'none';
+    let starting_offset = GetDropdownPixelOffset();
+    sidebar.style.bottom = starting_offset + 'px';
+    content.style.bottom = starting_offset + 'px';
   }
   else if (em_width >= compact_em_threshold && compact_mode == true)
   {
     compact_mode = false;
-    sidebar.style.display = 'grid';
     sidebar.style.bottom = 0;
     content.style.bottom = 0;
   }

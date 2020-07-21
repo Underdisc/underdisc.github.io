@@ -74,6 +74,7 @@ a.sidebar_element {
   align-items: center;
   padding-left: 1.5em;
   font-family: "Arial Black", Gadget, sans-serif;
+  text-decoration-line: none;
   color: var(--color-light-gray);
   background-color: var(--color-black);
   transition: 0.03s;
@@ -110,7 +111,7 @@ div.page_content {
   }
   div.main_grid {
     grid-template-columns: auto;
-    grid-template-rows: 4em auto;
+    grid-template-rows: 4em 9.63em auto;
   }
 
   div.header_container {
@@ -124,7 +125,7 @@ div.page_content {
   div.sidebar_grid {
     grid-row-start: 2;
     grid-row-end: 3;
-    display: none;
+    bottom: 7.4em;
   }
 
   div.page_content {
@@ -136,6 +137,7 @@ div.page_content {
     width: calc(100% - 2em);
     height: 100%;
     overflow: visible;
+    bottom: 8.75em;
   }
 }
 
