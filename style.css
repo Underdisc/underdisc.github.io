@@ -9,6 +9,8 @@ html {
   --color-gray: rgb(110, 110, 110);
   --color-light-gray: rgb(190, 190, 190);
   --color-white: rgb(255, 255, 255);
+
+  --dropdown-base-offset: 9.63em;
 }
 
 body {
@@ -62,6 +64,10 @@ div.sidebar_grid {
   z-index: 0;
   font-size: 1.3em;
   background-color: var(--color-black);
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
 
   --element-count: 4;
   --buffer-height: 1em;
@@ -89,21 +95,22 @@ a.sidebar_element:hover {
   cursor: pointer;
 }
 
-div.page_content {
+div.content_container {
   position: relative;
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 3;
-  width: calc(100% - 4em);
-  height: calc(100% - 2em);
-  font-size: 1.1em;
-  font-family: Arial;
-  padding: 1em;
   border-left: 1em solid var(--color-gray);
   border-right: 1em solid var(--color-gray);
   background-color: var(--color-white);
   overflow-y: scroll;
+}
+
+div.page_content {
+  font-size: 1.075em;
+  font-family: Arial;
+  padding: 1em;
 }
 
 @media screen and (max-width: 70em) {
@@ -112,7 +119,7 @@ div.page_content {
   }
   div.main_grid {
     grid-template-columns: auto;
-    grid-template-rows: 4em 9.63em auto;
+    grid-template-rows: 4em var(--dropdown-base-offset) auto;
   }
 
   div.header_container {
@@ -129,15 +136,13 @@ div.page_content {
     bottom: 7.4em;
   }
 
-  div.page_content {
+  div.content_container {
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 3;
     grid-row-end: 4;
     border: none;
-    width: calc(100% - 2em);
-    height: 100%;
     overflow: visible;
-    bottom: 8.75em;
+    bottom: var(--dropdown-base-offset);
   }
 }

@@ -13,8 +13,8 @@ function RenderMarkdown(input, destination)
 {
   let markdown = fs.readFileSync(input, 'utf8');
   let html = converter.makeHtml(markdown);
-  let container = '<div class=\'page_content\'></div>';
-  template('div.main_grid').append(container);
+  let content_div = '<div class=\'page_content\'></div>';
+  template('div.content_container').append(content_div);
   template('div.page_content').append(html);
   let filenameEnd = input.indexOf('.');
   let outputFile = input.slice(0, filenameEnd);

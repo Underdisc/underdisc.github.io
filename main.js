@@ -7,7 +7,7 @@ let compact_mode;
 const compact_em_threshold = 70;
 
 const root = document.querySelector('html');
-const content = document.querySelector('div.page_content');
+const content_container = document.querySelector('div.content_container');
 const sidebar = document.querySelector('div.sidebar_grid');
 const dropdown_button = document.querySelector('div.header_dropdown_button');
 
@@ -47,7 +47,7 @@ function ToggleDropdown()
   if (dropdown_open === false)
   {
     sidebar.style.bottom = dropdown_offset + 'px';
-    content.style.bottom = dropdown_offset + 'px';
+    content_container.style.bottom = dropdown_offset + 'px';
     start_pos = dropdown_offset;
     end_pos = 0;
     dropdown_open = true;
@@ -75,7 +75,7 @@ function ToggleDropdown()
     {
       dropdown_in_motion = false;
       sidebar.style.bottom = end_pos + 'px';
-      content.style.bottom = end_pos + 'px';
+      content_container.style.bottom = end_pos + 'px';
       clearInterval(animation);
       return;
     }
@@ -84,7 +84,7 @@ function ToggleDropdown()
     let t_quad_in = -1.0 * (t - 1.0) * (t - 1.0) + 1.0;
     let current_pos = start_pos + dist * t_quad_in;
     sidebar.style.bottom = current_pos + 'px';
-    content.style.bottom = current_pos + 'px';
+    content_container.style.bottom = current_pos + 'px';
   }
 }
 
@@ -99,13 +99,13 @@ function WindowResize()
     compact_mode = true;
     let starting_offset = GetDropdownPixelOffset();
     sidebar.style.bottom = starting_offset + 'px';
-    content.style.bottom = starting_offset + 'px';
+    content_container.style.bottom = starting_offset + 'px';
   }
   else if (em_width >= compact_em_threshold && compact_mode == true)
   {
     compact_mode = false;
     sidebar.style.bottom = 0;
-    content.style.bottom = 0;
+    content_container.style.bottom = 0;
   }
 }
 
