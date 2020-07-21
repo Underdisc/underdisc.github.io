@@ -34,6 +34,7 @@ div.header_container {
   display: flex;
 }
 div.header_dropdown_button {
+  display: none;
   flex-grow: 1;
   background-color: var(--color-gray);
   border: 10px solid var(--color-black);
@@ -138,12 +139,5 @@ div.page_content {
     height: 100%;
     overflow: visible;
     bottom: 8.75em;
-  }
-}
-
-@media screen and (min-width: 70em)
-{
-  div.header_dropdown_button {
-    display: none;
   }
 }
