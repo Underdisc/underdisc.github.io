@@ -72,6 +72,8 @@ div.sidebar_grid {
   --element-count: 4;
   --buffer-height: 1em;
   --element-height: 1.6em;
+  --dropdown-relative-offset: calc(var(--buffer-height) +
+    (var(--element-count) * var(--element-height)));
   display: grid;
   grid-template-rows: var(--buffer-height)
     repeat(var(--element-count), var(--element-height));
@@ -133,7 +135,7 @@ div.page_content {
   div.sidebar_grid {
     grid-row-start: 2;
     grid-row-end: 3;
-    bottom: 7.4em;
+    bottom: var(--dropdown-relative-offset);
   }
 
   div.content_container {
