@@ -3,6 +3,10 @@
   src: url(racing_sans_one_regular.ttf);
 }
 
+/* This first section is all for setting up the overall layout of the content
+ * for both mobile and desktop. Editing these properties could lead to large
+ * changes in the general layout. */
+
 html {
   --color-green: rgb(0, 153, 0);
   --color-black: rgb(22, 22, 22);
@@ -109,12 +113,6 @@ div.content_container {
   overflow-y: scroll;
 }
 
-div.page_content {
-  font-size: 1.075em;
-  font-family: Arial;
-  padding: 1em;
-}
-
 @media screen and (max-width: 70em) {
   body {
     overflow-y: scroll;
@@ -147,4 +145,28 @@ div.page_content {
     overflow: visible;
     bottom: var(--dropdown-base-offset);
   }
+}
+
+/* This section is used to specify the style of the things contained within
+ * the actual content of the page. This includes things like heading style,
+ * line spacing, etc. Editing pieces of this should not have any effect on the
+ * general layout. */
+
+div.page_content {
+  font-size: 1.075em;
+  font-family: Arial;
+  padding-left: 1em;
+  padding-right: 1em;
+  line-height: 1.4em;
+  text-align: justify;
+}
+
+h3 {
+  border-bottom: 2px solid var(--color-gray);
+  font-size: 1.5em;
+  font-family: Arial;
+  text-align: center;
+  font-weight: normal;
+  font-style: italic;
+  padding-bottom: 0.2em;
 }
