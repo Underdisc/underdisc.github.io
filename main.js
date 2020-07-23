@@ -42,23 +42,32 @@ function ToggleDropdown()
   }
 
   let dropdown_offset = GetDropdownPixelOffset();
+  // The pos suffix values are for the motion of the dropdown menu.
   let start_pos;
   let end_pos;
+  // The rot suffix values are for the rotation of the dropdown menu button.
+  let start_rot;
+  let end_rot;
   if (dropdown_open === false)
   {
     sidebar.style.bottom = dropdown_offset + 'px';
     content_container.style.bottom = dropdown_offset + 'px';
     start_pos = dropdown_offset;
     end_pos = 0;
+    start_rot = 0;
+    end_rot = -180;
     dropdown_open = true;
   }
   else
   {
     start_pos = 0;
     end_pos = dropdown_offset;
+    start_rot = -180;
+    end_rot = 0;
     dropdown_open = false;
   }
-  const dist = end_pos - start_pos;
+  const dist_pos = end_pos - start_pos;
+  const dist_rot = end_rot - start_rot;
 
   // All time values are expressed in milliseconds.
   const animation_time = 250;
@@ -82,9 +91,11 @@ function ToggleDropdown()
 
     let t = time_passed / animation_time;
     let t_quad_in = -1.0 * (t - 1.0) * (t - 1.0) + 1.0;
-    let current_pos = start_pos + dist * t_quad_in;
+    let current_pos = start_pos + dist_pos * t_quad_in;
+    let current_rot = start_rot + dist_rot * t_quad_in;
     sidebar.style.bottom = current_pos + 'px';
     content_container.style.bottom = current_pos + 'px';
+    dropdown_button.style.transform = 'rotate(' + current_rot + 'deg)';
   }
 }
 
