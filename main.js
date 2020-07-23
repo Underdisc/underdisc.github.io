@@ -9,7 +9,7 @@ const compact_em_threshold = 70;
 const root = document.querySelector('html');
 const content_container = document.querySelector('div.content_container');
 const sidebar = document.querySelector('div.sidebar_grid');
-const dropdown_button = document.querySelector('div.header_dropdown_button');
+const dropdown_button = document.querySelector('div.header_dropdown');
 
 function GetEmWidth()
 {
