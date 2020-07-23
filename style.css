@@ -12,7 +12,6 @@ html {
   --color-black: rgb(22, 22, 22);
   --color-gray: rgb(110, 110, 110);
   --color-light-gray: rgb(190, 190, 190);
-  --color-dark-gray: rgb(70, 70, 70);
   --color-white: rgb(255, 255, 255);
 
   --dropdown-base-offset: 9.63em;
@@ -29,12 +28,16 @@ body {
   background-color: var(--color-black);
 }
 
-div.main_grid_accent {
+div.left_accent_grid {
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: auto 4em;
 }
-svg.accent polygon {
-  fill: var(--color-dark-gray);
+div.right_accent_grid {
+  display: grid;
+  grid-template-columns: 4em auto;
+}
+div.accent {
+  background-color: var(--color-light-gray);
 }
 
 div.main_grid {
