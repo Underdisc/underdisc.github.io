@@ -47,7 +47,7 @@ div.main_grid {
   grid-column-end: 3;
   display: grid;
   grid-template-columns: 15em 55em;
-  grid-template-rows: 4em auto;
+  grid-template-rows: 4em 100%;
   border-left: 1em solid var(--color-gray);
   border-right: 1em solid var(--color-gray);
 }
@@ -92,6 +92,8 @@ div.header_text {
 
 div.sidebar_grid {
   position: relative;
+  width: 100%;
+  height: 100%;
   z-index: 0;
   font-size: 1.3em;
   background-color: var(--color-black);
@@ -136,6 +138,8 @@ div.content_container {
   grid-row-end: 3;
   border-left: 1em solid var(--color-gray);
   background-color: var(--color-white);
+  width: calc(100% - 1em);
+  height: 100vh;
   overflow-y: scroll;
 }
 
@@ -194,7 +198,7 @@ div.page_content {
 }
 
 h1 {
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-family: Arial;
   font-weight: normal;
   font-style: italic;
@@ -209,4 +213,10 @@ h3 {
   font-weight: normal;
   font-style: italic;
   padding-bottom: 0.2em;
+}
+
+hr {
+  height: 2px;
+  border-width: 0;
+  background-color: var(--color-gray);
 }
