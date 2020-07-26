@@ -84,8 +84,7 @@ function RenderMarkdown(inputFile, destination, rebuild)
     CorrectLink(template, 'link.hljs_style', 'href', linkCorrection);
     CorrectLink(template, 'a.index_link', 'href', linkCorrection);
     CorrectLink(template, 'a.blog_link', 'href', linkCorrection);
-    CorrectLink(template, 'a.portfolio_link', 'href', linkCorrection);
-    CorrectLink(template, 'a.contact_link', 'href', linkCorrection);
+    CorrectLink(template, 'a.projects_link', 'href', linkCorrection);
     CorrectLink(template, 'script.main_script', 'src', linkCorrection);
   }
 
@@ -121,6 +120,5 @@ function RenderMarkdown(inputFile, destination, rebuild)
 let rebuild = process.argv.length > 2 && process.argv[2] === 'r';
 RenderMarkdown('index.md', '../', rebuild);
 RenderMarkdown('blog.md', '../', rebuild);
-RenderMarkdown('portfolio.md', '../', rebuild);
-RenderMarkdown('contact.md', '../', rebuild);
+RenderMarkdown('projects.md', '../', rebuild);
 RenderMarkdown('blog/learning_more_about_web_development.md', '../', rebuild);

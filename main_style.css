@@ -118,11 +118,13 @@ a.sidebar_element {
   padding-left: 1.5em;
   font-family: "Arial Black", Gadget, sans-serif;
   text-decoration-line: none;
-  color: var(--color-light-gray);
   background-color: var(--color-black);
   transition: 0.03s;
   transition-timing-function: ease-out;
   user-select: none;
+}
+a.sidebar_element:link {
+  color: var(--color-light-gray);
 }
 a.sidebar_element:visited {
   color: var(--color-light-gray);
