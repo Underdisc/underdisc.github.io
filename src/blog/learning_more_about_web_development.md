@@ -1,4 +1,4 @@
-### Learning More About Web Development
+# Learning More About Web Development
 
 Around two to three years ago, I was making my way through college and would soon be entering the job market as a game programmer. In order to land a job, I was going to need a website to display my previous work. I had no desire to use a service like squarespace, wordspace, etc. I was more excited about creating my own website and the challenges that come along with that.
 
@@ -8,7 +8,7 @@ The first step to doing this involves learning about html and css. When I first 
 
 I just recently left my job with the goal of persuing my own work and I need a place to share that work, so the first task has been tearing down and rebuilding the entire website. What you are looking at now is the current iteration of the overhaul. So far, I am proud of it despite a few minor details that would be nice to have solved in the future.
 
-# Rebuilding
+## Rebuilding
 
 For this rebuild, my main goal has been to fix the biggest greivances I had with my previous work. When I recalled working on my old website, these are the major problems that quickly came to mind.
 
@@ -45,7 +45,7 @@ You should mention the thing about this line for scaling on other devices.
 I 
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-# My Thoughts On Web Development
+## My Thoughts On Web Development
 Creating a web page with the full trifecta of html, css, and js 
 I gotta say though, very often when attempting to get my layout the way I wanted it with css, I felt like I was finding little hacks to make things work. Not necessarily true.
 I gotta say though, very often when attempting to get my layout the way I wanted it with css, I felt like I was finding little hacks to make things work. Not necessarily true.
