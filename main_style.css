@@ -219,7 +219,8 @@ h2 {
   font-family: Arial;
   font-weight: normal;
   font-style: italic;
-  text-indent: 1em;
+  padding-left: 1em;
+  text-align: left;
   line-height: 1.5em;
 }
 h3 {
@@ -227,7 +228,7 @@ h3 {
   font-family: Arial;
   font-weight: normal;
   font-style: italic;
-  text-indent: 1em;
+  padding-left: 1em;
   text-align: left;
   line-height: 1.2em;
 }
