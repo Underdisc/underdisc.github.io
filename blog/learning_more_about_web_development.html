@@ -1,6 +1,7 @@
 <html><head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link class="main_style" rel="stylesheet" href="../style.css">
+    <link class="main_style" rel="stylesheet" href="../main_style.css">
+    <link class="hljs_style" rel="stylesheet" href="../hljs_style.css">
     <title>Underdisc</title>
   </head>
   <body>
@@ -51,18 +52,18 @@
 <li>Editing html files directly to add and edit content on the website.</li>
 </ul>
 <p>With those things in mind, I went off to work. I started with the layout issue. I needed to make something that would handle mobile and desktop well. When addressing that I came across <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries">css media queries</a>. They are explained in more detail in that link, but they are essentially a directive added to a style sheet to apply changes to css properties if a certain condition is met. For example, the media query I use on this website for identifying if the platform is mobile is this.</p>
-<pre><code class="css language-css">@media screen and (max-width: 70em) {
+<pre><code><span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width:</span> <span class="hljs-number">70em</span>) {
   ...
 }
 </code></pre>
 <p>This just means if the browser window size is less than or equal to 70em, then the changes within the curly braces are applied. The changes specified within the media query use the same syntax as everything else in css. As an example, here is a full style sheet with a media query.</p>
-<pre><code class="css language-css">div.a {
-  background-color: black;
+<pre><code><span class="hljs-selector-tag">div</span><span class="hljs-selector-class">.a</span> {
+  <span class="hljs-attribute">background-color</span>: black;
 }
 
-@media screen and (max-width: 500px) {
-  div.a {
-    backgound-color: white;
+<span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width:</span> <span class="hljs-number">500px</span>) {
+  <span class="hljs-selector-tag">div</span><span class="hljs-selector-class">.a</span> {
+    <span class="hljs-attribute">backgound-color</span>: white;
   }
 }
 </code></pre>
