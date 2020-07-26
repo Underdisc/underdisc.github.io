@@ -12,7 +12,9 @@ html {
   --color-black: rgb(22, 22, 22);
   --color-gray: rgb(110, 110, 110);
   --color-light-gray: rgb(190, 190, 190);
+  --color-ultra-light-gray: rgb(220, 220, 220);
   --color-white: rgb(255, 255, 255);
+  --color-teal: rgb(0, 150, 240);
 
   --dropdown-base-offset: 9.63em;
 }
@@ -20,7 +22,6 @@ html {
 body {
   margin: 0px;
   overflow: hidden;
-  overflow-x: hidden;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   grid-template-rows: 100%;
@@ -123,6 +124,9 @@ a.sidebar_element {
   transition-timing-function: ease-out;
   user-select: none;
 }
+a.sidebar_element:visited {
+  color: var(--color-light-gray);
+}
 a.sidebar_element:hover {
   padding-left: 2.0em;
   color: var(--color-black);
@@ -140,12 +144,12 @@ div.content_container {
   background-color: var(--color-white);
   width: calc(100% - 1em);
   height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 @media screen and (max-width: 70em) {
   body {
-    overflow-y: scroll;
+    overflow-y: auto;
     background-color: var(--color-white);
     display: block;
     width: 100%;
@@ -193,19 +197,11 @@ div.page_content {
   font-family: Arial;
   padding-left: 2em;
   padding-right: 2em;
-  line-height: 1.4em;
+  line-height: 1.5em;
   text-align: justify;
 }
 
 h1 {
-  font-size: 1.2em;
-  font-family: Arial;
-  font-weight: normal;
-  font-style: italic;
-  text-indent: 1em;
-}
-
-h3 {
   border-bottom: 2px solid var(--color-gray);
   font-size: 1.5em;
   font-family: Arial;
@@ -213,10 +209,59 @@ h3 {
   font-weight: normal;
   font-style: italic;
   padding-bottom: 0.2em;
+  line-height: 1.2em;
+}
+h2 {
+  border-bottom: 2px solid var(--color-gray);
+  font-size: 1.3em;
+  font-family: Arial;
+  font-weight: normal;
+  font-style: italic;
+  text-indent: 1em;
+  line-height: 1.5em;
+}
+h3 {
+  font-size: 1.3em;
+  font-family: Arial;
+  font-weight: normal;
+  font-style: italic;
+  text-indent: 1em;
+  text-align: left;
+  line-height: 1.2em;
 }
 
 hr {
   height: 2px;
   border-width: 0;
   background-color: var(--color-gray);
+}
+
+a:link {
+  color: var(--color-teal);
+}
+a:visited {
+  color: var(--color-green);
+}
+a:hover {
+  color: var(--color-green);
+}
+
+pre {
+  background-color: var(--color-black);
+  border: 0.5em solid var(--color-black);
+  border-radius: 0.5em;
+  line-height: 1.3em;
+  overflow-x: auto;
+}
+pre code {
+  font-family: monospace;
+  border: none;
+  background-color: transparent;
+  color: var(--color-white);
+}
+code {
+  font-family: monospace;
+  background-color: var(--color-ultra-light-gray);
+  border: 0.15em solid var(--color-ultra-light-gray);
+  border-radius: 0.25em;
 }
