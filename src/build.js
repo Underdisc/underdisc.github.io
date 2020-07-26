@@ -48,11 +48,12 @@ function IsBuildNeeded(inputFile, outputFile)
   return inputModifiedDate >= outputModifiedDate;
 }
 
-function RenderMarkdown(inputFile, destination)
+function RenderMarkdown(inputFile, destination, rebuild)
 {
   // Before rendering a markdown document to html, we first check to see if the
   // output html document is already up to date with the current markdown
-  // document. If it is, no rendering is required.
+  // document. If it is up to date and we are not rebuilding, then no rendering
+  // is required.
   let exists = fs.existsSync(inputFile);
   if(!exists)
   {
@@ -62,7 +63,7 @@ function RenderMarkdown(inputFile, destination)
   let filenameEnd = inputFile.indexOf('.');
   let outputFile = inputFile.slice(0, filenameEnd);
   outputFile = destination + outputFile + '.html';
-  if(!IsBuildNeeded(inputFile, outputFile))
+  if(!rebuild && !IsBuildNeeded(inputFile, outputFile))
   {
     return;
   }
@@ -117,8 +118,9 @@ function RenderMarkdown(inputFile, destination)
   fs.writeFileSync(outputFile, outputHtml, 'utf8');
 }
 
-RenderMarkdown('index.md', '../');
-RenderMarkdown('blog.md', '../');
-RenderMarkdown('portfolio.md', '../');
-RenderMarkdown('contact.md', '../');
-RenderMarkdown('blog/learning_more_about_web_development.md', '../');
+let rebuild = process.argv.length > 2 && process.argv[2] === 'r';
+RenderMarkdown('index.md', '../', rebuild);
+RenderMarkdown('blog.md', '../', rebuild);
+RenderMarkdown('portfolio.md', '../', rebuild);
+RenderMarkdown('contact.md', '../', rebuild);
+RenderMarkdown('blog/learning_more_about_web_development.md', '../', rebuild);
