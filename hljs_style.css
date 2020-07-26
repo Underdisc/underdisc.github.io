@@ -1,0 +1,29 @@
+html {
+  --pale-green: #40e640;
+  --gold: #ffc400;
+  --pale-blue: #57a3ff;
+  --shader-error-purple: #ff00f7;
+  --bright-pale-blue: #43e8fa;
+}
+
+.hljs-keyword {
+  color: var(--pale-green);
+}
+
+.hljs-number,
+.hljs-string {
+  color: var(--shader-error-purple);
+}
+
+.hljs-selector-tag {
+  color: var(--gold);
+}
+
+.hljs-selector-class {
+  color: var(--bright-pale-blue);
+}
+
+.hljs-attribute {
+  color: var(--pale-blue);
+}
+
