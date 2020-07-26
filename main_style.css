@@ -16,7 +16,7 @@ html {
   --color-white: rgb(255, 255, 255);
   --color-teal: rgb(0, 150, 240);
 
-  --dropdown-base-offset: 9.63em;
+  --dropdown-base-offset: 7.54em;
 }
 
 body {
@@ -103,7 +103,7 @@ div.sidebar_grid {
   grid-row-start: 2;
   grid-row-end: 3;
 
-  --element-count: 4;
+  --element-count: 3;
   --buffer-height: 1em;
   --element-height: 1.6em;
   --dropdown-relative-offset: calc(var(--buffer-height) +
