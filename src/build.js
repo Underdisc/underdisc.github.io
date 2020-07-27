@@ -113,6 +113,13 @@ function RenderMarkdown(inputFile, destination, rebuild)
       highlightedContent);
   });
 
+  // Apply lazy loading to all images so visitors never need to wait for an
+  // image to download before other page content is available.
+  template('img').each(function(i, domElement)
+  {
+    template(this).attr('loading', 'lazy');
+  });
+
   // Ouput the new html to its destination.
   let outputHtml = template.html();
   fs.writeFileSync(outputFile, outputHtml, 'utf8');
