@@ -49,12 +49,12 @@
 <li>Editing html files directly to add and edit content on the website.</li>
 </ul>
 <p>With those things in mind, I went off to work. I started with the layout issue. I needed to make something that would handle mobile and desktop well. When addressing that I came across <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries">css media queries</a>. They are explained in more detail in that link, but they are essentially a directive added to a style sheet to apply changes to css properties if a certain condition is met. For example, the media query I use on this website for identifying if the platform is mobile is this.</p>
-<pre><code><span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width:</span> <span class="hljs-number">70em</span>) {
+<div class="code_box"><pre><code><span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width:</span> <span class="hljs-number">70em</span>) {
   ...
 }
-</code></pre>
+</code></pre></div>
 <p>This just means if the browser window size is less than or equal to 70em, then the changes within the curly braces are applied. The changes specified within the media query use the same syntax as everything else in css. As an example, here is a full style sheet with a media query.</p>
-<pre><code><span class="hljs-selector-tag">div</span><span class="hljs-selector-class">.a</span> {
+<div class="code_box"><pre><code><span class="hljs-selector-tag">div</span><span class="hljs-selector-class">.a</span> {
   <span class="hljs-attribute">background-color</span>: black;
 }
 
@@ -63,7 +63,7 @@
     <span class="hljs-attribute">backgound-color</span>: white;
   }
 }
-</code></pre>
+</code></pre></div>
 <p>By default, the background color of <code>div.a</code> will be black, but if the browser screen size is less than or equal to 500px, the background color of <code>div.a</code> will become white. You can see this in action if you just decrease the width of your browser window while on this page. The window will eventually be small enought that the layout will change to mobile mode.</p>
 <p>Media queries were a nice start to what I was looking for to handle my specific use case, but I was also keen on having a dropdown menu on mobile so it wouldn&apos;t take up space when it wasn&apos;t needed. css has built features for handling dropdowns, but I only came across the potential for on hover dropdowns and never on click dropdowns. For that, I would need to take my first dive into javascript. Despite getting over a few small hurdles when dealing with client side vs node js, getting into the javascript&apos;s waters has been quite smooth.</p>
 <p>You should mention the thing about this line for scaling on other devices.

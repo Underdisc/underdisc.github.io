@@ -97,7 +97,7 @@ function RenderMarkdown(inputFile, destination, rebuild)
 
   // Take all of the content within code elements where a language is defined
   // and apply syntax highlighting to them.
-  template('code').each(function(i, domElement)
+  template('pre code').each(function(i, domElement)
   {
     let fullLangString = template(this).attr('class');
     if(typeof(fullLangString) === 'undefined')
@@ -109,7 +109,8 @@ function RenderMarkdown(inputFile, destination, rebuild)
     let lang = fullLangString.slice(0, langEnd);
     let bareContent = template(this).html();
     let highlightedContent = hljs.highlight(lang, bareContent).value;
-    template(this).replaceWith('<code>' + highlightedContent + '</code>');
+    template(this).parent().replaceWith('<div class=\"code_box"><pre><code>' +
+      highlightedContent);
   });
 
   // Ouput the new html to its destination.
@@ -117,7 +118,19 @@ function RenderMarkdown(inputFile, destination, rebuild)
   fs.writeFileSync(outputFile, outputHtml, 'utf8');
 }
 
-let rebuild = process.argv.length > 2 && process.argv[2] === 'r';
+let rebuild = false;
+let makeTests = false;
+if(process.argv.length > 2)
+{
+  rebuild = process.argv[2] === 'r';
+  makeTests = process.argv[2] === 't';
+}
+if(makeTests)
+{
+  RenderMarkdown('index.md', '../', true);
+  return;
+}
+
 RenderMarkdown('index.md', '../', rebuild);
 RenderMarkdown('blog.md', '../', rebuild);
 RenderMarkdown('projects.md', '../', rebuild);

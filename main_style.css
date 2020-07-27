@@ -249,20 +249,23 @@ a:hover {
   color: var(--color-green);
 }
 
-pre {
+div.code_box {
   background-color: var(--color-black);
   border: 0.5em solid var(--color-black);
   border-radius: 0.5em;
   line-height: 1.3em;
+}
+pre {
+  margin: 0px;
   overflow-x: auto;
 }
 pre code {
-  font-family: monospace;
   border: none;
   background-color: transparent;
   color: var(--color-white);
 }
 code {
+  font-size: 1em;
   font-family: monospace;
   background-color: var(--color-ultra-light-gray);
   border: 0.15em solid var(--color-ultra-light-gray);
