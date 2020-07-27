@@ -42,12 +42,10 @@ function ToggleDropdown()
   }
 
   let dropdown_offset = GetDropdownPixelOffset();
-  // The pos suffix values are for the motion of the dropdown menu.
-  let start_pos;
-  let end_pos;
+  // The pos suffix values are for the position of the dropdown menu.
   // The rot suffix values are for the rotation of the dropdown menu button.
-  let start_rot;
-  let end_rot;
+  let start_pos, end_pos;
+  let start_rot, end_rot;
   if (dropdown_open === false)
   {
     sidebar.style.bottom = dropdown_offset + 'px';
