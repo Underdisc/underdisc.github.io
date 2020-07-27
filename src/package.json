@@ -19,6 +19,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "highlight.js": "^10.1.2",
-    "showdown": "^1.9.1"
+    "showdown": "^1.9.1",
+    "showdown-highlight": "^2.1.4"
   }
 }

@@ -21,9 +21,9 @@ function GetFileContent(filename)
 
 let templateHtml = GetFileContent('template.html');
 const cheerio = require('cheerio');
-let showdown = require('showdown');
-let converter = new showdown.Converter();
-let hljs = require('highlight.js');
+const showdown = require('showdown');
+const showdownHighlight = require('showdown-highlight');
+const converter = new showdown.Converter({extensions: [showdownHighlight]});
 
 function CorrectLink(html, selector, attribute, correction)
 {
@@ -99,18 +99,8 @@ function RenderMarkdown(inputFile, destination, rebuild)
   // and apply syntax highlighting to them.
   template('pre code').each(function(i, domElement)
   {
-    let fullLangString = template(this).attr('class');
-    if(typeof(fullLangString) === 'undefined')
-    {
-      return;
-    }
-
-    let langEnd = fullLangString.indexOf(' ');
-    let lang = fullLangString.slice(0, langEnd);
-    let bareContent = template(this).html();
-    let highlightedContent = hljs.highlight(lang, bareContent).value;
     template(this).parent().replaceWith('<div class=\"code_box"><pre><code>' +
-      highlightedContent);
+      template(this).html());
   });
 
   // Apply lazy loading to all images so visitors never need to wait for an
