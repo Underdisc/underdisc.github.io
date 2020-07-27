@@ -4,12 +4,14 @@ html {
   --pale-blue: #57a3ff;
   --shader-error-purple: #ff00f7;
   --bright-pale-blue: #43e8fa;
+  --pale-orange: #ff954f;
 }
 
 .hljs-keyword {
   color: var(--pale-green);
 }
 
+.hljs-literal,
 .hljs-number,
 .hljs-string {
   color: var(--shader-error-purple);
@@ -25,5 +27,13 @@ html {
 
 .hljs-attribute {
   color: var(--pale-blue);
+}
+
+.hljs-comment {
+  color: var(--bright-pale-blue);
+}
+
+.hljs-built_in {
+  color: var(--pale-orange);
 }
 
