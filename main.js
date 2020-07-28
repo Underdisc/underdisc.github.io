@@ -2,14 +2,12 @@ let dropdown_open = false;
 let dropdown_in_motion = false;
 let compact_mode;
 
-// This comes from media queries within style.css. It is the threshold used to
+// These are dom elements that are assigned to in OnLoad.
+let root, content_container, sidebar, dropdown_button;
+
+// This comes from the media query within style.css. It is the threshold used to
 // determine the layout change.
 const compact_em_threshold = 70;
-
-const root = document.querySelector('html');
-const content_container = document.querySelector('div.content_container');
-const sidebar = document.querySelector('div.sidebar_grid');
-const dropdown_button = document.querySelector('div.header_dropdown');
 
 function GetEmWidth()
 {
@@ -97,8 +95,6 @@ function ToggleDropdown()
   }
 }
 
-dropdown_button.addEventListener('click', ToggleDropdown);
-
 function WindowResize()
 {
   let em_width = GetEmWidth();
@@ -122,6 +118,12 @@ window.onresize = WindowResize;
 
 function OnLoad()
 {
+  root = document.querySelector('html');
+  content_container = document.querySelector('div.content_container');
+  sidebar = document.querySelector('div.sidebar_grid');
+  dropdown_button = document.querySelector('div.header_dropdown');
+  dropdown_button.addEventListener('click', ToggleDropdown);
+
   let em_width = GetEmWidth();
   compact_mode = em_width <= compact_em_threshold;
 }
