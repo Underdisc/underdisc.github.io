@@ -7,6 +7,7 @@ html {
   --pale-orange: #ff954f;
 }
 
+.hljs-attr,
 .hljs-keyword {
   color: var(--pale-green);
 }
@@ -17,20 +18,19 @@ html {
   color: var(--shader-error-purple);
 }
 
+.hljs-tag,
 .hljs-selector-tag {
   color: var(--gold);
 }
 
+.hljs-name,
+.hljs-comment,
 .hljs-selector-class {
   color: var(--bright-pale-blue);
 }
 
 .hljs-attribute {
   color: var(--pale-blue);
-}
-
-.hljs-comment {
-  color: var(--bright-pale-blue);
 }
 
 .hljs-built_in {
