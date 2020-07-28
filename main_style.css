@@ -22,10 +22,9 @@ html {
 
 body {
   margin: 0px;
-  overflow: hidden;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: 100%;
+  grid-template-rows: auto;
   justify-content: center;
   background-color: var(--color-black);
 }
@@ -49,7 +48,7 @@ div.main_grid {
   grid-column-end: 3;
   display: grid;
   grid-template-columns: 15em 55em;
-  grid-template-rows: 4em 100%;
+  grid-template-rows: 4em auto;
   border-left: 1em solid var(--color-gray);
   border-right: 1em solid var(--color-gray);
 }
@@ -94,8 +93,6 @@ div.header_text {
 
 div.sidebar_grid {
   position: relative;
-  width: 100%;
-  height: 100%;
   z-index: 0;
   font-size: 1.3em;
   background-color: var(--color-black);
@@ -110,8 +107,9 @@ div.sidebar_grid {
   --dropdown-relative-offset: calc(var(--buffer-height) +
     (var(--element-count) * var(--element-height)));
   display: grid;
+  grid-template-columns: auto;
   grid-template-rows: var(--buffer-height)
-    repeat(var(--element-count), var(--element-height));
+    repeat(var(--element-count), var(--element-height)) auto;
 }
 a.sidebar_element {
   display: flex;
