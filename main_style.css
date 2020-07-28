@@ -13,6 +13,7 @@ html {
   --color-gray: rgb(110, 110, 110);
   --color-light-gray: rgb(190, 190, 190);
   --color-ultra-light-gray: rgb(220, 220, 220);
+  --color-dark-gray: rgb(60, 60, 60);
   --color-white: rgb(255, 255, 255);
   --color-teal: rgb(0, 150, 240);
 
@@ -280,4 +281,12 @@ img {
   max-height: 100%;
   border: 0.5em solid var(--color-black);
   border-radius: 0.5em;
+}
+
+blockquote {
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-left: 1em;
+  color: var(--color-dark-gray);
+  border-left: 2px solid var(--color-dark-gray);
 }
