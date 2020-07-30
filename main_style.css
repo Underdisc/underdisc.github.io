@@ -178,12 +178,13 @@ div.content_container {
   }
 
   div.content_container {
+    width: 100%;
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 3;
     grid-row-end: 4;
-    border: none;
-    overflow: visible;
+    border-left: none;
+    overflow-y: visible;
     bottom: var(--dropdown-base-offset);
   }
 }
@@ -275,7 +276,7 @@ img {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  max-width: 100%;
+  max-width: calc(100% - 1em);
   max-height: 100%;
   border: 0.5em solid var(--color-black);
   border-radius: 0.5em;
