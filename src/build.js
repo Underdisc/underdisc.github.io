@@ -95,8 +95,7 @@ function RenderMarkdown(inputFile, destination, rebuild)
   template('div.content_container').append(content_div);
   template('div.page_content').append(html);
 
-  // Take all of the content within code elements where a language is defined
-  // and apply syntax highlighting to them.
+  // Put all <pre><code> blocks inside of a code box div.
   template('pre code').each(function(i, domElement)
   {
     template(this).parent().replaceWith('<div class=\"code_box"><pre><code>' +
@@ -134,4 +133,7 @@ if(makeTests)
 RenderMarkdown('index.md', '../', rebuild);
 RenderMarkdown('blog.md', '../', rebuild);
 RenderMarkdown('projects.md', '../', rebuild);
-RenderMarkdown('blog/learning_more_about_web_development.md', '../', rebuild);
+RenderMarkdown(
+  'blog/0_learning_more_about_web_development/post.md',
+  '../',
+  rebuild);

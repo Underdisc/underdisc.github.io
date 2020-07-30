@@ -1,0 +1,224 @@
+<html><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link class="main_style" rel="stylesheet" href="../../main_style.css">
+    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+    <script class="main_script" type="text/javascript" src="../../main.js"></script>
+    <title>Underdisc</title>
+  </head>
+  <body>
+    <div class="left_accent_grid">
+      <div></div>
+      <div class="accent"></div>
+    </div>
+    <div class="main_grid">
+      <div class="header_container">
+        <div class="header_dropdown_container">
+          <div class="header_dropdown">
+            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
+            </svg>
+          </div>
+        </div>
+        <div class="header_text">
+          Underdisc
+        </div>
+        <div></div>
+      </div>
+      <div class="sidebar_grid">
+        <!-- We have one empty element that acts as padding. -->
+        <div></div>
+        <a class="sidebar_element index_link" href="../../index.html">
+          Home
+        </a>
+        <a class="sidebar_element blog_link" href="../../blog.html">
+          Blog
+        </a>
+        <a class="sidebar_element projects_link" href="../../projects.html">
+          Projects
+        </a>
+      </div>
+      <div class="content_container">
+      <div class="page_content"><h1 id="learningmoreaboutwebdevelopment">Learning More About Web Development</h1>
+<p>Around two to three years ago, I was making my way through college and would soon be entering the job market as a game programmer. In order to land a job, I was going to need a website to display my previous work. I had no desire to use a service like Squarespace, Wordspace, etc. I was more excited about creating my own website and the challenges that come along with that. Wanting this eliminated Jekyll as an option too.</p>
+<p>I found out about <a href="https://pages.github.com/">github pages</a> for hosting static websites. This would take care of hosting and I needed nothing more than a static website. That means I could focus purely on the work that goes into creating a webpage.</p>
+<p>The first step to doing this involves learning about html and css. When I first made my website, I only made use of the two. They were enough to get something quite basic created, but I didn&apos;t use them to their full power. I tried to make a layout that would work on both mobile and desktop that wouldn&apos;t require any layout changes for different platforms. Those words sound great, but when I looked at the site I made after letting it sit around for two years, I knew this was no longer going to cut it.</p>
+<p class="image_box"><img src="old_website.png" alt="Old website homepage" loading="lazy"></p>
+<p>This is the layout that would be used for every device. The image at the top would expand to fill the full width of the screen. When the window was stretched far enough, the image would take up the entire browser window. The top navigation bar always stayed the same. It would consistently be four evenly spaced boxes lined up horizontally. On small broswer windows, these options were clumped together. It wasn&apos;t pleasant to look at and there were certainly other problems as well, but it was usable. The issue is that I built it for the browser window I was testing against first and everything else second. I still keep the old page up <a href="https://underdisc.github.io/old/index.html">here</a> for reference. The links are not broken as of this writing, but they will likely break in the future as stuff is cleaned out from the old and moved to the new. The home page will always stay there though.</p>
+<p>I don&apos;t like it, but it did do its job. It helped me secure a position at a studio I was intersted in working at. Time has moved on though. I just recently left that job with the goal of persuing my own work and I need a place to share that work. Because of my dislike for the original site, the first task after leaving has been tearing down and rebuilding the entire thing. What you are looking at now is the current iteration of that overhaul. Despite a few minor details that would be nice to have solved in the future, I am proud of it.</p>
+<p>For the rebuild, my main goals involved fixing the biggest greivances I had with my previous work. When I recalled working on my old website, these are the major problems that quickly came to mind.</p>
+<ul>
+<li>A layout that doesn&apos;t react to window size changes..</li>
+<li>Editing html files directly to add and edit content on the website.</li>
+</ul>
+<p>With those in mind, I went off to work.</p>
+<h2 id="layout">Layout</h2>
+<p>I needed to make something that would handle mobile and desktop well. When addressing that I came across <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries">css media queries</a>. They are explained in more detail in that link, but they are essentially a directive added to a style sheet to apply changes to css properties if a certain condition is met. For example, the media query I use on this website for identifying if the platform is mobile is this.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width:</span> <span class="hljs-number">70em</span>) {
+  ...
+}
+</code></pre></div>
+<p>This just means if the browser window size is less than or equal to 70em, then the changes within the curly braces are applied. The changes specified within the media query use the same syntax as everything else in css. As an example, here is a full style sheet with a media query.</p>
+<div class="code_box"><pre><code><span class="hljs-selector-tag">div</span><span class="hljs-selector-class">.a</span> {
+  <span class="hljs-attribute">background-color</span>: black;
+}
+
+<span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width:</span> <span class="hljs-number">500px</span>) {
+  <span class="hljs-selector-tag">div</span><span class="hljs-selector-class">.a</span> {
+    <span class="hljs-attribute">backgound-color</span>: white;
+  }
+}
+</code></pre></div>
+<p>By default, the background color of <code>div.a</code> will be black, but if the browser screen size is less than or equal to 500px, the background color of <code>div.a</code> will become white. You can see this sort of dynamic behavior in action if you just decrease the width of your browser window while on this page. The window will eventually be small enough that the layout will change to mobile mode.</p>
+<p>Media queries were a nice start to what I was looking for to handle my specific use case, but I was also keen on having a dropdown menu on mobile so it wouldn&apos;t take up space when it wasn&apos;t needed. css has built features for handling dropdowns, but I only came across the potential for on hover dropdowns and never on click dropdowns. For that, I would need to take my first dive into javascript.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ToggleDropdown</span>(<span class="hljs-params"></span>)
+</span>{
+  ...
+}
+
+dropdown_button.addEventListener(<span class="hljs-string">&apos;click&apos;</span>, ToggleDropdown);
+</code></pre></div>
+<p>The process of creating the dropdown for the mobile mode was pretty straight forward. When the dropdown button is clicked and not in motion, the dropdown will either slide into view or out of view over a short period of time. This action also results in moving all the content of the page as well. Instead of having the dropdown hide the top of the page content, I wanted to have the content remain visible at all times, even though the bottom would still slide out of view.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ToggleDropdown</span>(<span class="hljs-params"></span>)
+</span>{
+  <span class="hljs-comment">//...</span>
+
+  <span class="hljs-comment">// All time values are expressed in milliseconds.</span>
+  <span class="hljs-keyword">const</span> animation_time = <span class="hljs-number">250</span>;
+  <span class="hljs-keyword">const</span> frame_time = <span class="hljs-number">10</span>;
+  <span class="hljs-keyword">let</span> animation = setInterval(step, frame_time);
+  dropdown_in_motion = <span class="hljs-literal">true</span>;
+  <span class="hljs-keyword">const</span> start_time = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">step</span>(<span class="hljs-params"></span>)
+  </span>{
+    <span class="hljs-keyword">let</span> current_time = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+    <span class="hljs-keyword">let</span> time_passed = current_time - start_time;
+    <span class="hljs-keyword">if</span> (time_passed &gt;= animation_time)
+    {
+      dropdown_in_motion = <span class="hljs-literal">false</span>;
+      sidebar.style.bottom = end_pos + <span class="hljs-string">&apos;px&apos;</span>;
+      content_container.style.bottom = end_pos + <span class="hljs-string">&apos;px&apos;</span>;
+      clearInterval(animation);
+      <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-keyword">let</span> t = time_passed / animation_time;
+    <span class="hljs-keyword">let</span> t_quad_in = <span class="hljs-number">-1.0</span> * (t - <span class="hljs-number">1.0</span>) * (t - <span class="hljs-number">1.0</span>) + <span class="hljs-number">1.0</span>;
+    <span class="hljs-keyword">let</span> current_pos = start_pos + dist_pos * t_quad_in;
+    <span class="hljs-keyword">let</span> current_rot = start_rot + dist_rot * t_quad_in;
+    sidebar.style.bottom = current_pos + <span class="hljs-string">&apos;px&apos;</span>;
+    content_container.style.bottom = current_pos + <span class="hljs-string">&apos;px&apos;</span>;
+    dropdown_button.style.transform = <span class="hljs-string">&apos;rotate(&apos;</span> + current_rot + <span class="hljs-string">&apos;deg)&apos;</span>;
+  }
+}
+</code></pre></div>
+<p>This was the method I ended up rolling with to accomplish this. The content and sidebar containers have <code>position: relative</code> set and that allows me to change the positions of the elements dynamically using the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/bottom">bottom property</a>. This is just the distance the element is from its bottom edge.</p>
+<p>To actually calculate this distance, I use the linear interpolation parameter <code>t</code>. As the animation goes from start to finish, this value will move from 0 to 1, getting closer to 1 during every step of the animation. That parameter, which is calculated based off the amount of time passed since the beginning of the animation, is used to to determine how far the element should be from its starting position. At <code>t = 0</code> the element hasn&apos;t made any motion and when <code>t = 1</code> the element will have moved all the way to the end position.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">let</span> t_quad_in = <span class="hljs-number">-1.0</span> * (t - <span class="hljs-number">1.0</span>) * (t - <span class="hljs-number">1.0</span>) + <span class="hljs-number">1.0</span>;
+</code></pre></div>
+<p>This statement just changes how <code>t</code> scales as it goes from 0 to 1. In this case, <code>t_quad_in</code> will change quickly at the beginning of the animation and slowly at the end of the animation. If you were to graph this function <code>t_quad_in = -1 * (t - 1)^2 + 1</code> you may notice it&apos;s just an upside down parabola centered at <code>(1, 1)</code>. That&apos;s what&apos;s responsible for this type of motion and it&apos;s usually referred to as an ease type. I will leave this particular topic here for now, because I can talk for days about these types of transformations. I like calling them <code>Actions</code>, and I&apos;ll definitely write about them when I go to implement them in my engine in the future.</p>
+<p>While getting this animation to work, I was constantly testing the website on my phone by hosting it locally with <code>python -m http.server</code>. There was something very strange about the site when viewed on mobile though. The font was ridiculously small and things just didn&apos;t seem to be scaled properly on mobile in general. That&apos;s when I came across this.</p>
+<div class="code_box"><pre><code><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;viewport&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;width=device-width, initial-scale=1&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+</code></pre></div>
+<p>Despite not seeing this mentioned almost anywhere except for a stack overflow post, this one line is extremely important. The purpose of this element is described in detail <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag">here</a>. In short, when a webpage is rendered on mobile, it&apos;s actually rendered to something larger than the display that it&apos;s being rendered to. The content is then scaled down to fit on the display. The html above changes that so the website is actually rendered using the correct display width. This has a huge impact on the page&apos;s scaling for mobile devices. Here is a before and after picture of this website as an example.</p>
+<p class="image_box"><img src="viewport_before.jpg" alt="Before" loading="lazy">
+<img src="viewport_after.jpg" alt="After" loading="lazy"></p>
+<p>That sums up most of the work done to create the website so that it works on multiple platforms. I skipped over some things: how the header bar and side bar were constructed using <code>display: grid</code> and how I handled widescreen browser windows, but I could write for much longer if I covered everything. Once I had the bulk of this layout work done, my next task involved finding a way to edit and add content to the website without ever needing to touch an html file.</p>
+<h2 id="automatedbuilding">Automated Building</h2>
+<p>Before researching anything related to this task, I already had an idea of what I was looking for. The main task was finding what I needed and using it. I didn&apos;t know all the details, but I did know markdown is a very common syntax that allows for <code>aesthetic</code> content sytling. Github uses markdown syntax for styling the readme document that is displayed on every repository&apos;s home page. I&apos;ve used it many times before and just thinking about making my whole website using markdown files got me a little giddy. It turns out it&apos;s pretty easy.</p>
+<p>The first thing I went searching for was a markdown to html converter. With that covered, I could have a single template html file that contains all the elements used for the website&apos;s overall layout style. Then I could insert some html that has been converted from markdown into a container element within that template for the page content and generate a page for the website. I was very pleased to come across <a href="https://github.com/showdownjs/showdown">Showdown</a>. It takes care of the markdown to html conversion process and I take care of the rest.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">RenderMarkdown</span>(<span class="hljs-params">inputFile, destination, rebuild</span>)
+</span>{
+  <span class="hljs-comment">// ...</span>
+
+  <span class="hljs-comment">// Render the markdown document to html.</span>
+  <span class="hljs-keyword">let</span> markdown = fs.readFileSync(inputFile, <span class="hljs-string">&apos;utf8&apos;</span>);
+  <span class="hljs-keyword">let</span> html = converter.makeHtml(markdown);
+  <span class="hljs-keyword">let</span> content_div = <span class="hljs-string">&apos;&lt;div class=\&apos;page_content\&apos;&gt;&lt;/div&gt;&apos;</span>;
+  template(<span class="hljs-string">&apos;div.content_container&apos;</span>).append(content_div);
+  template(<span class="hljs-string">&apos;div.page_content&apos;</span>).append(html);
+
+  <span class="hljs-comment">// ...</span>
+}
+
+RenderMarkdown(<span class="hljs-string">&apos;index.md&apos;</span>, <span class="hljs-string">&apos;../&apos;</span>, rebuild);
+RenderMarkdown(<span class="hljs-string">&apos;blog.md&apos;</span>, <span class="hljs-string">&apos;../&apos;</span>, rebuild);
+RenderMarkdown(<span class="hljs-string">&apos;projects.md&apos;</span>, <span class="hljs-string">&apos;../&apos;</span>, rebuild);
+</code></pre></div>
+<p>The process is this: read the markdown file, convert it to html, and insert it into the page&apos;s content container. If you&apos;re wondering why there is another wrapper around <code>page_content</code> called <code>content_container</code>, it has to with the different styling used for the two elements. I forget why I added it into the generation step instead of baking it into the template html directly though&#x2026;</p>
+<p>You probably noticed the <code>template(&apos;...&apos;)</code> syntax. It&apos;s from a package called <a href="https://github.com/cheeriojs/cheerio">cheerio</a> that takes a lot of inspiration from jQuery. I have never used jQuery, but I came across cheerio while looking for ways to parse and edit the template html file that I use to generate every page. cheerio allows for that sort of dom editing using Node.js instead of running on the client.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">let</span> template = cheerio.load(templateHtml);
+</code></pre></div>
+<p>And that leads to the next thing. You might be wondering why I am using Node.js if I am using Github Pages. Github Pages only allows for static hosting and that means I can&apos;t run any of my code on the server that&apos;s actually hosting the website. I don&apos;t know how common this is because I am not well versed in web development, but I am using Node.js purely locally here. I have a single script called <code>build.js</code> that builds all the html files for the website and puts them in the correct directories. I am essentially using it the same way most would use python. It&apos;s just a script that gets some work done.</p>
+<p>When working on this generation step, I encountered one problem that I anticipated, but never found a pretty solution to. Like I said before, there is one template html file that acts as the template for every html file. It&apos;s <a href="https://github.com/Underdisc/underdisc.github.io/blob/master/src/template.html">this</a>. This template file contains multiple links to other local files.</p>
+<div class="code_box"><pre><code><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main_style&quot;</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;main_style.css&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;hljs_style&quot;</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;hljs_style.css&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main_script&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;main.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- ... --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sidebar_element index_link&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;index.html&quot;</span>&gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sidebar_element blog_link&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;blog.html&quot;</span>&gt;</span>Blog<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sidebar_element projects_link&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;projects.html&quot;</span>&gt;</span>Projects<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+</code></pre></div>
+<p>This presents a problem when placing html files in directories deeper than the website&apos;s root directory. For example, <a href="https://github.com/Underdisc/underdisc.github.io/blob/master/blog/0_learning_more_about_web_development/post.html">this file</a> (the one you&apos;re currently reading) is one directory deeper than the root. That means the file paths in the html above will no longer refer to an existing location without being corrected to point to the files in the website&apos;s root.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">CorrectLink</span>(<span class="hljs-params">html, selector, attribute, correction</span>)
+</span>{
+    <span class="hljs-keyword">let</span> linkElement = html(selector);
+    <span class="hljs-keyword">let</span> filePath = linkElement.attr(attribute);
+    filePath = correction + filePath;
+    linkElement.attr(attribute, filePath);
+}
+
+<span class="hljs-keyword">let</span> depth = GetOccurrenceCount(inputFile, <span class="hljs-string">&apos;/&apos;</span>);
+<span class="hljs-keyword">if</span>(depth &gt; <span class="hljs-number">0</span>)
+{
+  <span class="hljs-keyword">let</span> linkCorrection = <span class="hljs-string">&apos;&apos;</span>;
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; depth; ++i)
+  {
+    linkCorrection += <span class="hljs-string">&apos;../&apos;</span>
+  }
+  CorrectLink(template, <span class="hljs-string">&apos;link.main_style&apos;</span>, <span class="hljs-string">&apos;href&apos;</span>, linkCorrection);
+  CorrectLink(template, <span class="hljs-string">&apos;link.hljs_style&apos;</span>, <span class="hljs-string">&apos;href&apos;</span>, linkCorrection);
+  CorrectLink(template, <span class="hljs-string">&apos;a.index_link&apos;</span>, <span class="hljs-string">&apos;href&apos;</span>, linkCorrection);
+  CorrectLink(template, <span class="hljs-string">&apos;a.blog_link&apos;</span>, <span class="hljs-string">&apos;href&apos;</span>, linkCorrection);
+  CorrectLink(template, <span class="hljs-string">&apos;a.projects_link&apos;</span>, <span class="hljs-string">&apos;href&apos;</span>, linkCorrection);
+  CorrectLink(template, <span class="hljs-string">&apos;script.main_script&apos;</span>, <span class="hljs-string">&apos;src&apos;</span>, linkCorrection);
+}
+</code></pre></div>
+<p>I fixed this by doing exactly that. Every time a markdown is rendered to html, the links contained in the template html are edited to point to the correct paths. The exact editing that needs to be done is dependant on where the html file ends up. This is why I search for the number of <code>/</code> occurrences there are in the markdown file path. The location and structure of all the markdown files is one to one with where they end up when they are built for the website.</p>
+<p>I wish there was a better solution to this because what I wrote is a bit ugly and doesn&apos;t seem very necessary. It would be nice if there was some way to specify the root and every link in html files in or below that root would begin at that root. It would remove the need to perform this link shenanigans, but at the same time such a thing doesn&apos;t seem easily doable and would likely result in a different kind of mess. What I am trying to say is, I think this a problem and I have no idea how I would solve it.</p>
+<p>The last task on my agenda was getting syntax highlighting for any code snippets I include in my markdown documents. What is code if it hasn&apos;t been puked on by unicorns, right? Again, I went searching around the internet for a solution because code highlighting on websites is extremely common and I came across <a href="https://highlightjs.org/">highlight.js</a>.</p>
+<p>When I first started to use highlight.js, I figured I could just take the html output from Showdown, get all existing <code>&lt;pre&gt;&lt;code&gt;...&lt;/pre&gt;&lt;code&gt;</code> blocks, send the block&apos;s content through highlight.js to add the html tags for syntax highlighting.</p>
+<div class="code_box"><pre><code>template(<span class="hljs-string">&apos;pre code&apos;</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">i, domElement</span>)
+</span>{
+  <span class="hljs-comment">// ...</span>
+
+  <span class="hljs-keyword">let</span> code = template(<span class="hljs-keyword">this</span>).html();
+  <span class="hljs-keyword">let</span> highlightedCode = hljs.highlight(lang, code).value;
+  template(<span class="hljs-keyword">this</span>).parent().replaceWith(<span class="hljs-string">&apos;&lt;pre&gt;&lt;code&gt;&apos;</span> + highlightedCode);
+});
+</code></pre></div>
+<p>Unfortunately, this didn&apos;t work. One important detail about pumping markdown through Showdown is that it will convert some characters to their corresponding html representations. For example, <code>&apos;</code> gets converted to <code>&amp;apos;</code> and <code>&amp;</code> gets converted to <code>&amp;amp;</code>. As you might imagine, code often contains those characters along with many others. So when Showdown performed the conversion and I gave a code string to highlight.js, a lot of the syntax highlighting was broken because of these character replacements. The syntax highlighting needed to be performed before showdown converted those characters.</p>
+<p>You&apos;re probably hoping for an eloborate solution to this problem. Well, sorry to dissapoint, but <a href="https://github.com/Bloggify/showdown-highlight">this</a> this took care of that work. With that package, all I needed to do was add the extension when initializing showdown and everything was taken of.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">const</span> showdown = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;showdown&apos;</span>);
+<span class="hljs-keyword">const</span> showdownHighlight = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;showdown-highlight&apos;</span>);
+<span class="hljs-keyword">const</span> converter = <span class="hljs-keyword">new</span> showdown.Converter({<span class="hljs-attr">extensions</span>: [showdownHighlight]});
+</code></pre></div>
+<p>Once I had that working, the bulk of everything I wanted to do with the redesign was complete. I am still continuing to work on the styling of certain elements as well as improving the build process so I have to do less work in the future as I add content to the website. This will be a continuous project as time goes on though. I intend on continuously posting on this website as I work on my projects. As I find new things to post and come across other problems, I will be adding and fixing things on the site. For now though, I have a solid base. All I have to do is edit and add markdown files, run <code>node build.js</code> and the website&apos;s html files will be updated according to the markdown changes made. Who knew being this lazy could be this exciting?</p>
+<h2 id="someothersmallproblems">Some Other Small Problems</h2>
+<p>Though most of the work is done, I still have issues with certain parts of the website. One big greivance of mine is the size of code boxes on mobile. I would love to have all code boxes be at least 80 characters wide, but I haven&apos;t found a feasible way to do it. The font used for code must remain monospace and it must be a readable size. I could exchange the font for a font with a smaller character width, but that means I need to add a custom font with that property. It might not be much, but that&apos;s more resources to load for the website to render. Additionally coming across such a font that would allow for lines that long on mobile would be a challenge on its own. I also considered expanding the width of the code boxes to take up the entire width of the content box, but when I looked at how much space that would add, it was less than 10 characters. I also like the current style of the code boxes, so I am not set on changing that for such a minor benefit. For now, horizontal scroll bars make the code accessible and that hits at least the minimum bar.</p>
+<p>Another issue is that I need to add a line to the build script every time a new markdown file is added. It&apos;s just like adding a file names to cmake in a build process. This is not a big deal and I will fix it as soon as I get annoyed while adding lines to the build script. When I do fix it, I will likely have the build script convert all the markdown files in certain directories. That way I can just add markdown files to those directories and they will automatically be built.</p>
+<h2 id="ps">PS</h2>
+<p>I hope this first post isn&apos;t too all over the place. While writing this, I was constantly testing new things and changing the style of various content elements. So, whilst this is my first post, it&apos;s more akin to a high effort test. If you&apos;ve made it this far though, thanks for reading about the shit I work on. I appreciate you.</p></div></div>
+    </div>
+    <div class="right_accent_grid">
+      <div class="accent"></div>
+      <div></div>
+    </div>
+  
+
+
+</body></html>
