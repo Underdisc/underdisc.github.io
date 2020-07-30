@@ -105,6 +105,7 @@ function WindowResize()
     let starting_offset = GetDropdownPixelOffset();
     sidebar.style.bottom = starting_offset + 'px';
     content_container.style.bottom = starting_offset + 'px';
+    dropdown_button.style.transform = 'rotate(0deg)';
   }
   else if (em_width >= compact_em_threshold && compact_mode == true)
   {
