@@ -103,11 +103,14 @@ function RenderMarkdown(inputFile, destination, rebuild)
       template(this).html());
   });
 
-  // Apply lazy loading to all images so visitors never need to wait for an
-  // image to download before other page content is available.
+  // Apply lazy loading to all images and add the image_box class to the parent
+  // element because all images are contained in an image box.
   template('img').each(function(i, domElement)
   {
-    template(this).attr('loading', 'lazy');
+    let image = template(this);
+    image.attr('loading', 'lazy');
+    let imageContainer = image.parent();
+    imageContainer.attr('class', 'image_box');
   });
 
   // Ouput the new html to its destination.

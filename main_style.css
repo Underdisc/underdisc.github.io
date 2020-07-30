@@ -274,12 +274,22 @@ code {
 
 img {
   display: block;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
   margin-left: auto;
   margin-right: auto;
-  max-width: calc(100% - 1em);
+  max-width: calc(100% - 0.8em);
   max-height: 100%;
-  border: 0.5em solid var(--color-black);
-  border-radius: 0.5em;
+  border: 0.4em solid var(--color-black);
+  border-radius: 0.4em;
+}
+p.image_box {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+  justify-content: center;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 blockquote {
