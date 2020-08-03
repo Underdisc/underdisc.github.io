@@ -1,39 +1,37 @@
-html {
-  --pale-green: #40e640;
-  --gold: #ffc400;
-  --pale-blue: #57a3ff;
-  --shader-error-purple: #ff00f7;
-  --bright-pale-blue: #43e8fa;
-  --pale-orange: #ff954f;
+.hljs-params {
+  color: rgb(200, 200, 200);
 }
 
 .hljs-attr,
 .hljs-keyword {
-  color: var(--pale-green);
+  color: #10c419;
 }
 
 .hljs-literal,
 .hljs-number,
 .hljs-string {
-  color: var(--shader-error-purple);
+  color: #a0b7fa;
 }
 
 .hljs-tag,
 .hljs-selector-tag {
-  color: var(--gold);
+  color: #adff87;
 }
 
+.hljs-comment {
+  color: #43e8fa;
+}
+
+.hljs-selector-class,
 .hljs-name,
-.hljs-comment,
-.hljs-selector-class {
-  color: var(--bright-pale-blue);
-}
-
 .hljs-attribute {
-  color: var(--pale-blue);
+  color: #86f7f7;
 }
 
 .hljs-built_in {
-  color: var(--pale-orange);
+  color: rgb(0, 255, 61);
 }
 
+.hljs-title {
+  color: #88e3b0;
+}
