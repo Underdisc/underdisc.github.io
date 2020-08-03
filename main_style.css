@@ -233,6 +233,11 @@ h3 {
   line-height: 1.2em;
 }
 
+div.date {
+  display: inline-block;
+  font-size: 0.9em;
+}
+
 hr {
   height: 2px;
   border-width: 0;
