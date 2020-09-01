@@ -21,7 +21,8 @@ function GetFileContent(filename)
 
 let templateHtml = GetFileContent('template.html');
 const cheerio = require('cheerio');
-const showdown = require('showdown');
+let showdown = require('showdown');
+showdown.setOption('noHeaderId', 'true');
 const showdownHighlight = require('showdown-highlight');
 const converter = new showdown.Converter({extensions: [showdownHighlight]});
 
@@ -48,6 +49,14 @@ function IsBuildNeeded(inputFile, outputFile)
   return inputModifiedDate >= outputModifiedDate;
 }
 
+function MakeRequiredDirectories(outputFile)
+{
+  let dirEnd = outputFile.lastIndexOf('/');
+  let dirPath = outputFile.slice(0, dirEnd);
+  let options = {recursive: true};
+  fs.mkdirSync(dirPath, options);
+}
+
 function RenderMarkdown(inputFile, destination, rebuild)
 {
   // Before rendering a markdown document to html, we first check to see if the
@@ -67,6 +76,7 @@ function RenderMarkdown(inputFile, destination, rebuild)
   {
     return;
   }
+  MakeRequiredDirectories(outputFile);
 
   // Before rendering the markdown document, we first fix all the links
   // contained in the template html if the output html will exist in a
@@ -115,6 +125,30 @@ function RenderMarkdown(inputFile, destination, rebuild)
   // Ouput the new html to its destination.
   let outputHtml = template.html();
   fs.writeFileSync(outputFile, outputHtml, 'utf8');
+  console.log('Built ' + inputFile);
+}
+
+function RenderRecursively(directory, destination, rebuild)
+{
+  let options = {withFileTypes: true};
+  let files = fs.readdirSync(directory, options);
+  for(let i = 0; i < files.length; ++i)
+  {
+    let file = files[i];
+    if(file.isDirectory())
+    {
+      RenderRecursively(directory + file.name + '/', destination, rebuild);
+    }
+
+    if(file.name.length >= 3)
+    {
+      let end  = file.name.slice(file.name.length - 3);
+      if(end === '.md')
+      {
+        RenderMarkdown(directory + file.name, destination, rebuild);
+      }
+    }
+  }
 }
 
 let rebuild = false;
@@ -131,9 +165,5 @@ if(makeTests)
 }
 
 RenderMarkdown('index.md', '../', rebuild);
-RenderMarkdown('blog.md', '../', rebuild);
-RenderMarkdown('projects.md', '../', rebuild);
-RenderMarkdown(
-  'blog/0_learning_more_about_web_development/post.md',
-  '../',
-  rebuild);
+RenderRecursively('blog/', '../', rebuild);
+RenderRecursively('projects/', '../', rebuild);
