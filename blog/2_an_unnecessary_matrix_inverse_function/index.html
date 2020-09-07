@@ -1,0 +1,172 @@
+<html><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link class="main_style" rel="stylesheet" href="../../main_style.css">
+    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+    <script class="main_script" type="text/javascript" src="../../main.js"></script>
+    <title>Underdisc</title>
+  </head>
+  <body>
+    <div class="left_accent_grid">
+      <div></div>
+      <div class="accent"></div>
+    </div>
+    <div class="main_grid">
+      <div class="header_container">
+        <div class="header_dropdown_container">
+          <div class="header_dropdown">
+            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
+            </svg>
+          </div>
+        </div>
+        <div class="header_text">
+          Underdisc
+        </div>
+        <div></div>
+      </div>
+      <div class="sidebar_grid">
+        <!-- We have one empty element that acts as padding. -->
+        <div></div>
+        <a class="sidebar_element index_link" href="../../index.html">
+          Home
+        </a>
+        <a class="sidebar_element blog_link" href="../../blog/index.html">
+          Blog
+        </a>
+        <a class="sidebar_element projects_link" href="../../projects/index.html">
+          Projects
+        </a>
+      </div>
+      <div class="content_container">
+      <div class="page_content"><h1>An Unnecessary Matrix Inverse Function</h1>
+<p>It&apos;s been one week minus a day since my last post and I said to myself that I need to write these every Monday, no matter what, so here I am. This week was relatively slow at the beginning, but I did a lot of work over the weekend. That doesn&apos;t mean the week was a complete loss though. Instead of writing code I was actually reviewing some math that I believe will become very useful in the near future.</p>
+<p>Since the code I started Varkor with was for a project I didn&apos;t have the time to finish, I decided that one of the first things I would do is finish the goal of that project first. The initial goal of the project was to create my own implementation of quaternions. It&apos;s one of those things I have known about for a long time and I have some understanding of, but I haven&apos;t gone through the trouble of implementing them myself. I just use some EulerAngleToQuaternion type function and vice versa and everything usually works out. Creating my own implementation of them would really force me to have a much deeper unstanding of the math behind them and it would give me the opportunity to say that I have implemented my own quaternions. I think that&apos;s a pretty cool badge to have.</p>
+<h2>Some Complex Number Review</h2>
+<p>Quaternions are used for the easy computation of 3d rotations. Essentially, there is one vector that determines the axis to rotate around and an angle that determines how far to rotate around that axis. Complex numbers are used heavily for quaternions because they can very elegantly describe rotations, so the first thing I did was review some complex number math and most importantly, Euler&apos;s formula.</p>
+<div class="code_box"><pre><code>// Euler&apos;s formula
+<span class="hljs-built_in">cos</span>(<span class="hljs-built_in">t</span>) + i * <span class="hljs-built_in">sin</span>(<span class="hljs-built_in">t</span>) = e^(i * <span class="hljs-built_in">t</span>)
+</code></pre></div>
+<p>I want to add something to the website build system that allows me to render pretty math pictures (probably using LaTeX), but this will do for now. Either way, this formula is really cool because it says that using our one parameter <code>t</code>, we can specify any point on the unit circle. <code>cos(t)</code> is the real part and <code>i * sin(t)</code> is the imaginary part. If you don&apos;t know about this, seriously, take this formula, plug in a few values between 0 and 2pi in, put them on a graph where the real axis is the typical x axis and the imaginary axis is the typical y axis and you&apos;ll eventually start seeing the unit circle (the circle centered at the origin with a radius of one) as you plot points.</p>
+<p>This formula comes with some extremely useful properties. For example, we can multiply two complex numbers and the result is really satisfying.</p>
+<div class="code_box"><pre><code>e^<span class="hljs-comment">(i * t)</span> * e^<span class="hljs-comment">(i * w)</span> = e^<span class="hljs-comment">(i * (w + t)</span>);
+</code></pre></div>
+<p>This just means that multiplying two complex numbers together actually just describes rotating one complex number by a certain amount. If we start with a complex number whose angle between the vector <code>[1, 0]</code> and itself is <code>t</code>, and multiply it with another complex number whose angle between the same vector and itself is <code>w</code>, we get a new complex number whose angle is <code>w + t</code>.</p>
+<p class="image_box"><img src="complex_rotation.png" alt="Complex rotation example picture" loading="lazy"></p>
+<p>I remember learning about this during my digital signal processing class in college and it was huge to me. It&apos;s just such a beautiful way to describe what seems like a simple operation. I&apos;m surprised that it had never been mentioned anywhere else: not in any other classes during college or high school.</p>
+<h2>3D Camera</h2>
+<p>After doing that, I got eager to create a camera and since I am not on a deadline to create the quaternion implementation, I went right at it. The thing about having a camera that you can actually move around is how useful it is for debugging. It lets you view things from any perspective you want with some simple controls. I also wanted something I could actually interact with because it&apos;s always fun to have that.</p>
+<p>To make the camera, I needed a world-to-camera transformation matrix. I intend on writing nearly all of my own math functions, so creating this was the first thing to do. I could go over the linear algrebra necessary to do this, but it would be quite a long explanation and I don&apos;t want to make this update unnecessarily long. It essentially comes down to this:</p>
+<p>There is a matrix called the camera-to-world matrix. It describes how we move from camera space (or view space) to world space. <a href="https://learnopengl.com/">learnopengl.com</a> has <a href="https://learnopengl.com/Getting-started/Coordinate-Systems">this page</a> that describes the different spaces. Unfortunately, we don&apos;t need a camera-to-world matrix, we need a world-to-camera matrix. We can find that matrix by just finding the inverse of the camera-to-world matrix though.</p>
+<p>Finding the inverse of a matrix is one of those things that you&apos;d think would be pretty straightforward and easy to accomplish, but it isn&apos;t. It&apos;s by no means terrible, but it&apos;s still a little bit of work. There are multiple ways to do it. You can use the determinant and the transpose of the cofactor matrix, you can use Gauss-Jordan elimination, and there are other methods too. I ended up implementing it with Gauss-Jordan elimination. Using this method, the square matrix is augmented by the identity matrix and row reduction is performed on the augmented matrix. After row reduction, the square matrix where the identity used to be will now be the inverse.</p>
+<div class="code_box"><pre><code>template&lt;typename T, unsigned <span class="hljs-built_in">int</span> N&gt;
+Matrix&lt;T, N&gt; Matrix&lt;T, N&gt;::<span class="hljs-constructor">Inverse()</span> const
+{
+  <span class="hljs-comment">// We find the inverse using Gauss-Jordan elimination. That is, we augment</span>
+  <span class="hljs-comment">// the square matrix by the identity and perform row operations until the new</span>
+  <span class="hljs-comment">// N by 2N matrix is in reduced row echelon form. At this point the inverse</span>
+  <span class="hljs-comment">// matrix is what used to be the identity after the augmentation.</span>
+
+  <span class="hljs-comment">// These two matrices represent the N by 2N matrix together. We will</span>
+  <span class="hljs-comment">// perform the same row operations on both of these matrices.</span>
+  Matrix&lt;T, N&gt; copy = *this;
+  Matrix&lt;T, N&gt; inverse;
+  inverse.<span class="hljs-constructor">Identity()</span>;
+  for (<span class="hljs-built_in">int</span> pivot = <span class="hljs-number">0</span>; pivot &lt; N; ++pivot)
+  {
+    <span class="hljs-comment">// If the value of this pivot is zero, we need to swap the current pivot row</span>
+    <span class="hljs-comment">// with a row that has a value in current pivot column that is non zero.</span>
+    <span class="hljs-keyword">if</span> (copy<span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-operator"> == </span><span class="hljs-number">0</span>)
+    {
+      <span class="hljs-built_in">bool</span> still_invertible = <span class="hljs-literal">false</span>;
+      for (<span class="hljs-built_in">int</span> row = pivot + <span class="hljs-number">1</span>; row &lt; N; ++row)
+      {
+        <span class="hljs-keyword">if</span> (copy<span class="hljs-literal">[<span class="hljs-identifier">row</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span> != (T)<span class="hljs-number">0</span>)
+        {
+          copy.<span class="hljs-constructor">SwapRows(<span class="hljs-params">row</span>, <span class="hljs-params">pivot</span>)</span>;
+          inverse.<span class="hljs-constructor">SwapRows(<span class="hljs-params">row</span>, <span class="hljs-params">pivot</span>)</span>;
+          still_invertible = <span class="hljs-literal">true</span>;
+          break;
+        }
+      }
+      <span class="hljs-comment">// If we can&apos;t find a non zero value below the pivot, the matrix is not</span>
+      <span class="hljs-comment">// invertible.</span>
+      <span class="hljs-constructor">LogAbortIf(!<span class="hljs-params">still_invertible</span>, <span class="hljs-string">&quot;The matrix is not invertible.&quot;</span>)</span>;
+    }
+
+    <span class="hljs-comment">// We change the pivot to one and make all values below the pivot zero using</span>
+    <span class="hljs-comment">// row operations.</span>
+    T row_factor = (T)<span class="hljs-number">1</span><span class="hljs-operator"> / </span>copy<span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span>;
+    copy.<span class="hljs-constructor">MultiplyRow(<span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
+    inverse.<span class="hljs-constructor">MultiplyRow(<span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
+    for (<span class="hljs-built_in">int</span> row = pivot + <span class="hljs-number">1</span>; row &lt; N; ++row)
+    {
+      row_factor = copy<span class="hljs-literal">[<span class="hljs-identifier">row</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-operator"> * </span>(T)-<span class="hljs-number">1</span>;
+      copy.<span class="hljs-constructor">AddRowMultiple(<span class="hljs-params">row</span>, <span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
+      inverse.<span class="hljs-constructor">AddRowMultiple(<span class="hljs-params">row</span>, <span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
+    }
+  }
+
+  <span class="hljs-comment">// We now force all elements that are above pivots to be zeros using row</span>
+  <span class="hljs-comment">// operations.</span>
+  for (<span class="hljs-built_in">int</span> pivot = <span class="hljs-number">1</span>; pivot &lt; N; ++pivot)
+  {
+    for (<span class="hljs-built_in">int</span> row = pivot - <span class="hljs-number">1</span>; row &gt;= <span class="hljs-number">0</span>; --row)
+    {
+      T row_factor = copy<span class="hljs-literal">[<span class="hljs-identifier">row</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-operator"> * </span>(T)-<span class="hljs-number">1</span>;
+      copy.<span class="hljs-constructor">AddRowMultiple(<span class="hljs-params">row</span>, <span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
+      inverse.<span class="hljs-constructor">AddRowMultiple(<span class="hljs-params">row</span>, <span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
+    }
+  }
+  return inverse;
+}
+</code></pre></div>
+<p>I would be interested in implementing this using some other methods to see the differences in performance, but I realized something after I did this: I actually didn&apos;t need it. Because we can make some assumptions about the camera and the affine camera-to-world matrix, finding the inverse is extremely easy and does not require doing this at all.</p>
+<p>What it basically comes down to is this: we can calculate some orientation vectors for our camera depending on yaw and pitch. Using those orientation vectors and the position of the camera, we can create our inverse camera-to-world matrix.</p>
+<div class="code_box"><pre><code><span class="hljs-built_in">void</span> Camera::CalculateBasisVectors()
+{
+  <span class="hljs-built_in">float</span> horizontal_scale = cosf(_pitch);
+  _forward[<span class="hljs-number">0</span>] = cosf(_yaw) * horizontal_scale;
+  _forward[<span class="hljs-number">1</span>] = sinf(_pitch);
+  _forward[<span class="hljs-number">2</span>] = sinf(_yaw) * horizontal_scale;
+  Vec3 global_up = {<span class="hljs-number">0.0f</span>, <span class="hljs-number">1.0f</span>, <span class="hljs-number">0.0f</span>};
+  _right = Math::Cross(global_up, _forward);
+  _right = Math::Normalize(_right);
+  _up = Math::Cross(_forward, _right);
+}
+
+<span class="hljs-built_in">void</span> Camera::CalculateWorldToCamera()
+{
+  Vec3 back = -_forward;
+  Vec3 negative_position = -_position;
+  _wtc[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = _right[<span class="hljs-number">0</span>];
+  _wtc[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] = _right[<span class="hljs-number">1</span>];
+  _wtc[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>] = _right[<span class="hljs-number">2</span>];
+  _wtc[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>] = Math::Dot(negative_position, _right);
+  _wtc[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] = _up[<span class="hljs-number">0</span>];
+  _wtc[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] = _up[<span class="hljs-number">1</span>];
+  _wtc[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>] = _up[<span class="hljs-number">2</span>];
+  _wtc[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>] = Math::Dot(negative_position, _up);
+  _wtc[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>] = back[<span class="hljs-number">0</span>];
+  _wtc[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>] = back[<span class="hljs-number">1</span>];
+  _wtc[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] = back[<span class="hljs-number">2</span>];
+  _wtc[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>] = Math::Dot(negative_position, back);
+}
+</code></pre></div>
+<p><code>_forward</code>, <code>_up</code>, <code>_right</code>, and <code>back</code> are the orientation vectors, but only the last three are used for creating the matrix. <code>_position</code> is just the location of the camera. <code>_wtc</code> is the world-to-camera matrix (the index operator is row major here). When I first tested my implementation, everything seemed fine except for when I looked nearly straight up or straight down.</p>
+<p class="image_box"><img src="camera.gif" alt="camera_gif" loading="lazy"></p>
+<p>The problem was that all of the orientation vectors needed to be normalized. This gif shows what happens when you don&apos;t normalize after <code>Math::Cross(global_up, _forward)</code>.
+It kinda makes sense too. As our forward vector gets closer to pointing straight down, the result of this cross product gets closer to a zero vector. Once it is pointing straight down, the result of the cross product will be the zero vector. This doesn&apos;t fully explain everything happening in the gif, but it does explain why the rotating cube seems to collapse in on itself as the camera is rotated down.</p>
+<h2>Wrapping Up</h2>
+<p>That&apos;s what happened this week. There&apos;s still a lot to do, but now that I have a camera, the next thing I am going to tackle before pursuing quaternions is debug drawing. I have already briefly started working on this, but there is still a lot of work left to do there. It will be very helpful now and in the future as I continue to beat my head against the wall when I have a seemingly impossible problem to solve.</p>
+<p>In other news, piano practice is going well. I have almost transcribed all of the Hollow Knight theme song to score except for a few remaining bars. I can play the first eightish bars, but I need to practice it more and finish transcribing the rest of the song.</p>
+<p>Also check out this sick fucking shot I scored a few days ago.</p>
+<p class="image_box"><img src="sick.gif" alt="sick_shot_gif" loading="lazy"></p></div></div>
+    </div>
+    <div class="right_accent_grid">
+      <div class="accent"></div>
+      <div></div>
+    </div>
+  
+
+
+</body></html>
