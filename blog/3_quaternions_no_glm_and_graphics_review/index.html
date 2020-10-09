@@ -1,0 +1,272 @@
+<html><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link class="main_style" rel="stylesheet" href="../../main_style.css">
+    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+    <script class="main_script" type="text/javascript" src="../../main.js"></script>
+    <title>Underdisc</title>
+  </head>
+  <body>
+    <div class="left_accent_grid">
+      <div></div>
+      <div class="accent"></div>
+    </div>
+    <div class="main_grid">
+      <div class="header_container">
+        <div class="header_dropdown_container">
+          <div class="header_dropdown">
+            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
+            </svg>
+          </div>
+        </div>
+        <div class="header_text">
+          Underdisc
+        </div>
+        <div></div>
+      </div>
+      <div class="sidebar_grid">
+        <!-- We have one empty element that acts as padding. -->
+        <div></div>
+        <a class="sidebar_element index_link" href="../../index.html">
+          Home
+        </a>
+        <a class="sidebar_element blog_link" href="../../blog/index.html">
+          Blog
+        </a>
+        <a class="sidebar_element projects_link" href="../../projects/index.html">
+          Projects
+        </a>
+      </div>
+      <div class="content_container">
+      <div class="page_content"><h1>Quaternions, No GLM, and Graphics Review</h1>
+<p>It&apos;s been a month since my last post. Despite saying that I would be doing a post every Monday, it&apos;s pretty obvious that I have not been doing that. When I started, I wasn&apos;t sure if I would be sticking to that rigid schedule of posting on Mondays. After a short trial run, I don&apos;t think I will be continuing that. I would rather focus on continuing to work on Varkor and other projects and only write posts when I am ready to do so. That being said, I think a month is too long considering how much has happened, so I think every two weeks might be a better target.</p>
+<p>I finally have my own implementation of quaternions working. I removed <a href="https://glm.g-truc.net/0.9.9/index.html">glm</a> from Varkor and the features I was using from glm have been replaced with my own math code. A simple debug drawing interface was created for quickly drawing lines. A fat chunk of the code that was residing in the main file (main.cc) has been organized into new files depending on the purpose. Framerate limiting is now possible using VSync or by simply sleeping the main thread until it is time to begin the next frame. <a href="https://github.com/ocornut/imgui">ImGui</a> was added to the project in order to quickly test the implementation of graphics features and, last but not least, I began reviewing graphics again by going through the tutorials on <a href="https://learnopengl.com/">Learn OpenGL</a>. I&apos;ve gone through these in the past but more on that later.</p>
+<h2>Quaternions and Custom Math</h2>
+<p>In my last blog post, I mentioned I was reviewing complex numbers in order to learn about and implement quaternions. I did quite a lot on this front and thanks to resources like <a href="https://eater.net/quaternions">3blue1brown &amp; Ben Eater&apos;s quaternion series</a> it was absolutely possible. After this study, it became clear to me how quaternions are simply an extension of the complex number space. Though I believe I have a decent understanding of them that allowed me to create a working implementation, I don&apos;t feel that my intuition is good enough for me to write an in-depth explanation about them. I would like to do that in the future because there could be more easy-to-access information available on quaternions and how they are used for rotations specifically, but now is not the time. Here is a little gif that shows off the working quaternion implementation though (holy shit why does this gif suck so much ass? It&apos;s also kind of cool though so I won&apos;t change it).</p>
+<p class="image_box"><img src="quaternion_demo.gif" alt="quaternion demo gif" loading="lazy"></p>
+<p>When I was creating the quaternion implementation, I had to go through the process of taking that quaternion and transforming it into a 4x4 matrix that could be applied to vertices on a model. This lead me on a little bit of a rabbit hole about how to structure a math library. Like I said earlier, I have removed glm from the project. I was working towards replacing glm with my own math for a while, but this was only completed recently. Additionally, my math library is very small because it only contains the math I am currently using. As time goes on and I require new math features, it will need to be expanded.</p>
+<p>I want to talk about how I decided to structure my math code. I ended up using a technique that I have never used before and am still uncertain about whether the structure is beneficial or not. I am not even sure if it was necessary for me to make this structural change but I did anyway. I saw no harm in giving it a try and validating if it&apos;s actually a good idea (but so far I really like it).</p>
+<p>A month ago, the math library looked a little like this.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">namespace</span> Math {
+
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N&gt;
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Matrix</span>
+{</span>
+  T mD[N][N];
+
+  <span class="hljs-function">T* <span class="hljs-title">Data</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-function"><span class="hljs-keyword">const</span> T* <span class="hljs-title">CData</span><span class="hljs-params">()</span> <span class="hljs-keyword">const</span></span>;
+  T* <span class="hljs-keyword">operator</span>[](<span class="hljs-keyword">int</span> row);
+  <span class="hljs-keyword">const</span> T* <span class="hljs-keyword">operator</span>[](<span class="hljs-keyword">int</span> row) <span class="hljs-keyword">const</span>;
+
+  Matrix&lt;T, N&gt; <span class="hljs-keyword">operator</span>*(<span class="hljs-keyword">const</span> Matrix&lt;T, N&gt;&amp; other) <span class="hljs-keyword">const</span>;
+  Matrix&lt;T, N&gt;&amp; <span class="hljs-keyword">operator</span>*=(<span class="hljs-keyword">const</span> Matrix&lt;T, N&gt;&amp; other);
+
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Zero</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Identity</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-comment">/*...*/</span>
+};
+
+<span class="hljs-comment">/*...*/</span>
+
+} <span class="hljs-comment">// namespace Math</span>
+</code></pre></div>
+<p>This is the definition for a matrix class that stores a NxN matrix with values of type T. Say we need a function that creates a 4x4 matrix specifically. This is exactly the kind of function I needed: a function that takes a quaternion and generates a 4x4 rotation matrix. How could we add that function to this definition specifically for 4x4 matrices? My first approach was to use a class template specialization, but I very quickly realized a con to this approach. Let me explain.</p>
+<p>Look at this simple template class.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Example</span>
+{</span>
+<span class="hljs-keyword">public</span>:
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncA</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncB</span><span class="hljs-params">()</span></span>;
+  T value;
+};
+
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">void</span> Example&lt;T&gt;::FuncA()
+{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncA: &quot;</span> &lt;&lt; value &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">void</span> Example&lt;T&gt;::FuncB()
+{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncB: &quot;</span> &lt;&lt; value &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre></div>
+<p>Nothing about this Example class is special. We have a template class that can be created with any type the user of the class desires. What if we needed a new member function that could only be used if the desired type was a float? We could then do something like this:</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">template</span>&lt;&gt;
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Example</span>&lt;float&gt;
+{</span>
+<span class="hljs-keyword">public</span>:
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncC</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-keyword">float</span> member;
+};
+
+<span class="hljs-keyword">void</span> Example&lt;<span class="hljs-keyword">float</span>&gt;::FuncC()
+{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncC Float: &quot;</span> &lt;&lt; member &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre></div>
+<p>With this template class specialization, we can create instances of the Example class where the desired type is float and we get access to the <code>FuncC()</code> function. This would allow us to do all of the following:</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span>
+</span>{
+  Example&lt;<span class="hljs-keyword">int</span>&gt; intObject;
+  intObject.FuncA();
+  intObject.FuncB();
+
+  Example&lt;<span class="hljs-keyword">float</span>&gt; floatObject;
+  floatObject.FuncC();
+}
+</code></pre></div>
+<p>This does work, but it comes with a disadvantage. The <code>Example&lt;float&gt;</code> instance can&apos;t use the <code>FuncA()</code> and <code>FuncB()</code> member functions that are defined in the generic template class.</p>
+<div class="code_box"><pre><code>floatObject.FuncA();
+</code></pre></div>
+<p>If we were to call <code>FuncA()</code> using our current defintion of <code>Example&lt;float&gt;</code>, we would receive a compiler error because <code>FuncA()</code> does not exist within the definition of <code>Example&lt;float&gt;</code>. If we want to access those functions, we need to add them to the class defintion and define them again for the <code>Example&lt;float&gt;</code> class like so:</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">template</span>&lt;&gt;
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Example</span>&lt;float&gt;
+{</span>
+<span class="hljs-keyword">public</span>:
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncA</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncB</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncC</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-keyword">float</span> member;
+};
+
+<span class="hljs-keyword">void</span> Example&lt;<span class="hljs-keyword">float</span>&gt;::FuncA()
+{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncA Float: &quot;</span> &lt;&lt; member &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+
+<span class="hljs-keyword">void</span> Example&lt;<span class="hljs-keyword">float</span>&gt;::FuncB()
+{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncB Float: &quot;</span> &lt;&lt; member &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+
+<span class="hljs-keyword">void</span> Example&lt;<span class="hljs-keyword">float</span>&gt;::FuncC()
+{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncC Float: &quot;</span> &lt;&lt; member &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre></div>
+<p>Only now can we call the <code>FuncA()</code> and <code>FuncB()</code> member functions on an instance of the <code>Example&lt;float&gt;</code> class. Btw, if we didn&apos;t include the function defintions, we would just get linker errors because the functions would be declared but not defined.</p>
+<p>We need a function that generates a 4x4 matrix given a quaternion. If we used the technique described above with template class specialization, we would need to create new function definitions for each of the member functions that exist in the generic class, just like we had to redefine <code>FuncA()</code> and <code>FuncB()</code> above. That&apos;s a huge pain in the ass. If a member function is not defined in a class specialization but is defined in the generic version, it would be nice if the generic member function was used instead. Obviously, this isn&apos;t possible because I wouldn&apos;t be talking about it if it was. In order to get around this, I changed the definition of the matrix class to look like this:</p>
+<div class="code_box"><pre><code>namespace Math {
+
+template&lt;typename T, unsigned int N&gt;
+struct Matrix
+{
+  T mD[N][N];
+
+  T* Data();
+  const T* CData() const;
+  T* operator[](int row);
+  const T* operator[](int row) const;
+};
+
+template&lt;typename T, unsigned int N&gt;
+Matrix&lt;T, N&gt; operator*(const Matrix&lt;T, N&gt;&amp; a, const Matrix&lt;T, N&gt;&amp; b);
+template&lt;typename T, unsigned int N&gt;
+Matrix&lt;T, N&gt;&amp; operator*=(Matrix&lt;T, N&gt;&amp; a, const Matrix&lt;T, N&gt;&amp; b);
+
+template&lt;typename T, unsigned int N&gt;
+void Zero(Matrix&lt;T, N&gt;* matrix);
+template&lt;typename T, unsigned int N&gt;
+void Identity(Matrix&lt;T, N&gt;* matrix);
+
+/*...*/
+
+} // namespace Math
+</code></pre></div>
+<p>Now the matrix class is very simple. The only things contained in the definition are the things that need to be there. This includes the data <code>mD</code> and any operator overloads that must be within a class definition, like <code>operator[]</code>. <code>Data()</code> and <code>CData()</code> are also there so a pointer can be retrieved with <code>matrix.Data()</code>. I just like the syntax and redefining and maintaing these functions for specializations is trivial. Besides personal preference, there is nothing that justifies the <code>Data()</code> and <code>CData()</code> functions.</p>
+<p>All of the other functions that used to be member functions are now outside of the class defintion and take a pointer to a matrix as if it were the <code>this</code> pointer. The advantage of this is that these functions can be used with any specialization of the Matrix class without the specialization needing to explicitly declare and define them. For example, I have a specialization for 4x4 float matrices. I did not create a new <code>Zero(...)</code> function for this specialization because I can still use the generic version like so:</p>
+<div class="code_box"><pre><code>Matrix&lt;<span class="hljs-keyword">float</span>, <span class="hljs-number">4</span>&gt; matrix;
+Math::Zero(&amp;matrix);
+</code></pre></div>
+<p>If there is a need to make this function faster or change its behavior for 4x4 float matrices, then there is nothing stopping me from creating a <code>Zero(Matrix&lt;float, 4&gt;*)</code> function for this specific kind of matrix. Once that&apos;s done, the new specialized function will be used instead of the generic version. Here&apos;s a small demo of this with some simpler code:</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Example</span>
+{</span>
+  T data;
+};
+<span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">void</span> <span class="hljs-title">FuncA</span><span class="hljs-params">(Example&lt;T&gt;* genericObject)</span>
+</span>{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncA generic: &quot;</span> &lt;&lt; genericObject-&gt;data &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">void</span> <span class="hljs-title">FuncB</span><span class="hljs-params">(Example&lt;T&gt;* genericObject)</span>
+</span>{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncB generic: &quot;</span> &lt;&lt; genericObject-&gt;data &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+
+<span class="hljs-keyword">template</span>&lt;&gt;
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Example</span>&lt;float&gt;
+{</span>
+  <span class="hljs-keyword">float</span> data;
+};
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncB</span><span class="hljs-params">(Example&lt;<span class="hljs-keyword">float</span>&gt;* floatObject)</span>
+</span>{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncB float: &quot;</span> &lt;&lt; floatObject-&gt;data &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre></div>
+<p>In this example, the generic version of the <code>Example</code> struct has two functions defined underneath it, both of which take a pointer to an <code>Example</code> instance. Below that, there is a specialization of the struct for floats. The only difference is that there is no <code>FuncA(Example&lt;float&gt;* floatObject)</code> function. That doesn&apos;t mean we can&apos;t use <code>FuncA()</code> though. Since we have a generic version, it will still compile and link if we pass an <code>Example&lt;float&gt;</code> instance to <code>FuncA()</code>.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span>
+</span>{
+  Example&lt;<span class="hljs-keyword">int</span>&gt; intObject;
+  FuncA(&amp;intObject);
+  FuncB(&amp;intObject);
+
+  Example&lt;<span class="hljs-keyword">float</span>&gt; floatObject;
+  FuncA(&amp;floatObject);
+  FuncB(&amp;floatObject);
+}
+
+<span class="hljs-comment">/* 
+-Output-
+FuncA generic: 4194432
+FuncB generic: 4194432
+FuncA generic: 4.95912e-039
+FuncB float: 4.95912e-039
+*/</span>
+</code></pre></div>
+<p>The whole entire reason we started breaking this down was because we wanted to create a single, non-generic function that generates a 4x4 matrix given a quaternion. With this structure, that can be added easily without needing to redefine the generic functions we still want to use.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncC</span><span class="hljs-params">(Example&lt;<span class="hljs-keyword">float</span>&gt;* floatObject)</span>
+</span>{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;FuncC float: &quot;</span> &lt;&lt; floatObject-&gt;data &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+}
+</code></pre></div>
+<p>Continuing with the previous example, <code>FuncC()</code> is a new function that takes an <code>Example&lt;float&gt;</code> instance pointer specifically. There is no <code>FuncC()</code> function defined for the generic <code>Example</code> though. This means that passing an <code>Example&lt;float&gt;</code> pointer to the function will compile, but passing any other type won&apos;t.</p>
+<div class="code_box"><pre><code><span class="hljs-comment">/* compiles and runs */</span>
+FuncC(&amp;floatObject);
+
+<span class="hljs-comment">/* does neither of those dreaded things */</span>
+FuncC(&amp;intObject);
+</code></pre></div>
+<p>And that&apos;s it. By using this structure, we can easily add a new function specifically for 4x4 float matrices without needing to redefine anything else. I was also looking at glm&apos;s code while considering this structure change and learned that it employs the same technique for a lot of functions. The class definitions aren&apos;t nearly as small as mine, but I guess it all comes down to how many functions one is willing to rewrite for every type they need and how performance critical they are. Here is the function signature to finally end discussion about this topic.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Rotate</span><span class="hljs-params">(Matrix&lt;<span class="hljs-keyword">float</span>, <span class="hljs-number">4</span>&gt;* matrix, <span class="hljs-keyword">const</span> Quaternion&amp; rotation)</span></span>;
+</code></pre></div>
+<h2>Framerate Limiting</h2>
+<p>Another exciting thing that I tackled this month was framerate limiting. I actually got to learn some pretty cool stuff while digging in on this topic. It&apos;s a little bit sad too, but that&apos;s just because I am picky and had hoped for better.</p>
+<p>To implement sofware based framerate limiting, we need a target frame time first. Take 60fps as an example. To run at 60fps, each frame needs to be 1/60 seconds long. This is a frame time of around 16.6ms. Since we now know how long a single frame should take, the next thing we need is the amount of time passed during the creation of the frame. To do this, we store the time at the beginning of the frame and then when all of the processing needed for a frame is over, we can find out how much time has passed.
+With the amount of time passed and a target frame time, we have everything we need to do software-based framerate limiting. We find out how much time is left in the frame by finding the difference between the target frame time and the current frame time and then we just sleep the thread for this amount of time.</p>
+<p>Now, there is a small detail about this &quot;sleep&quot; thing. On Windows, sleep periods are always provided in milliseconds. I did not come across anything that allowed for higher precision while digging around. I do not fully know the reason for this, but I have a hunch that it has something to do with how process scheduling is handled. Because of this, getting a consistent 60fps isn&apos;t typical. When a target of 60fps is used, the actual framerate will be around 59 fps. This is because the sleep function will usually result in frame times that are 17ms long, but the frames can sometimes be 16ms too. It all depends on which millisecond the process returns from the sleep function and continues running.</p>
+<p>Oh and by the way, I happened to be digging around the UnrealEngine repository and stumbled across some code that implements framerate limiting. It is cursed by the same problem of millisecond precision. So if you&apos;re ever wondering why you can never maintain a constant 60 fps using software-based framerate limiting, your answer is &quot;milliseconds aren&apos;t fucking good enough.&quot;</p>
+<p><em>Disclaimer</em>: I saw some resources claiming that higher precision is possible on linux. When I start working on linux compatibility, I will take a look into this more, but as of right now, I have no clue.</p>
+<h2>Graphics Review</h2>
+<p>The other thing I have begun to work on and the last thing I want to write about is graphics review. When I was working on my first engine for a student project at DigiPen, I was very passionate about graphics and handled the graphics code for the engine. This was in 2D though, so I never got fully go into the realm of 3D graphics except for one class where I learned about and implemented some basic and more advanced features. It has been a damn long time since I have done graphics now, but I am extremely excited to hop back into it. It&apos;s certainly not all brand new as I still carry a good deal of the intuition gathered from my old projects: how phong lighting works, what a normal map does, skyboxes, and other things.</p>
+<p>At the moment, the extent of my review has been up to phong lighting. I am going through the tutorials on <a href="https://learnopengl.com/">learnopengl.com</a>. These are the same tutorials I read through years ago, and now I am going through the ones I feel I need a refresher on for a solid foundation in graphics and to add some basic graphics features to Varkor.</p>
+<p>I don&apos;t want to talk more about this because there&apos;s nothing that I feel compelled to write about yet, but here&apos;s a little image of what things currently look like.</p>
+<p class="image_box"><img src="graphics_stuff.png" alt="graphics stuff" loading="lazy"></p>
+<h2>Wrapping Up</h2>
+<p>I don&apos;t think my next blog post will be a month away. There are topics that I could have talked about here but I didn&apos;t because a lot has happened in the last month. This post already feels like the longest one I have done. At the moment I am thinking two weeks, but we&apos;ll see how much happens until then and if that&apos;s an acceptable time frame.</p>
+<p>The next things on the agenda are continuing graphics review and some core engine work. By core engine work, I mean creating a system for game objects and game object components. I already have some ideas about what this is going to look like, but it&apos;s all still very much in my head and hasn&apos;t turned into any code yet.</p>
+<p>Thanks for reading.</p></div></div>
+    </div>
+    <div class="right_accent_grid">
+      <div class="accent"></div>
+      <div></div>
+    </div>
+  
+
+
+</body></html>
