@@ -96,8 +96,8 @@
 </code></pre></div>
 <p>Nothing about this Example class is special. We have a template class that can be created with any type the user of the class desires. What if we needed a new member function that could only be used if the desired type was a float? We could then do something like this:</p>
 <div class="code_box"><pre><code><span class="hljs-keyword">template</span>&lt;&gt;
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Example</span>&lt;float&gt;
-{</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Example</span>&lt;</span><span class="hljs-keyword">float</span>&gt;
+{
 <span class="hljs-keyword">public</span>:
   <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncC</span><span class="hljs-params">()</span></span>;
   <span class="hljs-keyword">float</span> member;
@@ -124,8 +124,8 @@
 </code></pre></div>
 <p>If we were to call <code>FuncA()</code> using our current defintion of <code>Example&lt;float&gt;</code>, we would receive a compiler error because <code>FuncA()</code> does not exist within the definition of <code>Example&lt;float&gt;</code>. If we want to access those functions, we need to add them to the class defintion and define them again for the <code>Example&lt;float&gt;</code> class like so:</p>
 <div class="code_box"><pre><code><span class="hljs-keyword">template</span>&lt;&gt;
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Example</span>&lt;float&gt;
-{</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Example</span>&lt;</span><span class="hljs-keyword">float</span>&gt;
+{
 <span class="hljs-keyword">public</span>:
   <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncA</span><span class="hljs-params">()</span></span>;
   <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncB</span><span class="hljs-params">()</span></span>;
@@ -150,32 +150,32 @@
 </code></pre></div>
 <p>Only now can we call the <code>FuncA()</code> and <code>FuncB()</code> member functions on an instance of the <code>Example&lt;float&gt;</code> class. Btw, if we didn&apos;t include the function defintions, we would just get linker errors because the functions would be declared but not defined.</p>
 <p>We need a function that generates a 4x4 matrix given a quaternion. If we used the technique described above with template class specialization, we would need to create new function definitions for each of the member functions that exist in the generic class, just like we had to redefine <code>FuncA()</code> and <code>FuncB()</code> above. That&apos;s a huge pain in the ass. If a member function is not defined in a class specialization but is defined in the generic version, it would be nice if the generic member function was used instead. Obviously, this isn&apos;t possible because I wouldn&apos;t be talking about it if it was. In order to get around this, I changed the definition of the matrix class to look like this:</p>
-<div class="code_box"><pre><code>namespace Math {
+<div class="code_box"><pre><code><span class="hljs-keyword">namespace</span> Math {
 
-template&lt;typename T, unsigned int N&gt;
-struct Matrix
-{
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N&gt;
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Matrix</span>
+{</span>
   T mD[N][N];
 
-  T* Data();
-  const T* CData() const;
-  T* operator[](int row);
-  const T* operator[](int row) const;
+  <span class="hljs-function">T* <span class="hljs-title">Data</span><span class="hljs-params">()</span></span>;
+  <span class="hljs-function"><span class="hljs-keyword">const</span> T* <span class="hljs-title">CData</span><span class="hljs-params">()</span> <span class="hljs-keyword">const</span></span>;
+  T* <span class="hljs-keyword">operator</span>[](<span class="hljs-keyword">int</span> row);
+  <span class="hljs-keyword">const</span> T* <span class="hljs-keyword">operator</span>[](<span class="hljs-keyword">int</span> row) <span class="hljs-keyword">const</span>;
 };
 
-template&lt;typename T, unsigned int N&gt;
-Matrix&lt;T, N&gt; operator*(const Matrix&lt;T, N&gt;&amp; a, const Matrix&lt;T, N&gt;&amp; b);
-template&lt;typename T, unsigned int N&gt;
-Matrix&lt;T, N&gt;&amp; operator*=(Matrix&lt;T, N&gt;&amp; a, const Matrix&lt;T, N&gt;&amp; b);
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N&gt;
+Matrix&lt;T, N&gt; <span class="hljs-keyword">operator</span>*(<span class="hljs-keyword">const</span> Matrix&lt;T, N&gt;&amp; a, <span class="hljs-keyword">const</span> Matrix&lt;T, N&gt;&amp; b);
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N&gt;
+Matrix&lt;T, N&gt;&amp; <span class="hljs-keyword">operator</span>*=(Matrix&lt;T, N&gt;&amp; a, <span class="hljs-keyword">const</span> Matrix&lt;T, N&gt;&amp; b);
 
-template&lt;typename T, unsigned int N&gt;
-void Zero(Matrix&lt;T, N&gt;* matrix);
-template&lt;typename T, unsigned int N&gt;
-void Identity(Matrix&lt;T, N&gt;* matrix);
+<span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N&gt;
+<span class="hljs-keyword">void</span> <span class="hljs-title">Zero</span><span class="hljs-params">(Matrix&lt;T, N&gt;* matrix)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N&gt;
+<span class="hljs-keyword">void</span> <span class="hljs-title">Identity</span><span class="hljs-params">(Matrix&lt;T, N&gt;* matrix)</span></span>;
 
-/*...*/
+<span class="hljs-comment">/*...*/</span>
 
-} // namespace Math
+} <span class="hljs-comment">// namespace Math</span>
 </code></pre></div>
 <p>Now the matrix class is very simple. The only things contained in the definition are the things that need to be there. This includes the data <code>mD</code> and any operator overloads that must be within a class definition, like <code>operator[]</code>. <code>Data()</code> and <code>CData()</code> are also there so a pointer can be retrieved with <code>matrix.Data()</code>. I just like the syntax and redefining and maintaing these functions for specializations is trivial. Besides personal preference, there is nothing that justifies the <code>Data()</code> and <code>CData()</code> functions.</p>
 <p>All of the other functions that used to be member functions are now outside of the class defintion and take a pointer to a matrix as if it were the <code>this</code> pointer. The advantage of this is that these functions can be used with any specialization of the Matrix class without the specialization needing to explicitly declare and define them. For example, I have a specialization for 4x4 float matrices. I did not create a new <code>Zero(...)</code> function for this specialization because I can still use the generic version like so:</p>
@@ -200,8 +200,8 @@ Math::Zero(&amp;matrix);
 }
 
 <span class="hljs-keyword">template</span>&lt;&gt;
-<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Example</span>&lt;float&gt;
-{</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Example</span>&lt;</span><span class="hljs-keyword">float</span>&gt;
+{
   <span class="hljs-keyword">float</span> data;
 };
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">FuncB</span><span class="hljs-params">(Example&lt;<span class="hljs-keyword">float</span>&gt;* floatObject)</span>
