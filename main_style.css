@@ -203,6 +203,7 @@ div.page_content {
   text-align: justify;
 }
 
+/* The stylings for the various kinds of headers. */
 h1 {
   border-bottom: 2px solid var(--color-gray);
   font-size: 1.5em;
@@ -228,9 +229,17 @@ h3 {
   font-family: Arial;
   font-weight: normal;
   font-style: italic;
+  margin-bottom: 0em;
+  text-align: center;
+}
+h4 {
+  font-size: 1.3em;
+  font-family: Arial;
+  font-weight: normal;
+  font-style: italic;
+  margin-bottom: 0em;
   padding-left: 1em;
   text-align: left;
-  line-height: 1.2em;
 }
 
 div.date {
