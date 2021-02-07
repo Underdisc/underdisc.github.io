@@ -4,7 +4,7 @@ Below is a list of a large majority of the projects I have worked on. Each proje
 
 ---
 
-### [Varkor](varkor.html)
+### [Varkor](varkor/index.html)
 
 A custom game engine I plan to use for my future projects and I hope to use for more than just games. This is what I am currently working on.
 
