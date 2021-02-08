@@ -21,6 +21,7 @@ html {
 }
 
 body {
+  overflow-x: hidden;
   margin: 0px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
