@@ -12,8 +12,8 @@ Amperage is a 2D, top down, puzzle game in which a player must solve and quickly
 - Created over 20 prototype levels on paper and later refined them in engine
 
 ## Team Members
-- *Me* - Lead Designer, Programmer
-- *Dylan Sunkel* - Lead Artist, Designer
+- *Connor Deakin (Me)* - Lead Designer, Programmer
+- *Dylan Sunkel* - Artist, Designer
 - *Chase Rayment* - Lead Sound Designer, Lead Programmer
 - *John Henke* - Sound Designer
 
