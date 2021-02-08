@@ -32,11 +32,11 @@ body {
 
 div.left_accent_grid {
   display: grid;
-  grid-template-columns: auto 4em;
+  grid-template-columns: auto 1em;
 }
 div.right_accent_grid {
   display: grid;
-  grid-template-columns: 4em auto;
+  grid-template-columns: 1em auto;
 }
 div.accent {
   background-color: var(--color-light-gray);
