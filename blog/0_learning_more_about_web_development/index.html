@@ -43,7 +43,7 @@
 <p>I found out about <a href="https://pages.github.com/">github pages</a> for hosting static websites. This would take care of hosting and I needed nothing more than a static website. That means I could focus purely on the work that goes into creating a webpage.</p>
 <p>The first step to doing this involves learning about HTML and CSS. When I first made my website, I only made use of the two. They were enough to get something quite basic created, but I didn&apos;t use them to their full power. I tried to make a layout that would work on both mobile and desktop that wouldn&apos;t require any layout changes for different platforms. Those words sound great, but when I looked at the site I made after letting it sit around for two years, I knew this was no longer going to cut it.</p>
 <p class="image_box"><img src="old_website.png" alt="Old website homepage" loading="lazy"></p>
-<p>This is the layout that would be used for every device. The image at the top would expand to fill the full width of the screen. When the window was stretched far enough, the image would take up the entire browser window. The top navigation bar always stayed the same. It would consistently be four evenly spaced boxes lined up horizontally. On small broswer windows, these options were clumped together. It wasn&apos;t pleasant to look at and there were certainly other problems, but it was usable. The issue is that I built it for the browser window I was testing against first and everything else second. I still keep the old page up <a href="https://underdisc.github.io/old/index.html">here</a> for reference. The links are not broken as of this writing, but they will likely break in the future as stuff is cleaned out from the old and moved to the new. The home page will always stay there though.</p>
+<p>This is the layout that would be used for every device. The image at the top would expand to fill the full width of the screen. When the window was stretched far enough, the image would take up the entire browser window. The top navigation bar always stayed the same. It would consistently be four evenly spaced boxes lined up horizontally. On small broswer windows, these options were clumped together. It wasn&apos;t pleasant to look at and there were certainly other problems, but it was usable. The issue is that I built it for the browser window I was testing against first and everything else second. I still keep the old page up <a href="../../old/index.html">here</a> for reference. The links are not broken as of this writing, but they will likely break in the future as stuff is cleaned out from the old and moved to the new. The home page will always stay there though.</p>
 <p>I don&apos;t like it, but it did do its job. It helped me secure a position at a studio I was intersted in working at. Time has moved on though. I just recently left that job with the goal of pursuing my own work and I need a place to share that work. Because of my dislike for the original site, the first task after leaving has been rebuilding the entire thing from scratch. What you are looking at now is the current iteration of that overhaul. Despite a few minor details that would be nice to have solved in the future, I am proud of it.</p>
 <p>For the rebuild, my main goals involved fixing the biggest grievances I had with my previous work. When I recalled working on my old website, these are the major problems that quickly came to mind.</p>
 <ul>
@@ -85,7 +85,7 @@ dropdown_button.addEventListener(<span class="hljs-string">&apos;click&apos;</sp
   <span class="hljs-comment">// All time values are expressed in milliseconds.</span>
   <span class="hljs-keyword">const</span> animation_time = <span class="hljs-number">250</span>;
   <span class="hljs-keyword">const</span> frame_time = <span class="hljs-number">10</span>;
-  <span class="hljs-keyword">let</span> animation = setInterval(step, frame_time);
+  <span class="hljs-keyword">let</span> animation = <span class="hljs-built_in">setInterval</span>(step, frame_time);
   dropdown_in_motion = <span class="hljs-literal">true</span>;
   <span class="hljs-keyword">const</span> start_time = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
 
@@ -98,12 +98,12 @@ dropdown_button.addEventListener(<span class="hljs-string">&apos;click&apos;</sp
       dropdown_in_motion = <span class="hljs-literal">false</span>;
       sidebar.style.bottom = end_pos + <span class="hljs-string">&apos;px&apos;</span>;
       content_container.style.bottom = end_pos + <span class="hljs-string">&apos;px&apos;</span>;
-      clearInterval(animation);
+      <span class="hljs-built_in">clearInterval</span>(animation);
       <span class="hljs-keyword">return</span>;
     }
 
     <span class="hljs-keyword">let</span> t = time_passed / animation_time;
-    <span class="hljs-keyword">let</span> t_quad_in = <span class="hljs-number">-1.0</span> * (t - <span class="hljs-number">1.0</span>) * (t - <span class="hljs-number">1.0</span>) + <span class="hljs-number">1.0</span>;
+    <span class="hljs-keyword">let</span> t_quad_in = -<span class="hljs-number">1.0</span> * (t - <span class="hljs-number">1.0</span>) * (t - <span class="hljs-number">1.0</span>) + <span class="hljs-number">1.0</span>;
     <span class="hljs-keyword">let</span> current_pos = start_pos + dist_pos * t_quad_in;
     <span class="hljs-keyword">let</span> current_rot = start_rot + dist_rot * t_quad_in;
     sidebar.style.bottom = current_pos + <span class="hljs-string">&apos;px&apos;</span>;
@@ -114,7 +114,7 @@ dropdown_button.addEventListener(<span class="hljs-string">&apos;click&apos;</sp
 </code></pre></div>
 <p>This was the method I ended up rolling with to accomplish this. The content and sidebar containers have <code>position: relative</code> set and that allows me to change the positions of the elements dynamically using the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/bottom">bottom property</a>. This is just the distance the element is from its bottom edge.</p>
 <p>To actually calculate this distance, I use the linear interpolation parameter <code>t</code>. As the animation goes from start to finish, this value will move from 0 to 1, getting closer to 1 during every step of the animation. That parameter, which is calculated based off the amount of time passed since the beginning of the animation, is used to to determine how far the element should be from its starting position. At <code>t = 0</code> the element hasn&apos;t moved and when <code>t = 1</code> the element will have moved all the way to the end position.</p>
-<div class="code_box"><pre><code><span class="hljs-keyword">let</span> t_quad_in = <span class="hljs-number">-1.0</span> * (t - <span class="hljs-number">1.0</span>) * (t - <span class="hljs-number">1.0</span>) + <span class="hljs-number">1.0</span>;
+<div class="code_box"><pre><code><span class="hljs-keyword">let</span> t_quad_in = -<span class="hljs-number">1.0</span> * (t - <span class="hljs-number">1.0</span>) * (t - <span class="hljs-number">1.0</span>) + <span class="hljs-number">1.0</span>;
 </code></pre></div>
 <p>This statement just changes how <code>t</code> scales as it goes from 0 to 1. In this case, <code>t_quad_in</code> will change quickly at the beginning of the animation and slowly at the end of the animation. If you were to graph this function <code>t_quad_in = -1 * (t - 1)^2 + 1</code> you may notice it&apos;s just an upside down parabola centered at <code>(1, 1)</code>. That&apos;s what&apos;s responsible for this type of motion and it&apos;s usually referred to as an ease type. I will leave this particular topic here for now, because I can talk about these types of transformations for days. I like calling them <code>Actions</code>, and I&apos;ll definitely write about them when I go to implement them in my engine in the future.</p>
 <p>While getting this animation to work, I was constantly testing the website on my phone by hosting it locally with <code>python -m http.server</code>. There was something very strange about the site when viewed on mobile though. The font was ridiculously small and things just didn&apos;t seem to be scaled properly on mobile in general. That&apos;s when I came across this.</p>
@@ -196,9 +196,9 @@ RenderMarkdown(<span class="hljs-string">&apos;projects.md&apos;</span>, <span c
 </span>{
   <span class="hljs-comment">// ...</span>
 
-  <span class="hljs-keyword">let</span> code = template(<span class="hljs-keyword">this</span>).html();
+  <span class="hljs-keyword">let</span> code = template(<span class="hljs-built_in">this</span>).html();
   <span class="hljs-keyword">let</span> highlightedCode = hljs.highlight(lang, code).value;
-  template(<span class="hljs-keyword">this</span>).parent().replaceWith(<span class="hljs-string">&apos;&lt;pre&gt;&lt;code&gt;&apos;</span> + highlightedCode);
+  template(<span class="hljs-built_in">this</span>).parent().replaceWith(<span class="hljs-string">&apos;&lt;pre&gt;&lt;code&gt;&apos;</span> + highlightedCode);
 });
 </code></pre></div>
 <p>Unfortunately, this didn&apos;t work. One important detail about pumping markdown through Showdown is that it will convert some characters to their corresponding HTML representations. For example, <code>&apos;</code> gets converted to <code>&amp;apos;</code> and <code>&amp;</code> gets converted to <code>&amp;amp;</code>. As you might imagine, code often contains those characters along with many others. So when Showdown performed the conversion and I gave a code string to highlight.js, a lot of the syntax highlighting was broken because of these character replacements. The syntax highlighting needed to be performed before showdown converted those characters.</p>
