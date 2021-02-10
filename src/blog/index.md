@@ -1,5 +1,10 @@
 # Blog
 
+#### <div class="date">21-02-08</div> [A Needed Update](4_a_needed_update/index.html)
+I've been quiet for a few months now and a lot has happened. This is a shorter post that provides an overview of what I have done since my previous post.
+
+---
+
 #### <div class="date">20-10-07</div> [Quaternions, No GLM, and Graphics Review](3_quaternions_no_glm_and_graphics_review/index.html)
 Varkor now uses its own math library with custom quaternions and I am beginning to go through the process of reviewing graphics so I am up to speed when I start adding graphics features to Varkor.
 
