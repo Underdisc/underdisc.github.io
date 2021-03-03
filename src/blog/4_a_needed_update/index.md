@@ -16,7 +16,7 @@ pushd %buildDir%
 popd
 set buildFailed=1
 if errorlevel %buildFailed% (
-  exit /b 0
+  exit /b 1
 )
 
 REM Run Varkor if requested.
