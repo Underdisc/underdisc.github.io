@@ -180,7 +180,7 @@ for (const SourceChunk& chunk : includeResult.mChunks)
 
 ## Varkor Projects
 
-Figuring out how project code and resources will be separated from Varkor has been a long time wonder of mine. Back in college, the engines I worked on went hand in hand with the games that were shipped with them. Even though there may have been a good deal of "engine code", at the end of the day, compiling the project did not spit out an engine, it spit out a game. I am happy to say that I haven finally taken my first stab at addressing this problem. 
+Figuring out how project code and resources will be separated from Varkor has been a long time wonder of mine. Back in college, the engines I worked on went hand in hand with the games that were shipped with them. Even though there may have been a good deal of "engine code", at the end of the day, compiling the project did not spit out an engine, it spit out a game. I am happy to say that I have finally taken my first stab at addressing this problem.
 
 When I was considering possible approaches, one of the core goals I had was not having to copy any files from Varkor. Instead, a user could do some form of inclusion and use all of Varkor's features without needing to do anything else. Unfortunately, I did not think of a way to acheive this because there are a few files that Varkor will always expect to exist: a dll and a few default shaders. This will expand to a default model and a default texture in the future to account for missing assets as well.
 
