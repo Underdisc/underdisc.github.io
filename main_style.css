@@ -315,3 +315,9 @@ blockquote {
   color: var(--color-dark-gray);
   border-left: 2px solid var(--color-dark-gray);
 }
+
+/* This will add a hanging indent to list items." */
+li {
+  padding-left: 2em;
+  text-indent: -2em;
+}
