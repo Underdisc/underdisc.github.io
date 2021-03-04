@@ -1,6 +1,6 @@
 # Shader Includes and Varkor Projects
 
-This blog post is a bit more prompt than my previous posts and I am hoping to post more frequently about my accomplishments as time moves on. A few excitings have happened over the past couple of weeks. In summary, models can now have custom shaders, shader files can have their own include preprocessor macros, and Varkor can finally be separated from the projects that are built with it.
+This blog post is a bit more prompt than my previous posts and I am hoping to post more frequently about my accomplishments as time moves on. A few exciting things have happened over the past couple of weeks. In summary, models can now have custom shaders, shader files can have their own include preprocessor macros, and Varkor can finally be separated from the projects that are built with it.
 
 ## Custom Shaders
 
@@ -67,7 +67,7 @@ struct IncludeResult
 IncludeResult HandleIncludes(const char* shaderFile, std::string& content);
 ```
 
-Actually creating that sorted list of SourceChunks was the largest challenge I faced here. What made it immensely difficult was considering what happens when an included file includes another file. It's an obvious candidate for recursion, but it's not exactly fibbonacci. Here's a little overview of how I accomplished it since it took me a few days to figure out and be reasonably satisfied with my solution.
+Actually creating that sorted list of SourceChunks was the largest challenge I faced here. What made it immensely difficult was considering what happens when an included file includes another file. It's an obvious candidate for recursion, but it's not exactly fibonacci. Here's a little overview of how I accomplished it since it took me a few days to figure out and be reasonably satisfied with my solution.
 
 ```cpp
 // The first source chunk is the file we are currently in.
@@ -88,7 +88,7 @@ while (std::regex_search(content.cbegin(), content.cend(), match, expression))
 }
 ```
 
-Step one is to create the first SourceChunk and find the an include statement. Since all I am doing here is implementing include statements and nothing else, regex is adequate.
+Step one is to create the first SourceChunk and find an include statement. Since all I am doing here is implementing include statements and nothing else, regex is adequate.
 
 ```cpp
 // Find the backmost chunk's end line, and use it to find the number of
@@ -107,7 +107,7 @@ if (result.mChunks.Top().mStartLine == result.mChunks.Top().mEndLine)
 // ...
 ```
 
-Once we have found an include statement, we want to find the line number that the inclusion happened on. That line number becomes the end line of our topmost/backmost chunk. Since we know the number of lines the topmost chunk covers, we can add that quantity to the number of lines that are excluded from the next chunk that covers the same source file.
+Once we have found an include statement, we want to find the line number that the inclusion happens on. That line number becomes the end line of our topmost/backmost chunk. Since we know the number of lines the topmost chunk covers, we can add that quantity to the number of lines that are excluded from the next chunk that covers the same source file.
 
 ```cpp
 // Handle any includes that show up within the included content and replace
@@ -160,7 +160,7 @@ result.mSuccess = true;
 return result;
 ```
 
-And that's it. In hindsight, it doesn't seem to complex, but coming to this solution was not straight forward by any means. At one point SourceChunks contained their own vector of subchinks, but I couldn't figure out a way to get it to work and forced myself to rethink about my approach.
+And that's it. In hindsight, it doesn't seem to complex, but coming to this solution was not straightforward by any means. At one point SourceChunks contained their own vector of subchunks, but I couldn't figure out a way to get it to work and forced myself to rethink about my approach.
 
 All of this work wasn't for nothing either. The goal was to have shader errors accurately display file and line number information. To do this, the error log is parsed and any time a line number is stumbled upon, it is replaced with a file name and a line number within that file by using the data in the SourceChunk vector.
 
@@ -227,7 +227,7 @@ These four function pointers are the ones I am currently providing. Here's an ov
 - *CentralUpdate:* This function is called once per frame after all of the Spaces currently in the World have been updated.
 - *SpaceUpdate:* This function is called once for every Space in the World per Frame. If there are currently four Spaces in the World, this will be called four times in frame: one call for each space.
 - *InspectComponents:* This is used for displaying the widgets of custom component types in the editor.
-- *AvailableCopmonents:* This is used to make custom componet types addable to Space memebers.
+- *AvailableCopmonents:* This is used to make custom componet types addable to Space members.
 
 The most important of these functions is the `SpaceUpdate` function. This function is where I intend on users placing all of their custom component updates. Varkor provides a template function to make the process of adding a component update easy. The only annoyance is the fact that something has to be written.
 
@@ -256,9 +256,9 @@ void SpaceUpdate(const World::Space& space, World::SpaceRef spaceRef)
 }
 ```
 
-Earlier on, I had wished that if a component defined an Update function, its Update function would get called without having to introduce any other code, but now I am on the fence about that wish. Because I am using an ECS structure for organizing component data, calling `UpdateComponentType<T>` will call the Update function for every component of type T within the current Space. In the example above, ComponentA::Update will be called for every ComponentA stored within the Space before the Update functions for the ComponentB and ComponentC components are called. Because of this, requiring the user to make it known that a component has an Update function and they want it called makes sense because it gives them control over the order their component updates are called in. Is it really neccessary though? Maybe. Maybe not. It depends on whether there is a game out there that would make use of this specificity or not.
+Earlier on, I had wished that if a component defined an Update function, its Update function would get called without having to introduce any other code, but now I am on the fence about that wish. Because I am using an ECS structure for organizing component data, calling `UpdateComponentType<T>` will call the Update function for every component of type T within the current Space. In the example above, ComponentA::Update will be called for every ComponentA stored within the Space before the Update functions for the ComponentB and ComponentC components are called. Because of this, requiring the user to make it known that a component has an Update function and they want it called makes sense because it gives them control of the order their component updates are called in. Is it really neccessary though? Maybe. Maybe not. It depends on whether there is a game out there that would make use of this specificity or not.
 
-Another interesting benefit of this is that if a user adds their component type to this component update queue and that component type does not have an update function, it won't compile.
+Another interesting benefit of this is that if a user adds their component type to this component update queue and that component type does not have an Update function, it won't compile.
 
 I am not 100% sure if this is the solution I will stick with. I'll need to see how it pans out to assess whether I actually like it or not. For now though, this direction achieves my current desires with a few minor downsides, so I am pretty optimistic about it.
 
