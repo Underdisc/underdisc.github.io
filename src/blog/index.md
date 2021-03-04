@@ -1,5 +1,10 @@
 # Blog
 
+#### <div class="date">21-03-03</div> [Shader Includes and Varkor Projects](5_shader_includes_and_varkor_projects/index.html)
+I got hell-bent on building my own inclusion prepocessor macros for glsl shaders and Varkor can now serve as a host for projects.
+
+---
+
 #### <div class="date">21-02-08</div> [A Needed Update](4_a_needed_update/index.html)
 I've been quiet for a few months now and a lot has happened. This is a shorter post that provides an overview of what I have done since my previous post.
 
