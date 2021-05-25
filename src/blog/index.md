@@ -1,5 +1,10 @@
 # Blog
 
+#### <div class="date">21-05-25</div> [Gizmos](6_gizmos/index.html)
+I created my own gizmo implementation for Varkor and this goes over the details required to do it. I also did a few other things that I discuss at the end of the post.
+
+---
+
 #### <div class="date">21-03-03</div> [Shader Includes and Varkor Projects](5_shader_includes_and_varkor_projects/index.html)
 I got hell-bent on building my own inclusion prepocessor macros for glsl shaders and Varkor can now serve as a host for projects.
 
