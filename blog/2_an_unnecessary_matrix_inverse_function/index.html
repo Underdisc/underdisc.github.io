@@ -71,14 +71,14 @@ Matrix&lt;T, N&gt; Matrix&lt;T, N&gt;::<span class="hljs-constructor">Inverse()<
   Matrix&lt;T, N&gt; copy = *this;
   Matrix&lt;T, N&gt; inverse;
   inverse.<span class="hljs-constructor">Identity()</span>;
-  for (<span class="hljs-built_in">int</span> pivot = <span class="hljs-number">0</span>; pivot &lt; N; ++pivot)
+  <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> pivot = <span class="hljs-number">0</span>; pivot &lt; N; ++pivot)
   {
     <span class="hljs-comment">// If the value of this pivot is zero, we need to swap the current pivot row</span>
     <span class="hljs-comment">// with a row that has a value in current pivot column that is non zero.</span>
     <span class="hljs-keyword">if</span> (copy<span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-operator"> == </span><span class="hljs-number">0</span>)
     {
       <span class="hljs-built_in">bool</span> still_invertible = <span class="hljs-literal">false</span>;
-      for (<span class="hljs-built_in">int</span> row = pivot + <span class="hljs-number">1</span>; row &lt; N; ++row)
+      <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> row = pivot + <span class="hljs-number">1</span>; row &lt; N; ++row)
       {
         <span class="hljs-keyword">if</span> (copy<span class="hljs-literal">[<span class="hljs-identifier">row</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span> != (T)<span class="hljs-number">0</span>)
         {
@@ -98,7 +98,7 @@ Matrix&lt;T, N&gt; Matrix&lt;T, N&gt;::<span class="hljs-constructor">Inverse()<
     T row_factor = (T)<span class="hljs-number">1</span><span class="hljs-operator"> / </span>copy<span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span>;
     copy.<span class="hljs-constructor">MultiplyRow(<span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
     inverse.<span class="hljs-constructor">MultiplyRow(<span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
-    for (<span class="hljs-built_in">int</span> row = pivot + <span class="hljs-number">1</span>; row &lt; N; ++row)
+    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> row = pivot + <span class="hljs-number">1</span>; row &lt; N; ++row)
     {
       row_factor = copy<span class="hljs-literal">[<span class="hljs-identifier">row</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-operator"> * </span>(T)-<span class="hljs-number">1</span>;
       copy.<span class="hljs-constructor">AddRowMultiple(<span class="hljs-params">row</span>, <span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
@@ -108,9 +108,9 @@ Matrix&lt;T, N&gt; Matrix&lt;T, N&gt;::<span class="hljs-constructor">Inverse()<
 
   <span class="hljs-comment">// We now force all elements that are above pivots to be zeros using row</span>
   <span class="hljs-comment">// operations.</span>
-  for (<span class="hljs-built_in">int</span> pivot = <span class="hljs-number">1</span>; pivot &lt; N; ++pivot)
+  <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> pivot = <span class="hljs-number">1</span>; pivot &lt; N; ++pivot)
   {
-    for (<span class="hljs-built_in">int</span> row = pivot - <span class="hljs-number">1</span>; row &gt;= <span class="hljs-number">0</span>; --row)
+    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> row = pivot - <span class="hljs-number">1</span>; row &gt;= <span class="hljs-number">0</span>; --row)
     {
       T row_factor = copy<span class="hljs-literal">[<span class="hljs-identifier">row</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">pivot</span>]</span><span class="hljs-operator"> * </span>(T)-<span class="hljs-number">1</span>;
       copy.<span class="hljs-constructor">AddRowMultiple(<span class="hljs-params">row</span>, <span class="hljs-params">pivot</span>, <span class="hljs-params">row_factor</span>)</span>;
@@ -122,34 +122,34 @@ Matrix&lt;T, N&gt; Matrix&lt;T, N&gt;::<span class="hljs-constructor">Inverse()<
 </code></pre></div>
 <p>I would be interested in implementing this using some other methods to see the differences in performance, but I realized something after I did this: I actually didn&apos;t need it. Because we can make some assumptions about the camera and the affine camera-to-world matrix, finding the inverse is extremely easy and does not require doing this at all.</p>
 <p>What it basically comes down to is this: we can calculate some orientation vectors for our camera depending on yaw and pitch. Using those orientation vectors and the position of the camera, we can create our inverse camera-to-world matrix.</p>
-<div class="code_box"><pre><code><span class="hljs-built_in">void</span> Camera::CalculateBasisVectors()
+<div class="code_box"><pre><code>void Camera::CalculateBasisVectors()
 {
-  <span class="hljs-built_in">float</span> horizontal_scale = cosf(_pitch);
-  _forward[<span class="hljs-number">0</span>] = cosf(_yaw) * horizontal_scale;
-  _forward[<span class="hljs-number">1</span>] = sinf(_pitch);
-  _forward[<span class="hljs-number">2</span>] = sinf(_yaw) * horizontal_scale;
-  Vec3 global_up = {<span class="hljs-number">0.0f</span>, <span class="hljs-number">1.0f</span>, <span class="hljs-number">0.0f</span>};
+  float horizontal_scale = cosf(_pitch);
+  _forward<span class="hljs-comment">[0]</span> = cosf(_yaw) * horizontal_scale;
+  _forward<span class="hljs-comment">[1]</span> = sinf(_pitch);
+  _forward<span class="hljs-comment">[2]</span> = sinf(_yaw) * horizontal_scale;
+  Vec3 global_up = {0.0f, 1.0f, 0.0f};
   _right = Math::Cross(global_up, _forward);
   _right = Math::Normalize(_right);
   _up = Math::Cross(_forward, _right);
 }
 
-<span class="hljs-built_in">void</span> Camera::CalculateWorldToCamera()
+void Camera::CalculateWorldToCamera()
 {
   Vec3 back = -_forward;
   Vec3 negative_position = -_position;
-  _wtc[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = _right[<span class="hljs-number">0</span>];
-  _wtc[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] = _right[<span class="hljs-number">1</span>];
-  _wtc[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>] = _right[<span class="hljs-number">2</span>];
-  _wtc[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>] = Math::Dot(negative_position, _right);
-  _wtc[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] = _up[<span class="hljs-number">0</span>];
-  _wtc[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] = _up[<span class="hljs-number">1</span>];
-  _wtc[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>] = _up[<span class="hljs-number">2</span>];
-  _wtc[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>] = Math::Dot(negative_position, _up);
-  _wtc[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>] = back[<span class="hljs-number">0</span>];
-  _wtc[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>] = back[<span class="hljs-number">1</span>];
-  _wtc[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] = back[<span class="hljs-number">2</span>];
-  _wtc[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>] = Math::Dot(negative_position, back);
+  _wtc<span class="hljs-comment">[0]</span><span class="hljs-comment">[0]</span> = _right<span class="hljs-comment">[0]</span>;
+  _wtc<span class="hljs-comment">[0]</span><span class="hljs-comment">[1]</span> = _right<span class="hljs-comment">[1]</span>;
+  _wtc<span class="hljs-comment">[0]</span><span class="hljs-comment">[2]</span> = _right<span class="hljs-comment">[2]</span>;
+  _wtc<span class="hljs-comment">[0]</span><span class="hljs-comment">[3]</span> = Math::Dot(negative_position, _right);
+  _wtc<span class="hljs-comment">[1]</span><span class="hljs-comment">[0]</span> = _up<span class="hljs-comment">[0]</span>;
+  _wtc<span class="hljs-comment">[1]</span><span class="hljs-comment">[1]</span> = _up<span class="hljs-comment">[1]</span>;
+  _wtc<span class="hljs-comment">[1]</span><span class="hljs-comment">[2]</span> = _up<span class="hljs-comment">[2]</span>;
+  _wtc<span class="hljs-comment">[1]</span><span class="hljs-comment">[3]</span> = Math::Dot(negative_position, _up);
+  _wtc<span class="hljs-comment">[2]</span><span class="hljs-comment">[0]</span> = back<span class="hljs-comment">[0]</span>;
+  _wtc<span class="hljs-comment">[2]</span><span class="hljs-comment">[1]</span> = back<span class="hljs-comment">[1]</span>;
+  _wtc<span class="hljs-comment">[2]</span><span class="hljs-comment">[2]</span> = back<span class="hljs-comment">[2]</span>;
+  _wtc<span class="hljs-comment">[2]</span><span class="hljs-comment">[3]</span> = Math::Dot(negative_position, back);
 }
 </code></pre></div>
 <p><code>_forward</code>, <code>_up</code>, <code>_right</code>, and <code>back</code> are the orientation vectors, but only the last three are used for creating the matrix. <code>_position</code> is just the location of the camera. <code>_wtc</code> is the world-to-camera matrix (the index operator is row major here). When I first tested my implementation, everything seemed fine except for when I looked nearly straight up or straight down.</p>
