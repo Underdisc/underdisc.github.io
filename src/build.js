@@ -90,6 +90,7 @@ function RenderMarkdown(inputFile, destination, rebuild)
     {
       linkCorrection += '../'
     }
+    CorrectLink(template, 'link.favicon', 'href', linkCorrection);
     CorrectLink(template, 'link.main_style', 'href', linkCorrection);
     CorrectLink(template, 'link.hljs_style', 'href', linkCorrection);
     CorrectLink(template, 'a.index_link', 'href', linkCorrection);
