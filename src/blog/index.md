@@ -1,5 +1,10 @@
 # Blog
 
+#### <div class="date">21-10-23</div> [Serialization With Valkor](7_serialization_with_valkor/index.html)
+Data can finally be saved and loaded to and from file within Varkor using my aptly named serialization language, Valkor.
+
+---
+
 #### <div class="date">21-05-25</div> [Gizmos](6_gizmos/index.html)
 I created my own gizmo implementation for Varkor and this goes over the details required to do it. I also did a few other things that I discuss at the end of the post.
 
