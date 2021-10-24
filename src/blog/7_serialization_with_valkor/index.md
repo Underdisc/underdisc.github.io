@@ -2,7 +2,7 @@
 
 After finishing gizmos, the next major task was serialization. There's a few popular options for this. One can use JSON as the file format and use something like [nlohmann/jsoncpp](https://github.com/nlohmann/json) for the cpp side of it. [YAML](https://yaml.org/) is also an option. There are probably plenty of small options out there as well. As has been typical for me, I decided to not use any of those options and instead made my own serialization language that can be read using a small cpp library I cooked up. This language is called Valkor.
 
-Similar to gizmos, my reason for making this is a concoction of control and curiousity. When it comes to control, making my own language gives me the opportunity to make any decisions I want. I can make it look how I want and I can make the processing work how I want. It turns out this is both a blessing and a curse. That will become apparent throughout the post. Curiosity takes the role of main ingredient in this mixture, though. In college, one of the last classes I took was on compilers and interpreters. I learned about everything one would need to make a serialization language from that class. It would feel strange not to take a crack at making my own language after having a class on the topic and it would really become a missed opportunity. With that thought in mind, I was curious about what hills there were to climb while making a language. Albeit a simple language, but there must be hills nonetheless. It turns out there are many and a lot of it comes down to the "freedom" that comes with making a language.
+Similar to gizmos, my reason for making this is a concoction of control and curiousity. When it comes to control, making my own serialization language gives me the opportunity to make any decisions I want. I can make it look how I want and I can make the processing work how I want. It turns out this is both a blessing and a curse. That will become apparent throughout the post. Curiosity takes the role of main ingredient in this mixture, though. In college, one of the last classes I took was on compilers and interpreters. I learned about everything one would need to make a serialization language from the beginning of that class. It would feel strange not to take a crack at making my own language after having a class that directly discussed the topic and it would really become a missed opportunity. With that thought in mind, I was curious about what hills there were to climb while making a language. Albeit a simple language, but there must be hills nonetheless. It turns out there are many and a lot of it comes down to the "freedom" that comes with making it.
 
 Like my last post, this one will also be split up into a few sections. First, I'll cover the inception of the language and how I got started. After that, I'll give an overview of what using the language's cpp interface looks like for performing data serialization. Then, last but not least, I'll talk about the deserialization process. Along the entire way, I'll be discussing the problems I encountered while developing. The implementation for the language can be found in Varkor's [vlk directory](https://github.com/Underdisc/Varkor/tree/master/src/vlk). Here's [another link](https://github.com/Underdisc/Varkor/tree/62017a04ea90c7dcd455290d861378f3168a4c4e/src/vlk) for the repo's top commit when this was posted since things may change in the future. Without further ado, let's dive in.
 
@@ -73,9 +73,9 @@ The only difference here is that the first key ends with a colon. But what about
     Value
 ```
 
-Because values and keys can come after array arrows, we can't bake that into the definition of a key. The fact that two arrows happen in succession makes things even more tricky. To make matters worse, what if we have an array of key value pairs instead of just values?
+Because values and keys can come after array arrows, we can't bake that into the definition of a key. The fact that two arrows happen in succession makes things even more tricky. To make matters worse, what if we have an array of key value pairs instead of just values? I could have attempted to address these problems during the parsing phase, but no attempt was made since I didn't go forward with this syntax.
 
-Freedom is a nice thing to have, but it doesn't mean everything that comes out of your ass will work, as is hopefully appearent. That fact made finding a usable syntax very difficult and was one of the largest challenges I faced while developing the language. It's nothing like a cs class where you are given a language and expected to process it. I don't want to go into more details about this initial prototype because it is not what Valkor ended up being, but I did want to show the origins of the language because it's part of the story.
+My point here is to show that freedom is nice to have, but it doesn't mean everything that comes out of your ass will work out. That fact made finding a usable syntax very difficult and was one of the larger challenges I faced while developing the language. It's nothing like a cs class where you are given a language and expected to process it. I don't want to go into more details about this initial prototype because it is not what Valkor ended up being, but I did want to show the origins of the language because it's part of the story.
 
 # The Writer
 
@@ -218,7 +218,7 @@ willBecomeTrueValue = "NewValue";
 *****/
 ```
 
-The `root("PairArray")` and `root("TrueValue")` statements only create new Values. They have yet to be initialized. The way they are initialized depends on how they are used for the first time. When we say `willBecomePairArray("NewValue")` the Value becomes a PairArray because we are using it like one by adding a new Value to it. `willBecomeTrueValue = "NewValue"` initializes that Value's type as TrueValue because we assigned a Value to it. Essentially, the operator used on a Value defines its type. Once you use one operator on a Value, using another is an error.
+The `root("PairArray")` and `root("TrueValue")` statements only create new Values. They have yet to be initialized. The way they are initialized depends on how they are used for the first time. When we say `willBecomePairArray("NewValue")` the Value becomes a PairArray because we are using it like one by adding a new Value to it. `willBecomeTrueValue = "NewValue"` initializes that Value's type as TrueValue because we assigned a value to it. Essentially, the operator used on a Value defines its type. Once you use one operator on a Value, using another is an error.
 
 ```cpp
 Vlk::Value& crashValue = root("PairArray");
@@ -383,7 +383,7 @@ PairArray = <OpenBrace> Pair* <CloseBrace>
 ValueArray = <OpenBracket> (<TrueValue>* | ValueArray*) <OpenBracket>
 ```
 
-Reading into what this means is not exactly straightfoward and I hope these posts can be followed by more people than just programmers, so here's an explanation. Every line represents a rule. The above grammar has three rules: `Pair`, `PairArray`, and `ValueArray`, Every time there is something of the form `<TokenType>`, it represents one of the token types from the tokenization phase. If there are no angle brackets, that represents another grammar rule. With that knowledge, let's break down the fist rule in the original Valkor grammar:
+Reading into what this means is not exactly straightfoward and I hope these posts can be followed by more people than just programmers, so here's an explanation. Every line represents a rule. The above grammar has three rules: `Pair`, `PairArray`, and `ValueArray`. Every time there is something of the form `<TokenType>`, it represents one of the token types from the tokenization phase. If there are no angle brackets, that represents another grammar rule. With that knowledge, let's break down the fist rule in the original Valkor grammar:
 
 ```text
 Pair = <Key> <Colon> (<Value> | ValueArray | PairArray)
@@ -451,7 +451,6 @@ Vlk::Pair root;
 root.Read("filename.vlk");
 const Vlk::Pair& constRoot = root;
 const Vlk::Pair& containedPair = constRoot("ContainedPair");
-
 const Vlk::Pair& otherContainedPair = root("OtherContainedPair");
 otherContainedPair = constRoot("OtherContainedPair");
 ```
@@ -490,7 +489,7 @@ Error|src/vlk/Explorer.cc(123)|Vlk::Explorer::operator []|
 *****/
 ```
 
-Because the `Strings` ValueArray did not contain a fourth element, the Vlk::Explorer logged an error. That error specifies exactly where the access attempt was made, making it easier for the user to know where the problem might be within their code. In this case, the logged error says the access attempt was made within `{}{Container}{Strings}`. Since errors like this are expected, there also needs to be a way to detect that an error has occured in the deserialization code. The Vlk::Explorer provides a `Valid` function for just that reason.
+Because the `Strings` ValueArray did not contain a fourth element, the Vlk::Explorer logged an error. That error specifies exactly where the access attempt was made, making it easier for the user to know where the problem might be within their code. In this case, the logged error says the access attempt was made within `{}{Container}{Strings}` where root represents our root pair. Since errors like this are expected, there also needs to be a way to detect that an error has occured in the deserialization code. The Vlk::Explorer provides a `Valid` function for just that reason.
 
 ```cpp
 if (!fourthString.Valid())
