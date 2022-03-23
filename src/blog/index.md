@@ -1,5 +1,10 @@
 # Blog
 
+#### <div class="date">22-03-23</div> [A Bug Involving References](8_a_bug_involving_references/index.html)
+I haven't posted anything in a while, so I decided to do a write up about a bug I just dealt with.
+
+---
+
 #### <div class="date">21-10-23</div> [Serialization With Valkor](7_serialization_with_valkor/index.html)
 Data can finally be saved and loaded to and from file within Varkor using my aptly named serialization language, Valkor.
 
