@@ -6,7 +6,7 @@ First, the premise. I made my own gizmos a while ago [gizmo post](../6_gizmos/in
 
 In the original implementation, the transform gizmo structure held its own Space ([the space I speak of](https://github.com/Underdisc/Varkor/blob/b8fbe655dbb7706a18e80897b341e4b43030b9b0/src/editor/hook/Transform.h#L79)). This is where gizmo handle information is stored: their transformations, model references, etc. The gizmo having its own space like this didn't feel quite right, so I decided to make a general editor Space. A gizmo could then just use that space rather than needing to hold its own. I still don't know if this is a good decision, but it gets rid of some boilerplate, so that's what I am doing. More importantly, this establishes the premise and leads me to what the bug even is. While testing the first separated gizmo, this ended up happening.
 
-<video width="400" height="200" controls>
+<video controls>
   <source src="bug.mp4" type="video/mp4">
 </video>
 
