@@ -1,45 +1,31 @@
 <html><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link class="favicon" rel="icon" href="../../favicon.ico">
-    <link class="main_style" rel="stylesheet" href="../../main_style.css">
-    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
-    <script class="main_script" type="text/javascript" src="../../main.js"></script>
-    <title>Underdisc</title>
-  </head>
-  <body>
-    <div class="left_accent_grid">
-      <div></div>
-      <div class="accent"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+      </div>
     </div>
-    <div class="main_grid">
-      <div class="header_container">
-        <div class="header_dropdown_container">
-          <div class="header_dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
-            </svg>
-          </div>
-        </div>
-        <div class="header_text">
-          Underdisc
-        </div>
-        <div></div>
-      </div>
-      <div class="sidebar_grid">
-        <!-- We have one empty element that acts as padding. -->
-        <div></div>
-        <a class="sidebar_element index_link" href="../../index.html">
-          Home
-        </a>
-        <a class="sidebar_element blog_link" href="../../blog/index.html">
-          Blog
-        </a>
-        <a class="sidebar_element projects_link" href="../../projects/index.html">
-          Projects
-        </a>
-      </div>
-      <div class="content_container">
-      <div class="page_content"><h1>Shader Includes and Varkor Projects</h1>
+    <div class="content_container"><h1>Shader Includes and Varkor Projects</h1>
 <p>This blog post is a bit more prompt than my previous posts and I am hoping to post more frequently about my accomplishments as time moves on. A few exciting things have happened over the past couple of weeks. In summary, models can now have custom shaders, shader files can have their own include preprocessor macros, and Varkor can finally be separated from the projects that are built with it.</p>
 <h2>Custom Shaders</h2>
 <p>After creating the first implementation for my renderer, I knew that I wanted abilitiy to apply custom shaders to objects. Using shaders to get interesting effects is a must have for me, so this was something I wanted to tackle early. To do this, Model components were given a <code>ShaderId</code>. This Id references the shader that should be used to draw the Model.</p>
@@ -253,13 +239,8 @@ result.mSuccess = <span class="hljs-literal">true</span>;
 <h2>Wrapping Up</h2>
 <p>Thanks for reading this update. I hope the next one comes soon. My girlfriend is now doing an internship during the day and we live in the same one room apartment. So when she&apos;s at work, I will be at work on Varkor and other projects. Even after just the first few days, I am accomplishing quite a bit just because of the lack of distractions. I am hoping to see some big productivity boosts and more discipline on my part because of this. I think Picasso said something about the importance that solitude serves. I think he was right.</p>
 <p>Oh, and as a parting gift, here&apos;s something I was able to make using this project structure and a ship model I finished making a few days ago.</p>
-<p class="image_box"><img src="icepick.gif" alt="icepick" loading="lazy"></p></div></div>
-    </div>
-    <div class="right_accent_grid">
-      <div class="accent"></div>
-      <div></div>
-    </div>
-  
+<p class="image_box"><img src="icepick.gif" alt="icepick" loading="lazy"></p></div>
+  </div>
 
 
 </body></html>

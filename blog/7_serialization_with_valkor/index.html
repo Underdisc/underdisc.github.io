@@ -1,45 +1,31 @@
 <html><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link class="favicon" rel="icon" href="../../favicon.ico">
-    <link class="main_style" rel="stylesheet" href="../../main_style.css">
-    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
-    <script class="main_script" type="text/javascript" src="../../main.js"></script>
-    <title>Underdisc</title>
-  </head>
-  <body>
-    <div class="left_accent_grid">
-      <div></div>
-      <div class="accent"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+      </div>
     </div>
-    <div class="main_grid">
-      <div class="header_container">
-        <div class="header_dropdown_container">
-          <div class="header_dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
-            </svg>
-          </div>
-        </div>
-        <div class="header_text">
-          Underdisc
-        </div>
-        <div></div>
-      </div>
-      <div class="sidebar_grid">
-        <!-- We have one empty element that acts as padding. -->
-        <div></div>
-        <a class="sidebar_element index_link" href="../../index.html">
-          Home
-        </a>
-        <a class="sidebar_element blog_link" href="../../blog/index.html">
-          Blog
-        </a>
-        <a class="sidebar_element projects_link" href="../../projects/index.html">
-          Projects
-        </a>
-      </div>
-      <div class="content_container">
-      <div class="page_content"><h1>Serialization With Valkor</h1>
+    <div class="content_container"><h1>Serialization With Valkor</h1>
 <p>After finishing gizmos, the next major task was serialization. There&apos;s a few popular options for this. One can use JSON as the file format and use something like <a href="https://github.com/nlohmann/json">nlohmann/jsoncpp</a> for the cpp side of it. <a href="https://yaml.org/">YAML</a> is also an option. There are probably plenty of small options out there as well. As has been typical for me, I decided to not use any of those options and instead made my own serialization language that can be read using a small cpp library I cooked up. This language is called Valkor.</p>
 <p>Similar to gizmos, my reason for making this is a concoction of control and curiousity. When it comes to control, making my own serialization language gives me the opportunity to make any decisions I want. I can make it look how I want and I can make the processing work how I want. It turns out this is both a blessing and a curse. That will become apparent throughout the post. Curiosity takes the role of main ingredient in this mixture, though. In college, one of the last classes I took was on compilers and interpreters. I learned about everything one would need to make a serialization language from the beginning of that class. It would feel strange not to take a crack at making my own language after having a class that directly discussed the topic and it would really become a missed opportunity. With that thought in mind, I was curious about what hills there were to climb while making a language. Albeit a simple language, but there must be hills nonetheless. It turns out there are many and a lot of it comes down to the &quot;freedom&quot; that comes with making it.</p>
 <p>Like my last post, this one will also be split up into a few sections. First, I&apos;ll cover the inception of the language and how I got started. After that, I&apos;ll give an overview of what using the language&apos;s cpp interface looks like for performing data serialization. Then, last but not least, I&apos;ll talk about the deserialization process. Along the entire way, I&apos;ll be discussing the problems I encountered while developing. The implementation for the language can be found in Varkor&apos;s <a href="https://github.com/Underdisc/Varkor/tree/master/src/vlk">vlk directory</a>. Here&apos;s <a href="https://github.com/Underdisc/Varkor/tree/9e9ac4eb1b4d9b3a50ab36e2eb2da01042c2c990/src/vlk">another link</a> for the repo&apos;s top commit when this was posted since things may change in the future. Without further ado, let&apos;s dive in.</p>
@@ -419,13 +405,8 @@ Error|src/vlk/Explorer.cc(123)|Vlk::Explorer::operator []|
 <p>This post is long overdue. The near final version of Valkor was completed months ago, but I kept putting this post to the side. For one, I went on a month and a half long trip, but before that I was too excited about saving and loading vlk files within Varkor to write anything. With Valkor, I was finally able to handle the whole serialization/deserialization process for assets, component types, and entire spaces. The result of that is the ability to load and save levels to file. The advantages of this are massive. Spaces no longer need to be created every time I test a feature that requires me to create game objects with certain components. Now I can just save a space to file and load it every time I test whatever it is I am working on. Testing graphics features will take advantage of this the most first, but other systems will be making use of it too. Physics is the most obvious one that comes to mind. What&apos;s even better than that is the ability to finally build something that isn&apos;t code and not lose the work when I close Varkor. Having that takes Varkor from being the toy it was months ago to being a tool that can actually be used to build something. It only took a year, but I am glad to have finally reached the top of this mountain that I have been hiking up. Now it&apos;s time to head into the next valley.</p>
 <p>If you managed to reach here, I hope you enjoyed the read. I was writing this on and off over the course of the last two months while traveling and wrapped it up after returning. Creating something coherent during that stretched period of time was difficult. The scattered development of Valkor made it even harder. If anything, I hope the post is reminiscent of what developing the language was like.</p>
 <p>As a parting gift, here is a gif showing the loading in action. The goal of everything discussed in the post was to make such a thing possible. Now I think it&apos;s finally time to start improving the look and variety of the things that can be loaded.</p>
-<p class="image_box"><img src="space_loading.gif" alt="space loading" loading="lazy"></p></div></div>
-    </div>
-    <div class="right_accent_grid">
-      <div class="accent"></div>
-      <div></div>
-    </div>
-  
+<p class="image_box"><img src="space_loading.gif" alt="space loading" loading="lazy"></p></div>
+  </div>
 
 
 </body></html>

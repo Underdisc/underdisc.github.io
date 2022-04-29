@@ -1,78 +1,59 @@
 <html><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link class="favicon" rel="icon" href="../favicon.ico">
-    <link class="main_style" rel="stylesheet" href="../main_style.css">
-    <link class="hljs_style" rel="stylesheet" href="../hljs_style.css">
-    <script class="main_script" type="text/javascript" src="../main.js"></script>
-    <title>Underdisc</title>
-  </head>
-  <body>
-    <div class="left_accent_grid">
-      <div></div>
-      <div class="accent"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../projects/index.html">Projects</a>
+      </div>
     </div>
-    <div class="main_grid">
-      <div class="header_container">
-        <div class="header_dropdown_container">
-          <div class="header_dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
-            </svg>
-          </div>
-        </div>
-        <div class="header_text">
-          Underdisc
-        </div>
-        <div></div>
-      </div>
-      <div class="sidebar_grid">
-        <!-- We have one empty element that acts as padding. -->
-        <div></div>
-        <a class="sidebar_element index_link" href="../index.html">
-          Home
-        </a>
-        <a class="sidebar_element blog_link" href="../blog/index.html">
-          Blog
-        </a>
-        <a class="sidebar_element projects_link" href="../projects/index.html">
-          Projects
-        </a>
-      </div>
-      <div class="content_container">
-      <div class="page_content"><h1>Blog</h1>
-<h4><div class="date">22-03-23</div> <a href="8_a_bug_involving_references/index.html">A Bug Involving References</a></h4>
+    <div class="content_container"><h1>Blog</h1>
+<h4>22-03-23 <a href="8_a_bug_involving_references/index.html">A Bug Involving References</a></h4>
 <p>I haven&apos;t posted anything in a while, so I decided to do a write up about a bug I just dealt with.</p>
 <hr>
-<h4><div class="date">21-10-23</div> <a href="7_serialization_with_valkor/index.html">Serialization With Valkor</a></h4>
+<h4>21-10-23 <a href="7_serialization_with_valkor/index.html">Serialization With Valkor</a></h4>
 <p>Data can finally be saved and loaded to and from file within Varkor using my aptly named serialization language, Valkor.</p>
 <hr>
-<h4><div class="date">21-05-25</div> <a href="6_gizmos/index.html">Gizmos</a></h4>
+<h4>21-05-25 <a href="6_gizmos/index.html">Gizmos</a></h4>
 <p>I created my own gizmo implementation for Varkor and this goes over the details required to do it. I also did a few other things that I discuss at the end of the post.</p>
 <hr>
-<h4><div class="date">21-03-03</div> <a href="5_shader_includes_and_varkor_projects/index.html">Shader Includes and Varkor Projects</a></h4>
+<h4>21-03-03 <a href="5_shader_includes_and_varkor_projects/index.html">Shader Includes and Varkor Projects</a></h4>
 <p>I got hell-bent on building my own inclusion prepocessor macros for glsl shaders and Varkor can now serve as a host for projects.</p>
 <hr>
-<h4><div class="date">21-02-08</div> <a href="4_a_needed_update/index.html">A Needed Update</a></h4>
+<h4>21-02-08 <a href="4_a_needed_update/index.html">A Needed Update</a></h4>
 <p>I&apos;ve been quiet for a few months now and a lot has happened. This is a shorter post that provides an overview of what I have done since my previous post.</p>
 <hr>
-<h4><div class="date">20-10-07</div> <a href="3_quaternions_no_glm_and_graphics_review/index.html">Quaternions, No GLM, and Graphics Review</a></h4>
+<h4>20-10-07 <a href="3_quaternions_no_glm_and_graphics_review/index.html">Quaternions, No GLM, and Graphics Review</a></h4>
 <p>Varkor now uses its own math library with custom quaternions and I am beginning to go through the process of reviewing graphics so I am up to speed when I start adding graphics features to Varkor.</p>
 <hr>
-<h4><div class="date">20-09-07</div> <a href="2_an_unnecessary_matrix_inverse_function/index.html">An Unnecessary Matrix Inverse Function</a></h4>
+<h4>20-09-07 <a href="2_an_unnecessary_matrix_inverse_function/index.html">An Unnecessary Matrix Inverse Function</a></h4>
 <p>This week has been all about matrices, cameras, and complex numbers. Varkor now has a working camera and next I am moving onto debug drawing and quaternions.</p>
 <hr>
-<h4><div class="date">20-08-30</div> <a href="1_the_first_real_post/index.html">The First Real Post</a></h4>
+<h4>20-08-30 <a href="1_the_first_real_post/index.html">The First Real Post</a></h4>
 <p>My first legitimate blog post. This goes over the brief history that has lead me to this point in time and how I intend on using this blog space as I continue pursuing my personal endeavours.</p>
 <hr>
-<h4><div class="date">20-07-30</div> <a href="0_learning_more_about_web_development/index.html">Learning More About Web Development</a></h4>
+<h4>20-07-30 <a href="0_learning_more_about_web_development/index.html">Learning More About Web Development</a></h4>
 <p>After leaving my job, my first task has been completely overhauling my website to what it is now. This is about that and some of the things I learned about web developlment along the way.</p>
-<hr></div></div>
-    </div>
-    <div class="right_accent_grid">
-      <div class="accent"></div>
-      <div></div>
-    </div>
-  
+<hr></div>
+  </div>
 
 
 </body></html>

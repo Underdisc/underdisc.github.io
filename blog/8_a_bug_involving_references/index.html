@@ -1,45 +1,31 @@
 <html><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link class="favicon" rel="icon" href="../../favicon.ico">
-    <link class="main_style" rel="stylesheet" href="../../main_style.css">
-    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
-    <script class="main_script" type="text/javascript" src="../../main.js"></script>
-    <title>Underdisc</title>
-  </head>
-  <body>
-    <div class="left_accent_grid">
-      <div></div>
-      <div class="accent"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+      </div>
     </div>
-    <div class="main_grid">
-      <div class="header_container">
-        <div class="header_dropdown_container">
-          <div class="header_dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
-            </svg>
-          </div>
-        </div>
-        <div class="header_text">
-          Underdisc
-        </div>
-        <div></div>
-      </div>
-      <div class="sidebar_grid">
-        <!-- We have one empty element that acts as padding. -->
-        <div></div>
-        <a class="sidebar_element index_link" href="../../index.html">
-          Home
-        </a>
-        <a class="sidebar_element blog_link" href="../../blog/index.html">
-          Blog
-        </a>
-        <a class="sidebar_element projects_link" href="../../projects/index.html">
-          Projects
-        </a>
-      </div>
-      <div class="content_container">
-      <div class="page_content"><h1>A Bug Involving References</h1>
+    <div class="content_container"><h1>A Bug Involving References</h1>
 <p>Y&apos;know those bugs that result in some really strange behavior? You analyze its nature to figure what is happening and you finally find an explanation only to realize the problem was practically sitting in front of your face the entire time. This is about one of those.</p>
 <p>First, the premise. I made my own gizmos a while ago <a href="../6_gizmos/index.html">gizmo post</a>. There was a translate, scale, and rotate tool all packed into a single &quot;mega gizmo&quot; called the transform gizmo. Putting these all into a single structure was a blunder and I have tasked myself with separating them into 3 different structures; one for each of the tools. That way I don&apos;t need to provide modifiable scale and rotation parameters to a gizmo that will only be used for performing translation.</p>
 <p>In the original implementation, the transform gizmo structure held its own Space (<a href="https://github.com/Underdisc/Varkor/blob/b8fbe655dbb7706a18e80897b341e4b43030b9b0/src/editor/hook/Transform.h#L79">the space I speak of</a>). This is where gizmo handle information is stored: their transformations, model references, etc. The gizmo having its own space like this didn&apos;t feel quite right, so I decided to make a general editor Space. A gizmo could then just use that space rather than needing to hold its own. I still don&apos;t know if this is a good decision, but it gets rid of some boilerplate, so that&apos;s what I am doing. More importantly, this establishes the premise and leads me to what the bug even is. While testing the first separated gizmo, this ended up happening.</p>
@@ -116,13 +102,8 @@ yM.mShaderId = AssLib::nColorShaderId;
 <p>Looking back through my posts, it feels like nothing happened after and around the last 2. That&apos;s definitely not the case, though. Many little steps and challenges have been passed during that time. I guess this serves as a reminder that the things I am working on are worth talking about, even if I feel as though they are too little. <em>A large thing is nothing but a combination of many small things, right?</em></p>
 <p style="text-align: center;">
 RIP Lucas &apos;Kaybox&apos; Koester. Thank you for spending time with me. We&apos;ll meet again in the Wilderzone.
-</p></div></div>
-    </div>
-    <div class="right_accent_grid">
-      <div class="accent"></div>
-      <div></div>
-    </div>
-  
+</p></div>
+  </div>
 
 
 </body></html>

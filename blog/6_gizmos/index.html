@@ -1,45 +1,31 @@
 <html><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link class="favicon" rel="icon" href="../../favicon.ico">
-    <link class="main_style" rel="stylesheet" href="../../main_style.css">
-    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
-    <script class="main_script" type="text/javascript" src="../../main.js"></script>
-    <title>Underdisc</title>
-  </head>
-  <body>
-    <div class="left_accent_grid">
-      <div></div>
-      <div class="accent"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+      </div>
     </div>
-    <div class="main_grid">
-      <div class="header_container">
-        <div class="header_dropdown_container">
-          <div class="header_dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
-            </svg>
-          </div>
-        </div>
-        <div class="header_text">
-          Underdisc
-        </div>
-        <div></div>
-      </div>
-      <div class="sidebar_grid">
-        <!-- We have one empty element that acts as padding. -->
-        <div></div>
-        <a class="sidebar_element index_link" href="../../index.html">
-          Home
-        </a>
-        <a class="sidebar_element blog_link" href="../../blog/index.html">
-          Blog
-        </a>
-        <a class="sidebar_element projects_link" href="../../projects/index.html">
-          Projects
-        </a>
-      </div>
-      <div class="content_container">
-      <div class="page_content"><h1>Gizmos</h1>
+    <div class="content_container"><h1>Gizmos</h1>
 <p>About a week ago, I finally finished implementing my own gizmo for modifying Transform components. For the uninitiated, a transform gizmo is very common in 2D and 3D editing software. They are the handles that allow a user to translate, scale, and rotate an object. I decided to implement my own version of these and I want to go over some of the core systems and ideas that made implementing them possible in this post.</p>
 <p>One might ask, &quot;Why implement your own transform gizmo when something like <a href="https://github.com/CedricGuillemet/ImGuizmo">this (ImGuizmo)</a> already exists?&quot; It&apos;s a fair question, especially since I am already using ImGui to drive Varkor&apos;s editor interface. My justification for doing this is that gizmos are much more than the typical transform gizmo that most would think of. Gizmos can also be used to edit a bezier curve or a terrain height map. Really, gizmos just make the process of editing properties easier than just changing numbers and they tend to achieve this by having an in-world representation. One of my goals with implementing my own gizmos was to have a means of adding these other types of editor controls and I&apos;ll absolutely be making use of that when the time comes. It also allowed me to have my own attempt at creating a transform gizmo and that involved a lot of learning about what is necessary in order to get the job done.</p>
 <p>With that said, I am going to split this up into a few sections: the gizmo system, handle display and selection, gizmo controls, and reference frames and snapping. After that, I want to show some things that happened before doing the deep dive on gizmos, but aren&apos;t very deserving of their own post. Another note: there are multiple code snippets throughout this post. These snippets are going to be dramatically reduced versions of the actual code because I want them to be purely related to the topic being discussed. If you would like to see the full implementation, it can be found in these files: <a href="https://github.com/Underdisc/Varkor/blob/7eab86a4d76b389430d987fb8d06e4a3afffdf2a/src/editor/hook/Hook.hh">editor/hook/Hook.hh</a>, <a href="https://github.com/Underdisc/Varkor/blob/7eab86a4d76b389430d987fb8d06e4a3afffdf2a/src/editor/hook/Transform.h">editor/hook/Transform.h</a>, and <a href="https://github.com/Underdisc/Varkor/blob/7eab86a4d76b389430d987fb8d06e4a3afffdf2a/src/editor/hook/Transform.cc">editor/hook/Transform.cc</a>. These links point to a specific commit, so they should continue to work until Varkor is not on github or github no longer exists.</p>
@@ -265,13 +251,8 @@ Vec3 Gizmo&lt;Comp::Transform&gt;::ScaleToInterval(Vec3 <span class="hljs-built_
 </code></pre></div>
 <p>Before addressing anything discussed above, I did a fun little project to take a break from implementing Varkor features. Many people are familiar with fractals and I was a bit dissappointed that I had never implemented fractals myself. I understood the basic idea, but I didn&apos;t fully understand exactly what was going on to create things like the famous images of the Mandelbrot and Julia sets. To remedy that curiosity, I spent a few days making my own fractal program called <a href="https://github.com/Underdisc/Fractalkor">Fractalkor</a>. This was my first project that uses Varkor as its backend. Even though I only use utils from Varkor in the program, it was exciting to make my first subproject with the engine. Furthermore, it makes me very excited for the future because my intent with creating Varkor is to use it as the backbone for other projects and this is the first time that I did that. To wrap things up, I&apos;ll leave you with some pretty gifs that I generated while working on the project. Thanks for reading. Up next: serialization, more control over graphics, and other things I am brewing in my head.</p>
 <p class="image_box"><img src="pretty_set.gif" alt="pretty set" loading="lazy">
-<img src="mandelbrot_iterations.gif" alt="mandelbrot iterations" loading="lazy"></p></div></div>
-    </div>
-    <div class="right_accent_grid">
-      <div class="accent"></div>
-      <div></div>
-    </div>
-  
+<img src="mandelbrot_iterations.gif" alt="mandelbrot iterations" loading="lazy"></p></div>
+  </div>
 
 
 </body></html>

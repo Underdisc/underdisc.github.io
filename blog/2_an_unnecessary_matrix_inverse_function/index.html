@@ -1,45 +1,31 @@
 <html><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link class="favicon" rel="icon" href="../../favicon.ico">
-    <link class="main_style" rel="stylesheet" href="../../main_style.css">
-    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
-    <script class="main_script" type="text/javascript" src="../../main.js"></script>
-    <title>Underdisc</title>
-  </head>
-  <body>
-    <div class="left_accent_grid">
-      <div></div>
-      <div class="accent"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+      </div>
     </div>
-    <div class="main_grid">
-      <div class="header_container">
-        <div class="header_dropdown_container">
-          <div class="header_dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
-            </svg>
-          </div>
-        </div>
-        <div class="header_text">
-          Underdisc
-        </div>
-        <div></div>
-      </div>
-      <div class="sidebar_grid">
-        <!-- We have one empty element that acts as padding. -->
-        <div></div>
-        <a class="sidebar_element index_link" href="../../index.html">
-          Home
-        </a>
-        <a class="sidebar_element blog_link" href="../../blog/index.html">
-          Blog
-        </a>
-        <a class="sidebar_element projects_link" href="../../projects/index.html">
-          Projects
-        </a>
-      </div>
-      <div class="content_container">
-      <div class="page_content"><h1>An Unnecessary Matrix Inverse Function</h1>
+    <div class="content_container"><h1>An Unnecessary Matrix Inverse Function</h1>
 <p>It&apos;s been one week minus a day since my last post and I said to myself that I need to write these every Monday, no matter what, so here I am. This week was relatively slow at the beginning, but I did a lot of work over the weekend. That doesn&apos;t mean the week was a complete loss though. Instead of writing code I was actually reviewing some math that I believe will become very useful in the near future.</p>
 <p>Since the code I started Varkor with was for a project I didn&apos;t have the time to finish, I decided that one of the first things I would do is finish the goal of that project first. The initial goal of the project was to create my own implementation of quaternions. It&apos;s one of those things I have known about for a long time and I have some understanding of, but I haven&apos;t gone through the trouble of implementing them myself. I just use some EulerAngleToQuaternion type function and vice versa and everything usually works out. Creating my own implementation of them would really force me to have a much deeper unstanding of the math behind them and it would give me the opportunity to say that I have implemented my own quaternions. I think that&apos;s a pretty cool badge to have.</p>
 <h2>Some Complex Number Review</h2>
@@ -161,13 +147,8 @@ It kinda makes sense too. As our forward vector gets closer to pointing straight
 <p>That&apos;s what happened this week. There&apos;s still a lot to do, but now that I have a camera, the next thing I am going to tackle before pursuing quaternions is debug drawing. I have already briefly started working on this, but there is still a lot of work left to do there. It will be very helpful now and in the future as I continue to beat my head against the wall when I have a seemingly impossible problem to solve.</p>
 <p>In other news, piano practice is going well. I have almost transcribed all of the Hollow Knight theme song to score except for a few remaining bars. I can play the first eightish bars, but I need to practice it more and finish transcribing the rest of the song.</p>
 <p>Also check out this sick fucking shot I scored a few days ago.</p>
-<p class="image_box"><img src="sick.gif" alt="sick_shot_gif" loading="lazy"></p></div></div>
-    </div>
-    <div class="right_accent_grid">
-      <div class="accent"></div>
-      <div></div>
-    </div>
-  
+<p class="image_box"><img src="sick.gif" alt="sick_shot_gif" loading="lazy"></p></div>
+  </div>
 
 
 </body></html>

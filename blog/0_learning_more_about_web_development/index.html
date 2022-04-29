@@ -1,45 +1,31 @@
 <html><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link class="favicon" rel="icon" href="../../favicon.ico">
-    <link class="main_style" rel="stylesheet" href="../../main_style.css">
-    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
-    <script class="main_script" type="text/javascript" src="../../main.js"></script>
-    <title>Underdisc</title>
-  </head>
-  <body>
-    <div class="left_accent_grid">
-      <div></div>
-      <div class="accent"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+      </div>
     </div>
-    <div class="main_grid">
-      <div class="header_container">
-        <div class="header_dropdown_container">
-          <div class="header_dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
-            </svg>
-          </div>
-        </div>
-        <div class="header_text">
-          Underdisc
-        </div>
-        <div></div>
-      </div>
-      <div class="sidebar_grid">
-        <!-- We have one empty element that acts as padding. -->
-        <div></div>
-        <a class="sidebar_element index_link" href="../../index.html">
-          Home
-        </a>
-        <a class="sidebar_element blog_link" href="../../blog/index.html">
-          Blog
-        </a>
-        <a class="sidebar_element projects_link" href="../../projects/index.html">
-          Projects
-        </a>
-      </div>
-      <div class="content_container">
-      <div class="page_content"><h1>Learning More About Web Development</h1>
+    <div class="content_container"><h1>Learning More About Web Development</h1>
 <p>Around two to three years ago, I was making my way through college and would soon be entering the job market as a game programmer. In order to land a job, I was going to need a website to display my previous work. I had no desire to use a service like Squarespace, Wordspace, etc. I was more excited about creating my own website and the challenges that come along with that. Wanting this eliminated Jekyll as an option too.</p>
 <p>I found out about <a href="https://pages.github.com/">github pages</a> for hosting static websites. This would take care of hosting and I needed nothing more than a static website. That means I could focus purely on the work that goes into creating a webpage.</p>
 <p>The first step to doing this involves learning about HTML and CSS. When I first made my website, I only made use of the two. They were enough to get something quite basic created, but I didn&apos;t use them to their full power. I tried to make a layout that would work on both mobile and desktop that wouldn&apos;t require any layout changes for different platforms. Those words sound great, but when I looked at the site I made after letting it sit around for two years, I knew this was no longer going to cut it.</p>
@@ -213,13 +199,8 @@ RenderMarkdown(<span class="hljs-string">&apos;projects.md&apos;</span>, <span c
 <p>Though most of the work is done, I still have issues with certain parts of the website. One big grievance of mine is the size of code boxes on mobile. I would love to have all code boxes be at least 80 characters wide, but I haven&apos;t found a feasible way to do it. The font used for code must remain monospace and it must be a readable size. I could exchange the font for a font with a smaller character width, but that means I need to add a custom font with that property. It might not be much, but that&apos;s more resources to load for the website to render. Additionally coming across such a font that would allow for lines that long on mobile would be a challenge on its own. I also considered expanding the width of the code boxes to take up the entire width of the content box, but when I looked at how much space that would add, it was less than 10 characters. I also like the current style of the code boxes, so I am not set on changing that for such a minor benefit. For now, horizontal scroll bars make the code accessible and that hits at least the minimum bar.</p>
 <p>Another issue is that I need to add a line to the build script every time a new markdown file is added. It&apos;s just like adding file names to cmake in a build process. This is not a big deal and I will fix it as soon as I get annoyed while adding lines to the build script. When I do fix it, I will likely have the build script convert all the markdown files in certain directories. That way I can just add markdown files to those directories and they will automatically be built.</p>
 <h2>PS</h2>
-<p>I hope this first post isn&apos;t too all over the place. While writing this, I was constantly testing new things and changing the style of various content elements. So, while this is my first post, it&apos;s more akin to a high effort test. If you&apos;ve made it this far though, thanks for reading about the shit I work on. I appreciate you.</p></div></div>
-    </div>
-    <div class="right_accent_grid">
-      <div class="accent"></div>
-      <div></div>
-    </div>
-  
+<p>I hope this first post isn&apos;t too all over the place. While writing this, I was constantly testing new things and changing the style of various content elements. So, while this is my first post, it&apos;s more akin to a high effort test. If you&apos;ve made it this far though, thanks for reading about the shit I work on. I appreciate you.</p></div>
+  </div>
 
 
 </body></html>

@@ -1,45 +1,31 @@
 <html><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link class="favicon" rel="icon" href="../../favicon.ico">
-    <link class="main_style" rel="stylesheet" href="../../main_style.css">
-    <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
-    <script class="main_script" type="text/javascript" src="../../main.js"></script>
-    <title>Underdisc</title>
-  </head>
-  <body>
-    <div class="left_accent_grid">
-      <div></div>
-      <div class="accent"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+      </div>
     </div>
-    <div class="main_grid">
-      <div class="header_container">
-        <div class="header_dropdown_container">
-          <div class="header_dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-              <path fill="#fff" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z" paint-order="stroke markers fill"/>
-            </svg>
-          </div>
-        </div>
-        <div class="header_text">
-          Underdisc
-        </div>
-        <div></div>
-      </div>
-      <div class="sidebar_grid">
-        <!-- We have one empty element that acts as padding. -->
-        <div></div>
-        <a class="sidebar_element index_link" href="../../index.html">
-          Home
-        </a>
-        <a class="sidebar_element blog_link" href="../../blog/index.html">
-          Blog
-        </a>
-        <a class="sidebar_element projects_link" href="../../projects/index.html">
-          Projects
-        </a>
-      </div>
-      <div class="content_container">
-      <div class="page_content"><h1>Varkor</h1>
+    <div class="content_container"><h1>Varkor</h1>
 <p>I work on this project as a solo developer on a very regular basis, therefore some of the things written here may change or may have already changed. That being said, the gist of what is said here will continue to hold true.</p>
 <p>Varkor is a custom game engine written in C++. I hesitate to say &quot;written from scratch&quot;, because I believe that the statement is thrown around too often without actually being true to the phrase. I didn&apos;t design the hardware the engine runs on. I didn&apos;t write the C++ compiler. I didn&apos;t even write all of the C++. I am using libraries to handle the things I don&apos;t have an interest in implementing, however, I am cursed with having a serious interest in implementing a lot of things. This project acts as a way for me to use that interest as fuel for revisiting topics that I dearly miss from college, topics that I feel I should have studied in college, and topics that I have only dreamed of getting a knack for.</p>
 <p><a href="https://github.com/Underdisc/Varkor">Varkor on GitHub</a></p>
@@ -54,13 +40,8 @@
 <p><a href="https://github.com/Underdisc/Varkor/tree/master/src/core">Varcore?</a></p>
 <h2>Custom Graphics</h2>
 <p>Similar to the core mentioned above, Varkor&apos;s graphics implementation is one of my current focuses. I have already written code that allows me to display models with lighting applied, but it&apos;s rather weak because it is not data-driven. In other words, code needs to be written in order to draw things and that&apos;s not how it should be for a game engine. Regardless, this is going to change a lot in the time after I write this and I don&apos;t want these words to be instantly invalidated, so I am going to shut up.</p>
-<p><a href="https://github.com/Underdisc/Varkor/tree/master/src/gfx">Varkor Graphics</a></p></div></div>
-    </div>
-    <div class="right_accent_grid">
-      <div class="accent"></div>
-      <div></div>
-    </div>
-  
+<p><a href="https://github.com/Underdisc/Varkor/tree/master/src/gfx">Varkor Graphics</a></p></div>
+  </div>
 
 
 </body></html>

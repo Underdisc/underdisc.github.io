@@ -102,9 +102,7 @@ function RenderMarkdown(inputFile, destination, rebuild)
   // Render the markdown document to html.
   let markdown = fs.readFileSync(inputFile, 'utf8');
   let html = converter.makeHtml(markdown);
-  let content_div = '<div class=\'page_content\'></div>';
-  template('div.content_container').append(content_div);
-  template('div.page_content').append(html);
+  template('div.content_container').append(html);
 
   // Put all <pre><code> blocks inside of a code box div.
   template('pre code').each(function(i, domElement)
@@ -162,7 +160,6 @@ if(process.argv.length > 2)
 if(makeTests)
 {
   RenderMarkdown('index.md', '../', true);
-  return;
 }
 
 RenderMarkdown('index.md', '../', rebuild);

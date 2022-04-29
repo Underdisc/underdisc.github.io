@@ -3,7 +3,9 @@ let dropdown_in_motion = false;
 let compact_mode;
 
 // These are dom elements that are assigned to in OnLoad.
-let root, content_container, sidebar, dropdown_button;
+let root;
+let links;
+let arrow_svg;
 
 // This comes from the media query within style.css. It is the threshold used to
 // determine the layout change.
@@ -18,18 +20,14 @@ function GetEmWidth()
   return em_width;
 }
 
-function GetDropdownPixelOffset()
+function GetLinksPixelOffset()
 {
-  sidebar_style = getComputedStyle(sidebar);
-  let element_count = parseFloat(
-    sidebar_style.getPropertyValue('--element-count'));
-  let buffer_height = parseFloat(
-    sidebar_style.getPropertyValue('--buffer-height'));
-  let element_height = parseFloat(
-    sidebar_style.getPropertyValue('--element-height'));
-  let em_offset = buffer_height + (element_count * element_height);
-  let font_size = parseFloat(sidebar_style.getPropertyValue('font-size'));
-  return em_offset * font_size;
+  style = getComputedStyle(links);
+  let element_count = parseFloat(style.getPropertyValue('--element-count'));
+  let element_height = parseFloat(style.getPropertyValue('--element-height'));
+  let em_height =  element_count * element_height + 1;
+  let font_size = parseFloat(style.getPropertyValue('font-size'));
+  return em_height * font_size;
 }
 
 function ToggleDropdown()
@@ -39,16 +37,14 @@ function ToggleDropdown()
     return;
   }
 
-  let dropdown_offset = GetDropdownPixelOffset();
+  let links_offset = GetLinksPixelOffset();
   // The pos suffix values are for the position of the dropdown menu.
   // The rot suffix values are for the rotation of the dropdown menu button.
   let start_pos, end_pos;
   let start_rot, end_rot;
   if (dropdown_open === false)
   {
-    sidebar.style.bottom = dropdown_offset + 'px';
-    content_container.style.bottom = dropdown_offset + 'px';
-    start_pos = dropdown_offset;
+    start_pos = -links_offset;
     end_pos = 0;
     start_rot = 0;
     end_rot = -180;
@@ -57,7 +53,7 @@ function ToggleDropdown()
   else
   {
     start_pos = 0;
-    end_pos = dropdown_offset;
+    end_pos = -links_offset;
     start_rot = -180;
     end_rot = 0;
     dropdown_open = false;
@@ -79,8 +75,6 @@ function ToggleDropdown()
     if (time_passed >= animation_time)
     {
       dropdown_in_motion = false;
-      sidebar.style.bottom = end_pos + 'px';
-      content_container.style.bottom = end_pos + 'px';
       clearInterval(animation);
       return;
     }
@@ -89,9 +83,8 @@ function ToggleDropdown()
     let t_quad_in = -1.0 * (t - 1.0) * (t - 1.0) + 1.0;
     let current_pos = start_pos + dist_pos * t_quad_in;
     let current_rot = start_rot + dist_rot * t_quad_in;
-    sidebar.style.bottom = current_pos + 'px';
-    content_container.style.bottom = current_pos + 'px';
-    dropdown_button.style.transform = 'rotate(' + current_rot + 'deg)';
+    arrow_svg.style.transform = 'rotate(' + current_rot + 'deg)';
+    links.style.transform = 'translate(0px,' + current_pos + 'px)';
   }
 }
 
@@ -102,16 +95,15 @@ function WindowResize()
   {
     dropdown_open = false;
     compact_mode = true;
-    let starting_offset = GetDropdownPixelOffset();
-    sidebar.style.bottom = starting_offset + 'px';
-    content_container.style.bottom = starting_offset + 'px';
-    dropdown_button.style.transform = 'rotate(0deg)';
+
+    let offset = GetLinksPixelOffset();
+    arrow_svg.style.transform = 'rotate(0deg)';
+    links.style.transform = 'translate(0px,' + -offset + 'px)';
   }
   else if (em_width >= compact_em_threshold && compact_mode == true)
   {
     compact_mode = false;
-    sidebar.style.bottom = 0;
-    content_container.style.bottom = 0;
+    links.style.transform = 'translate(0px, 0px)';
   }
 }
 
@@ -120,13 +112,14 @@ window.onresize = WindowResize;
 function OnLoad()
 {
   root = document.querySelector('html');
-  content_container = document.querySelector('div.content_container');
-  sidebar = document.querySelector('div.sidebar_grid');
-  dropdown_button = document.querySelector('div.header_dropdown');
-  dropdown_button.addEventListener('click', ToggleDropdown);
+  links = document.querySelector('div.links');
+  arrow_svg = document.querySelector('div.arrow_container svg');
 
-  let em_width = GetEmWidth();
-  compact_mode = em_width <= compact_em_threshold;
+  let arrow_container = document.querySelector('div.arrow_container');
+  arrow_container.addEventListener('click', ToggleDropdown);
+
+  compact_mode = false;
+  WindowResize();
 }
 
 window.onload = OnLoad;
