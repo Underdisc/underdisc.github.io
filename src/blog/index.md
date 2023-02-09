@@ -1,5 +1,9 @@
 # Blog
 
+#### 23-02-08 [Bloom Problems](9_bloom_problems/index.html)
+Rambling in a file as I work on my bloom implementation.
+
+---
 #### 22-03-23 [A Bug Involving References](8_a_bug_involving_references/index.html)
 I haven't posted anything in a while, so I decided to do a write up about a bug I just dealt with.
 
