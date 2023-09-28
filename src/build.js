@@ -1,12 +1,9 @@
-function GetOccurrenceCount(string, search)
-{
+function GetOccurrenceCount(string, search) {
   let count = 0;
   let fromIndex = -1;
-  while(true)
-  {
+  while (true) {
     fromIndex = string.indexOf(search, fromIndex + 1);
-    if(fromIndex === -1)
-    {
+    if (fromIndex === -1) {
       return count;
     }
     ++count;
@@ -14,8 +11,7 @@ function GetOccurrenceCount(string, search)
 }
 
 const fs = require('fs');
-function GetFileContent(filename)
-{
+function GetFileContent(filename) {
   return fs.readFileSync(filename, 'utf8')
 }
 
@@ -27,8 +23,7 @@ showdown.setOption('simpleLineBreaks', 'true');
 const showdownHighlight = require('showdown-highlight');
 const converter = new showdown.Converter({extensions: [showdownHighlight]});
 
-function CorrectLink(html, selector, attribute, correction)
-{
+function CorrectLink(html, selector, attribute, correction) {
   let linkElement = html(selector);
   let filePath = linkElement.attr(attribute);
   filePath = correction + filePath;
@@ -37,8 +32,7 @@ function CorrectLink(html, selector, attribute, correction)
 
 // Retrieves the content of the template html and modifies the links to have
 // the correct relative paths.
-function RelativeTemplate(linkCorrection)
-{
+function RelativeTemplate(linkCorrection) {
   let template = cheerio.load(templateHtml);
   CorrectLink(template, 'link.favicon', 'href', linkCorrection);
   CorrectLink(template, 'link.main_style', 'href', linkCorrection);
@@ -51,11 +45,9 @@ function RelativeTemplate(linkCorrection)
   return template;
 }
 
-function IsBuildNeeded(inputFile, outputFile)
-{
+function IsBuildNeeded(inputFile, outputFile) {
   exists = fs.existsSync(outputFile);
-  if(!exists)
-  {
+  if (!exists) {
     return true;
   }
 
@@ -66,8 +58,7 @@ function IsBuildNeeded(inputFile, outputFile)
   return inputModifiedDate >= outputModifiedDate;
 }
 
-function MakeRequiredDirectories(outputFile)
-{
+function MakeRequiredDirectories(outputFile) {
   let dirEnd = outputFile.lastIndexOf('/');
   let dirPath = outputFile.slice(0, dirEnd);
   let options = {recursive: true};
@@ -75,22 +66,19 @@ function MakeRequiredDirectories(outputFile)
 }
 
 // Render markdown text into html.
-function RenderMarkdownIntoTemplate(template, markdown)
-{
+function RenderMarkdownIntoTemplate(template, markdown) {
   let html = converter.makeHtml(markdown);
   template('div.content_container').append(html);
 
   // Put all <pre><code> blocks inside of a code box div.
-  template('pre code').each(function(i, domElement)
-  {
-    template(this).parent().replaceWith('<div class=\"code_box"><pre><code>' +
-      template(this).html());
+  template('pre code').each(function(i, domElement) {
+    template(this).parent().replaceWith(
+      '<div class=\"code_box"><pre><code>' + template(this).html());
   });
 
-  // Apply lazy loading to all images and add the image_box class to the parent
-  // element because all images are contained in an image box.
-  template('img').each(function(i, domElement)
-  {
+  // Apply lazy loading to all images and add the image_box class to the
+  // parent element because all images are contained in an image box.
+  template('img').each(function(i, domElement) {
     let image = template(this);
     image.attr('loading', 'lazy');
     let imageContainer = image.parent();
@@ -98,23 +86,20 @@ function RenderMarkdownIntoTemplate(template, markdown)
   });
 }
 
-function RenderLocalMarkdown(inputFile, destination, rebuild)
-{
-  // Before rendering a markdown document to html, we first check to see if the
-  // output html document is already up to date with the current markdown
+function RenderLocalMarkdown(inputFile, destination, rebuild) {
+  // Before rendering a markdown document to html, we first check to see if
+  // the output html document is already up to date with the current markdown
   // document. If it is up to date and we are not rebuilding, then no rendering
   // is required.
   let exists = fs.existsSync(inputFile);
-  if(!exists)
-  {
+  if (!exists) {
     console.error(inputFile + ' does not exist');
     return;
   }
   let filenameEnd = inputFile.indexOf('.');
   let outputFile = inputFile.slice(0, filenameEnd);
   outputFile = destination + outputFile + '.html';
-  if(!rebuild && !IsBuildNeeded(inputFile, outputFile))
-  {
+  if (!rebuild && !IsBuildNeeded(inputFile, outputFile)) {
     return;
   }
   MakeRequiredDirectories(outputFile);
@@ -124,8 +109,7 @@ function RenderLocalMarkdown(inputFile, destination, rebuild)
   // directory below the root.
   let depth = GetOccurrenceCount(inputFile, '/');
   let linkCorrection = ''
-  for(let i = 0; i < depth; ++i)
-  {
+  for (let i = 0; i < depth; ++i) {
     linkCorrection += '../'
   }
   let template = RelativeTemplate(linkCorrection);
@@ -137,31 +121,25 @@ function RenderLocalMarkdown(inputFile, destination, rebuild)
   console.log('Built ' + inputFile);
 }
 
-function RenderRecursively(directory, destination, rebuild)
-{
+function RenderRecursively(directory, destination, rebuild) {
   let options = {withFileTypes: true};
   let files = fs.readdirSync(directory, options);
-  for(let i = 0; i < files.length; ++i)
-  {
+  for (let i = 0; i < files.length; ++i) {
     let file = files[i];
-    if(file.isDirectory())
-    {
+    if (file.isDirectory()) {
       RenderRecursively(directory + file.name + '/', destination, rebuild);
     }
 
-    if(file.name.length >= 3)
-    {
-      let end  = file.name.slice(file.name.length - 3);
-      if(end === '.md')
-      {
+    if (file.name.length >= 3) {
+      let end = file.name.slice(file.name.length - 3);
+      if (end === '.md') {
         RenderLocalMarkdown(directory + file.name, destination, rebuild);
       }
     }
   }
 }
 
-function RenderNotes(rebuild)
-{
+function RenderNotes(rebuild) {
   let notesIndexMarkdown = fs.readFileSync('notes/index.md');
   fs.readdirSync('notes/').forEach(filename => {
     if (filename == 'index.md') {
@@ -176,8 +154,8 @@ function RenderNotes(rebuild)
     title = title.replaceAll('_', ' ');
     let extensionStart = filename.indexOf('.');
     let htmlFilename = filename.slice(0, extensionStart + 1) + 'html';
-    notesIndexMarkdown += '\n' + date + ' - [' + title + '](' + htmlFilename
-      + ')';
+    notesIndexMarkdown +=
+      '\n' + date + ' - [' + title + '](' + htmlFilename + ')';
 
     // Only write render the html if it needs to be updated.
     let markdownFilename = 'notes/' + filename;
@@ -202,13 +180,11 @@ function RenderNotes(rebuild)
 
 let rebuild = false;
 let makeTests = false;
-if(process.argv.length > 2)
-{
+if (process.argv.length > 2) {
   rebuild = process.argv[2] === 'r';
   makeTests = process.argv[2] === 't';
 }
-if(makeTests)
-{
+if (makeTests) {
   RenderLocalMarkdown('index.md', '../', true);
 }
 

@@ -1,0 +1,55 @@
+﻿---
+Language: JavaScript
+BasedOnStyle: Mozilla
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveAssignments: 'false'
+AlignConsecutiveDeclarations: 'false'
+AlignEscapedNewlines: Left
+AlignOperands: 'false'
+AlignTrailingComments: 'false'
+AllowAllArgumentsOnNextLine: 'true'
+AllowAllParametersOfDeclarationOnNextLine: 'true'
+AllowShortBlocksOnASingleLine: 'false'
+AllowShortCaseLabelsOnASingleLine: 'true'
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Always
+AllowShortLambdasOnASingleLine: Empty
+AllowShortLoopsOnASingleLine: 'false'
+AlwaysBreakBeforeMultilineStrings: 'true'
+BinPackArguments: 'false'
+BinPackParameters: 'false'
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterControlStatement: false
+  AfterFunction: false
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+BreakBeforeTernaryOperators: 'false'
+BreakStringLiterals: 'true'
+ColumnLimit: '80'
+ContinuationIndentWidth: '2'
+Cpp11BracedListStyle: 'true'
+DisableFormat: 'false'
+IndentCaseLabels: 'false'
+IndentWidth: '2'
+IndentWrappedFunctionNames: 'true'
+KeepEmptyLinesAtTheStartOfBlocks: 'false'
+MaxEmptyLinesToKeep: '1'
+ReflowComments: 'true'
+SpaceAfterLogicalNot: 'false'
+SpaceBeforeAssignmentOperators: 'true'
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: 'false'
+SpacesInAngles: 'false'
+SpacesInContainerLiterals: 'false'
+SpacesInParentheses: 'false'
+SpacesInSquareBrackets: 'false'
+TabWidth: '2'
+UseTab: Never

@@ -11,8 +11,7 @@ let arrow_svg;
 // determine the layout change.
 const compact_em_threshold = 70;
 
-function GetEmWidth()
-{
+function GetEmWidth() {
   let width = window.innerWidth;
   let root_style = window.getComputedStyle(root);
   let font_size = parseFloat(root_style.getPropertyValue('font-size'));
@@ -20,20 +19,17 @@ function GetEmWidth()
   return em_width;
 }
 
-function GetLinksPixelOffset()
-{
+function GetLinksPixelOffset() {
   style = getComputedStyle(links);
   let element_count = parseFloat(style.getPropertyValue('--element-count'));
   let element_height = parseFloat(style.getPropertyValue('--element-height'));
-  let em_height =  element_count * element_height + 1;
+  let em_height = element_count * element_height + 1;
   let font_size = parseFloat(style.getPropertyValue('font-size'));
   return em_height * font_size;
 }
 
-function ToggleDropdown()
-{
-  if(dropdown_in_motion === true)
-  {
+function ToggleDropdown() {
+  if (dropdown_in_motion === true) {
     return;
   }
 
@@ -42,16 +38,14 @@ function ToggleDropdown()
   // The rot suffix values are for the rotation of the dropdown menu button.
   let start_pos, end_pos;
   let start_rot, end_rot;
-  if (dropdown_open === false)
-  {
+  if (dropdown_open === false) {
     start_pos = -links_offset;
     end_pos = 0;
     start_rot = 0;
     end_rot = -180;
     dropdown_open = true;
   }
-  else
-  {
+  else {
     start_pos = 0;
     end_pos = -links_offset;
     start_rot = -180;
@@ -68,12 +62,10 @@ function ToggleDropdown()
   dropdown_in_motion = true;
   const start_time = new Date();
 
-  function step()
-  {
+  function step() {
     let current_time = new Date();
     let time_passed = current_time - start_time;
-    if (time_passed >= animation_time)
-    {
+    if (time_passed >= animation_time) {
       dropdown_in_motion = false;
       clearInterval(animation);
       return;
@@ -88,11 +80,9 @@ function ToggleDropdown()
   }
 }
 
-function WindowResize()
-{
+function WindowResize() {
   let em_width = GetEmWidth();
-  if (em_width <= compact_em_threshold && compact_mode === false)
-  {
+  if (em_width <= compact_em_threshold && compact_mode === false) {
     dropdown_open = false;
     compact_mode = true;
 
@@ -100,8 +90,7 @@ function WindowResize()
     arrow_svg.style.transform = 'rotate(0deg)';
     links.style.transform = 'translate(0px,' + -offset + 'px)';
   }
-  else if (em_width >= compact_em_threshold && compact_mode == true)
-  {
+  else if (em_width >= compact_em_threshold && compact_mode == true) {
     compact_mode = false;
     links.style.transform = 'translate(0px, 0px)';
   }
@@ -109,8 +98,7 @@ function WindowResize()
 
 window.onresize = WindowResize;
 
-function OnLoad()
-{
+function OnLoad() {
   root = document.querySelector('html');
   links = document.querySelector('div.links');
   arrow_svg = document.querySelector('div.arrow_container svg');
