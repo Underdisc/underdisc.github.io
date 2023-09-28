@@ -23,15 +23,32 @@ let templateHtml = GetFileContent('template.html');
 const cheerio = require('cheerio');
 let showdown = require('showdown');
 showdown.setOption('noHeaderId', 'true');
+showdown.setOption('simpleLineBreaks', 'true');
 const showdownHighlight = require('showdown-highlight');
 const converter = new showdown.Converter({extensions: [showdownHighlight]});
 
 function CorrectLink(html, selector, attribute, correction)
 {
-    let linkElement = html(selector);
-    let filePath = linkElement.attr(attribute);
-    filePath = correction + filePath;
-    linkElement.attr(attribute, filePath);
+  let linkElement = html(selector);
+  let filePath = linkElement.attr(attribute);
+  filePath = correction + filePath;
+  linkElement.attr(attribute, filePath);
+}
+
+// Retrieves the content of the template html and modifies the links to have
+// the correct relative paths.
+function RelativeTemplate(linkCorrection)
+{
+  let template = cheerio.load(templateHtml);
+  CorrectLink(template, 'link.favicon', 'href', linkCorrection);
+  CorrectLink(template, 'link.main_style', 'href', linkCorrection);
+  CorrectLink(template, 'link.hljs_style', 'href', linkCorrection);
+  CorrectLink(template, 'a.index_link', 'href', linkCorrection);
+  CorrectLink(template, 'a.blog_link', 'href', linkCorrection);
+  CorrectLink(template, 'a.projects_link', 'href', linkCorrection);
+  CorrectLink(template, 'a.notes_link', 'href', linkCorrection);
+  CorrectLink(template, 'script.main_script', 'src', linkCorrection);
+  return template;
 }
 
 function IsBuildNeeded(inputFile, outputFile)
@@ -57,7 +74,31 @@ function MakeRequiredDirectories(outputFile)
   fs.mkdirSync(dirPath, options);
 }
 
-function RenderMarkdown(inputFile, destination, rebuild)
+// Render markdown text into html.
+function RenderMarkdownIntoTemplate(template, markdown)
+{
+  let html = converter.makeHtml(markdown);
+  template('div.content_container').append(html);
+
+  // Put all <pre><code> blocks inside of a code box div.
+  template('pre code').each(function(i, domElement)
+  {
+    template(this).parent().replaceWith('<div class=\"code_box"><pre><code>' +
+      template(this).html());
+  });
+
+  // Apply lazy loading to all images and add the image_box class to the parent
+  // element because all images are contained in an image box.
+  template('img').each(function(i, domElement)
+  {
+    let image = template(this);
+    image.attr('loading', 'lazy');
+    let imageContainer = image.parent();
+    imageContainer.attr('class', 'image_box');
+  });
+}
+
+function RenderLocalMarkdown(inputFile, destination, rebuild)
 {
   // Before rendering a markdown document to html, we first check to see if the
   // output html document is already up to date with the current markdown
@@ -81,49 +122,18 @@ function RenderMarkdown(inputFile, destination, rebuild)
   // Before rendering the markdown document, we first fix all the links
   // contained in the template html if the output html will exist in a
   // directory below the root.
-  let template = cheerio.load(templateHtml);
   let depth = GetOccurrenceCount(inputFile, '/');
-  if(depth > 0)
+  let linkCorrection = ''
+  for(let i = 0; i < depth; ++i)
   {
-    let linkCorrection = '';
-    for(let i = 0; i < depth; ++i)
-    {
-      linkCorrection += '../'
-    }
-    CorrectLink(template, 'link.favicon', 'href', linkCorrection);
-    CorrectLink(template, 'link.main_style', 'href', linkCorrection);
-    CorrectLink(template, 'link.hljs_style', 'href', linkCorrection);
-    CorrectLink(template, 'a.index_link', 'href', linkCorrection);
-    CorrectLink(template, 'a.blog_link', 'href', linkCorrection);
-    CorrectLink(template, 'a.projects_link', 'href', linkCorrection);
-    CorrectLink(template, 'script.main_script', 'src', linkCorrection);
+    linkCorrection += '../'
   }
-
-  // Render the markdown document to html.
-  let markdown = fs.readFileSync(inputFile, 'utf8');
-  let html = converter.makeHtml(markdown);
-  template('div.content_container').append(html);
-
-  // Put all <pre><code> blocks inside of a code box div.
-  template('pre code').each(function(i, domElement)
-  {
-    template(this).parent().replaceWith('<div class=\"code_box"><pre><code>' +
-      template(this).html());
-  });
-
-  // Apply lazy loading to all images and add the image_box class to the parent
-  // element because all images are contained in an image box.
-  template('img').each(function(i, domElement)
-  {
-    let image = template(this);
-    image.attr('loading', 'lazy');
-    let imageContainer = image.parent();
-    imageContainer.attr('class', 'image_box');
-  });
+  let template = RelativeTemplate(linkCorrection);
 
   // Ouput the new html to its destination.
-  let outputHtml = template.html();
-  fs.writeFileSync(outputFile, outputHtml, 'utf8');
+  let markdown = fs.readFileSync(inputFile, 'utf8');
+  RenderMarkdownIntoTemplate(template, markdown)
+  fs.writeFileSync(outputFile, template.html(), 'utf8');
   console.log('Built ' + inputFile);
 }
 
@@ -144,10 +154,50 @@ function RenderRecursively(directory, destination, rebuild)
       let end  = file.name.slice(file.name.length - 3);
       if(end === '.md')
       {
-        RenderMarkdown(directory + file.name, destination, rebuild);
+        RenderLocalMarkdown(directory + file.name, destination, rebuild);
       }
     }
   }
+}
+
+function RenderNotes(rebuild)
+{
+  let notesIndexMarkdown = fs.readFileSync('notes/index.md');
+  fs.readdirSync('notes/').forEach(filename => {
+    if (filename == 'index.md') {
+      return;
+    }
+
+    // Create the entry on the notes index.
+    let dateEnd = filename.indexOf('_');
+    let date = filename.slice(0, dateEnd);
+    let titleEnd = filename.indexOf('.');
+    let title = filename.slice(dateEnd + 1, titleEnd);
+    title = title.replaceAll('_', ' ');
+    let extensionStart = filename.indexOf('.');
+    let htmlFilename = filename.slice(0, extensionStart + 1) + 'html';
+    notesIndexMarkdown += '\n' + date + ' - [' + title + '](' + htmlFilename
+      + ')';
+
+    // Only write render the html if it needs to be updated.
+    let markdownFilename = 'notes/' + filename;
+    htmlFilename = '../notes/' + htmlFilename
+    if (!IsBuildNeeded(markdownFilename, htmlFilename) && !rebuild) {
+      return;
+    }
+
+    // Render the file.
+    let notesMarkdown = fs.readFileSync(markdownFilename);
+    notesMarkdown = '#' + title + '\n' + notesMarkdown;
+    let template = RelativeTemplate('../');
+    RenderMarkdownIntoTemplate(template, notesMarkdown.toString());
+    fs.writeFileSync(htmlFilename, template.html(), 'utf-8');
+    console.log('Built ' + markdownFilename);
+  })
+
+  let template = RelativeTemplate('../');
+  RenderMarkdownIntoTemplate(template, notesIndexMarkdown);
+  fs.writeFileSync('../notes/index.html', template.html(), 'utf-8');
 }
 
 let rebuild = false;
@@ -159,9 +209,10 @@ if(process.argv.length > 2)
 }
 if(makeTests)
 {
-  RenderMarkdown('index.md', '../', true);
+  RenderLocalMarkdown('index.md', '../', true);
 }
 
-RenderMarkdown('index.md', '../', rebuild);
+RenderLocalMarkdown('index.md', '../', rebuild);
 RenderRecursively('blog/', '../', rebuild);
 RenderRecursively('projects/', '../', rebuild);
+RenderNotes(rebuild);

@@ -1,0 +1,215 @@
+<html><head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"></path>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../projects/index.html">Projects</a>
+        <a class="sidebar_element notes_link" href="../notes/index.html">Notes</a>
+      </div>
+    </div>
+    <div class="content_container"><h1>only update relevant things once</h1>
+<p>I am working on some performance improvements. When a splatch starts to get larger than normal, changing node positions gets pricey. This is because I update all the patches rather than the handful of patches that need to be changed. Not only am I updating all the patches. I am updating the rods and edges that undergo changes multiple times.</p>
+<p>I did some profiling on my current crappy implementation.</p>
+<div class="code_box"><pre><code>UpdateEverything - This accounts for updating rods, edges, and patches.
+UpdateRodsAndEdges - This <span class="hljs-keyword">is</span> just for updating rods and edges.
+UpdatePatches - This <span class="hljs-keyword">is</span> just for updating patches.
+</code></pre></div>
+<p>Here is the relevant code for that.</p>
+<div class="code_box"><pre><code>{
+  <span class="hljs-comment">//...</span>
+  <span class="hljs-built_in">TracyCZoneN</span>(UpdateEverything, <span class="hljs-string">"UpdateEverything"</span>, <span class="hljs-literal">true</span>);
+  <span class="hljs-comment">// Apply the motion to all points.</span>
+  <span class="hljs-built_in">TracyCZoneN</span>(UpdateRodsAndEdges, <span class="hljs-string">"UpdateRodsAndEdges"</span>, <span class="hljs-literal">true</span>);
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; (<span class="hljs-keyword">int</span>)Strength::Count; ++i) {
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; selection = mSelection[i];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>; p &lt; selection.<span class="hljs-built_in">Size</span>(); ++p) {
+      World::MemberId nodeId = selection[p];
+      <span class="hljs-keyword">const</span> Node&amp; node = nSpace.Get&lt;Node&gt;(nodeId);
+      Vec3&amp; point = splatch-&gt;mPoints[node.mPointId].mPosition;
+      point = <span class="hljs-built_in">motion</span>(point);
+      nSpace.Get&lt;Comp::Transform&gt;(nodeId).<span class="hljs-built_in">SetTranslation</span>(point);
+
+      <span class="hljs-comment">// Apply the change to all connected rods and edges.</span>
+      <span class="hljs-keyword">for</span> (World::MemberId rodId : node.mRods) {
+        <span class="hljs-built_in">UpdateRod</span>(*splatch, rodId);
+      }
+      <span class="hljs-keyword">for</span> (World::MemberId edgeId : node.mEdgeIds) {
+        <span class="hljs-keyword">if</span> (edgeId != World::nInvalidMemberId) {
+          <span class="hljs-built_in">UpdateLineMesh</span>(*splatch, edgeId);
+        }
+      }
+    }
+  }
+  <span class="hljs-built_in">TracyCZoneEnd</span>(UpdateRodsAndEdges);
+
+
+  <span class="hljs-comment">// Update the affected mesh patches.</span>
+  <span class="hljs-built_in">TracyCZoneN</span>(UpdatePatches, <span class="hljs-string">"UpdatePatches"</span>, <span class="hljs-literal">true</span>);
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>; p &lt; splatch-&gt;mPatches.<span class="hljs-built_in">Size</span>(); ++p) {
+    splatch-&gt;<span class="hljs-built_in">UpdateMeshPatch</span>(splatch-&gt;mPatches.<span class="hljs-built_in">Dense</span>()[p]);
+  }
+  <span class="hljs-built_in">TracyCZoneEnd</span>(UpdatePatches);
+  <span class="hljs-built_in">TracyCZoneEnd</span>(UpdateEverything);
+}
+</code></pre></div>
+<p>With four corner nodes selected, 103 patches, and 696 frames, here are the profiling averages.</p>
+<div class="code_box"><pre><code><span class="hljs-attribute">UpdateEverything</span> - <span class="hljs-number">44</span>.<span class="hljs-number">56</span>ms
+<span class="hljs-attribute">UpdateRodsAndEdges</span> - <span class="hljs-number">663</span>.<span class="hljs-number">04</span>us
+<span class="hljs-attribute">UpdatePatches</span> - <span class="hljs-number">43</span>.<span class="hljs-number">89</span>ms
+</code></pre></div>
+<p>Obviously, this is pretty bad. Now let's improve it.</p>
+<p>My new implementation makes use of Ds::RbTree. It's my red black tree structure. I am using it as a set to provide a speed-up. It's important to know that every node/element in the rbtree is a separate allocation with new. I've been concerned about the slow-down caused by that, but it shouldn't be relevant here.</p>
+<p>For this next profiling session, I have some new zones.</p>
+<div class="code_box"><pre><code>UpdateEverything - Same <span class="hljs-keyword">as</span> <span class="hljs-keyword">before</span>.
+CollectDirty - Collection <span class="hljs-keyword">of</span> <span class="hljs-keyword">all</span> the objects/patches that need <span class="hljs-keyword">to</span> be updated.
+UpdateDirty - <span class="hljs-keyword">Update</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">all</span> the collected dirty objects/patches.
+</code></pre></div>
+<p>Here is the relevant code.</p>
+<div class="code_box"><pre><code>  <span class="hljs-comment">// Apply the motion to all points and find all gizmo objects and patches that</span>
+  <span class="hljs-comment">// need to be updated.</span>
+  <span class="hljs-built_in">TracyCZoneN</span>(UpdateEverything, <span class="hljs-string">"UpdateEverything"</span>, <span class="hljs-literal">true</span>);
+  <span class="hljs-built_in">TracyCZoneN</span>(CollectDirty, <span class="hljs-string">"CollectDirty"</span>, <span class="hljs-literal">true</span>);
+  Ds::RbTree&lt;World::MemberId&gt; dirtyRods;
+  Ds::RbTree&lt;World::MemberId&gt; dirtyEdges;
+  Ds::RbTree&lt;Ds::PoolId&gt; dirtyPatches;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; (<span class="hljs-keyword">int</span>)Strength::Count; ++i) {
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; selection = mSelection[i];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>; p &lt; selection.<span class="hljs-built_in">Size</span>(); ++p) {
+      <span class="hljs-comment">// Apply the motion to the point.</span>
+      World::MemberId nodeId = selection[p];
+      <span class="hljs-keyword">const</span> Node&amp; node = nSpace.Get&lt;Node&gt;(nodeId);
+      Vec3&amp; point = splatch-&gt;mPoints[node.mPointId].mPosition;
+      point = <span class="hljs-built_in">motion</span>(point);
+      nSpace.Get&lt;Comp::Transform&gt;(nodeId).<span class="hljs-built_in">SetTranslation</span>(point);
+
+      <span class="hljs-comment">// Account for dirty rods, edges, and patches.</span>
+      <span class="hljs-keyword">for</span> (World::MemberId rodId : node.mRods) {
+        dirtyRods.<span class="hljs-built_in">Insert</span>(rodId);
+      }
+      <span class="hljs-keyword">for</span> (World::MemberId edgeId : node.mEdgeIds) {
+        <span class="hljs-keyword">if</span> (edgeId == World::nInvalidMemberId) {
+          <span class="hljs-keyword">continue</span>;
+        }
+        dirtyEdges.<span class="hljs-built_in">Insert</span>(edgeId);
+        <span class="hljs-keyword">const</span> Edge&amp; edge = nSpace.Get&lt;Edge&gt;(edgeId);
+        dirtyPatches.<span class="hljs-built_in">Insert</span>(edge.mPatchId);
+        Ds::PoolId adjacentPatchId =
+          splatch-&gt;mPatches[edge.mPatchId].mAdjacentPatchIds[edge.mDirection];
+        <span class="hljs-keyword">if</span> (adjacentPatchId != Ds::nInvalidPoolId) {
+          dirtyPatches.<span class="hljs-built_in">Insert</span>(adjacentPatchId);
+        }
+      }
+    }
+  }
+  <span class="hljs-built_in">TracyCZoneEnd</span>(CollectDirty);
+
+  <span class="hljs-comment">// Update all of the changed gizmo objects and patches.</span>
+  <span class="hljs-built_in">TracyCZoneN</span>(UpdateDirty, <span class="hljs-string">"UpdateDirty"</span>, <span class="hljs-literal">true</span>);
+  <span class="hljs-keyword">for</span> (World::MemberId rodId : dirtyRods) {
+    <span class="hljs-built_in">UpdateRod</span>(*splatch, rodId);
+  }
+  <span class="hljs-keyword">for</span> (World::MemberId edgeId : dirtyEdges) {
+    <span class="hljs-built_in">UpdateLineMesh</span>(*splatch, edgeId);
+  }
+  <span class="hljs-keyword">for</span> (Ds::PoolId patchId : dirtyPatches) {
+    splatch-&gt;<span class="hljs-built_in">UpdateMeshPatch</span>(patchId);
+  }
+  <span class="hljs-built_in">TracyCZoneEnd</span>(UpdateDirty);
+  <span class="hljs-built_in">TracyCZoneEnd</span>(UpdateEverything);
+</code></pre></div>
+<p>Ok, let's see the new times using the same setup as before.</p>
+<div class="code_box"><pre><code><span class="hljs-attribute">UpdateEverything</span> - <span class="hljs-number">2</span>.<span class="hljs-number">06</span>ms
+<span class="hljs-attribute">CollectDirty</span> - <span class="hljs-number">23</span>.<span class="hljs-number">14</span>us
+<span class="hljs-attribute">UpdateDirty</span> - <span class="hljs-number">2</span>.<span class="hljs-number">03</span>ms
+</code></pre></div>
+<p>What is that? 21.6 times faster.</p>
+<p>Ah fuck. Wait. There's a bug in here. If I move an interior point, it won't update the patch because it doesn't reference any edges. The fix here should be quite easy. Make a lambda that registers elements attached to a node as dirty. If a node is an interior node, follow the attached rod to the edge node and call the lambda with that node.</p>
+<p>This will result in unnecessarily updating patches that didn't change, but at least this is much faster than before. Here is the new code for the relevant section (CollectDirty).</p>
+<div class="code_box"><pre><code>{
+  <span class="hljs-comment">//...</span>
+  <span class="hljs-built_in">TracyCZoneN</span>(UpdateEverything, <span class="hljs-string">"UpdateEverything"</span>, <span class="hljs-literal">true</span>);
+  <span class="hljs-built_in">TracyCZoneN</span>(CollectDirty, <span class="hljs-string">"CollectDirty"</span>, <span class="hljs-literal">true</span>);
+  Ds::RbTree&lt;World::MemberId&gt; dirtyRods;
+  Ds::RbTree&lt;World::MemberId&gt; dirtyEdges;
+  Ds::RbTree&lt;Ds::PoolId&gt; dirtyPatches;
+  <span class="hljs-comment">// Adds all elements that need to be updated because a relevant node moved.</span>
+  <span class="hljs-keyword">auto</span> addDirtiedElements = [&amp;](<span class="hljs-keyword">const</span> Node&amp; node)
+  {
+    <span class="hljs-keyword">for</span> (World::MemberId rodId : node.mRods) {
+      dirtyRods.<span class="hljs-built_in">Insert</span>(rodId);
+    }
+    <span class="hljs-keyword">for</span> (World::MemberId edgeId : node.mEdgeIds) {
+      <span class="hljs-keyword">if</span> (edgeId == World::nInvalidMemberId) {
+        <span class="hljs-keyword">continue</span>;
+      }
+      dirtyEdges.<span class="hljs-built_in">Insert</span>(edgeId);
+      <span class="hljs-keyword">const</span> Edge&amp; edge = nSpace.Get&lt;Edge&gt;(edgeId);
+      dirtyPatches.<span class="hljs-built_in">Insert</span>(edge.mPatchId);
+      Ds::PoolId adjacentPatchId =
+        splatch-&gt;mPatches[edge.mPatchId].mAdjacentPatchIds[edge.mDirection];
+      <span class="hljs-keyword">if</span> (adjacentPatchId != Ds::nInvalidPoolId) {
+        dirtyPatches.<span class="hljs-built_in">Insert</span>(adjacentPatchId);
+      }
+    }
+  };
+
+  <span class="hljs-comment">// Apply the motion to all points and find all gizmo objects and patches</span>
+  <span class="hljs-comment">// (dirty elements) that need to be updated.</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; (<span class="hljs-keyword">int</span>)Strength::Count; ++i) {
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; selection = mSelection[i];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>; p &lt; selection.<span class="hljs-built_in">Size</span>(); ++p) {
+      <span class="hljs-comment">// Apply the motion to the point.</span>
+      World::MemberId nodeId = selection[p];
+      <span class="hljs-keyword">const</span> Node&amp; node = nSpace.Get&lt;Node&gt;(nodeId);
+      Vec3&amp; point = splatch-&gt;mPoints[node.mPointId].mPosition;
+      point = <span class="hljs-built_in">motion</span>(point);
+      nSpace.Get&lt;Comp::Transform&gt;(nodeId).<span class="hljs-built_in">SetTranslation</span>(point);
+
+      <span class="hljs-comment">// Add the elements that are now dirtied because of the point motion.</span>
+      <span class="hljs-built_in">addDirtiedElements</span>(node);
+      <span class="hljs-comment">// Moving an interior node needs to update the patch it is part of.</span>
+      <span class="hljs-keyword">if</span> ((Strength)i == Strength::Interior) {
+        <span class="hljs-keyword">const</span> Rod&amp; rod = nSpace.Get&lt;Rod&gt;(node.mRods[<span class="hljs-number">0</span>]);
+        World::MemberId edgeNodeId = mPointIdToMemberId[rod.mPointIds[<span class="hljs-number">0</span>]];
+        <span class="hljs-built_in">addDirtiedElements</span>(nSpace.Get&lt;Node&gt;(edgeNodeId));
+      }
+    }
+  }
+  <span class="hljs-built_in">TracyCZoneEnd</span>(CollectDirty);
+}
+</code></pre></div>
+<p>With this change, here are the new times. These are averages over 22,472 runs.</p>
+<div class="code_box"><pre><code><span class="hljs-attribute">UpdateEverything</span> - <span class="hljs-number">2</span>.<span class="hljs-number">17</span>ms
+<span class="hljs-attribute">CollectDirty</span> - <span class="hljs-number">29</span>.<span class="hljs-number">66</span>us
+<span class="hljs-attribute">UpdateDirty</span> - <span class="hljs-number">2</span>.<span class="hljs-number">12</span>ms
+</code></pre></div>
+<p>Just a little slower, as expected, but necessary to make things work as they should.</p>
+<p>Just because I am curious, I want to add three more zones to see how long it takes to update each of the dirtied elements: rods, edges, and patches. I am certain that edges and patches will take the longest, but just how long is what I am curious about. 20,388 runs.</p>
+<div class="code_box"><pre><code><span class="hljs-attribute">UpdateRods</span> - <span class="hljs-number">12</span>.<span class="hljs-number">62</span>us
+<span class="hljs-attribute">UpdateEdges</span> - <span class="hljs-number">418</span>.<span class="hljs-number">9</span>us
+<span class="hljs-attribute">UpdatePatches</span> - <span class="hljs-number">1</span>.<span class="hljs-number">62</span>ms
+</code></pre></div>
+<p>So patch updating would certainly be the next thing to target for performance improvements.</p></div>
+  </div>
+
+
+</body></html>

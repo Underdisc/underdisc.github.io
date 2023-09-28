@@ -1,0 +1,158 @@
+<html><head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"></path>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../projects/index.html">Projects</a>
+        <a class="sidebar_element notes_link" href="../notes/index.html">Notes</a>
+      </div>
+    </div>
+    <div class="content_container"><h1>dont rebind equivalent materials</h1>
+<p>I have three things going through my mind as things to work on.</p>
+<ul>
+<li>Add instanced rendering.</li>
+<li>Get gizmo transparency working when multiple gizmos are active.</li>
+<li>Have line meshes use three or more points for defining the interior cylinder.</li>
+</ul>
+<p>I am most interested in the first two at the moment.</p>
+<p>I just did a little bit a digging and it turns out that the two problems are somewhat related. Instanced rendering is going to require sorting the renderables based on material and mesh. Gizmo transparency is going to require some form of OIT. That means we will need to know which renderables are transparent. Simpler, but still another form of sorting because we want to render all the transparent objects in one pass.</p>
+<p>So, I am going to start with instanced rendering. I'll get a performance boost for my scenes with many repeated objects and I'll get sorting renderables established, which will help with the gizmo transparency problem later.</p>
+<p>In my current rendering structure, there are renderables. All renderables in a scene are grouped together in a Renderable::Collection.</p>
+<div class="code_box"><pre><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Collection</span>
+{</span>
+  Ds::Vector&lt;Renderable::Floater&gt; mFloaters;
+  Renderable::Skybox mSkybox;
+  Ds::Vector&lt;Renderable::Icon&gt; mIcons;
+  UniformVector mUniforms;
+  <span class="hljs-comment">//...</span>
+}
+</code></pre></div>
+<p>Floaters are the primary type of Renderable. A Floater represents one of the objects that "float" in the scene. All the objects that make up the environment of the scene can be found here. Think trees, rocks, buildings.</p>
+<div class="code_box"><pre><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Floater</span>
+{</span>
+  World::MemberId mOwner;
+  Mat4 mTransform;
+  ResId mMaterialId;
+  ResId mMeshId;
+  UniformVector mUniforms;
+};
+</code></pre></div>
+<p>Getting instanced rendering to work is going to involve sorting the vector of floaters by material first and mesh second. That way, we can bind a material once and render all the meshes that use that material. Likewise, we can group together all floaters with the same mesh into a single draw call.</p>
+<p>One issue here is the uniform vector. Uniforms can be specified on a per-renderable basis. That also means they must be set on a per-renderable basis. For now, I am going to continue to bind uniforms on a per-renderable basis because that is an extra step. Let's see what kind of performance improvement comes from eliminating the repetitious material binds. It won't be instanced rendering, but it will remove repeated work.</p>
+<p>I will be testing performance with the scene I am currently looking to optimize. Let me find some objective stats and numbers to write down.</p>
+<div class="code_box"><pre><code><span class="hljs-string">&lt;=</span> <span class="hljs-string">Specifics</span> <span class="hljs-string">=&gt;</span>
+<span class="hljs-attr">Material:</span> <span class="hljs-string">gizmo/splatch:inactive</span>
+  <span class="hljs-attr">Mesh:</span> <span class="hljs-string">vres/gizmo:sphere</span>
+    <span class="hljs-attr">Count:</span> <span class="hljs-number">1258</span>
+  <span class="hljs-attr">Mesh:</span> <span class="hljs-string">gizmo/splatch:egdeLine[0-315]</span>
+    <span class="hljs-attr">Count:</span> <span class="hljs-number">1</span>
+<span class="hljs-attr">Material:</span> <span class="hljs-string">gizmo/splatch:rod</span>
+  <span class="hljs-attr">Mesh:</span> <span class="hljs-string">gizmo/spline:Cylinder</span>
+    <span class="hljs-attr">Count:</span> <span class="hljs-number">1454</span>
+<span class="hljs-string">&lt;=</span> <span class="hljs-string">Summary</span> <span class="hljs-string">=&gt;</span>
+<span class="hljs-attr">Unique Materials:</span> <span class="hljs-number">3</span>
+<span class="hljs-attr">Unique Meshes:</span> <span class="hljs-number">318</span>
+</code></pre></div>
+<p>While looking at the raw data for this. I was happy to see the <code>gizmo/splatch:inactive</code> material show up not grouped together in the output. It justifies that sorting is necessary for this scene.</p>
+<div class="code_box"><pre><code><span class="hljs-section">&lt;= Timings =&gt;</span>
+<span class="hljs-attribute">CollectRenderables</span>: <span class="hljs-number">2</span>.<span class="hljs-number">02</span>ms
+<span class="hljs-attribute">RenderFloaters</span>: <span class="hljs-number">11</span>.<span class="hljs-number">54</span>ms
+</code></pre></div>
+<p>These are means after 11,833 runs. RenderFloaters is what will be optimized. CollectRenderables is the step that collects all the renderables. All of them are collected every frame. That should ideally become no time at all, since renderables should only be collected when removed when they are created or deleted.</p>
+<p>Here is the relevant code (11.54ms) that I will be adding the sort and material grouping too. Let's see what the performance differences are once we start grouping things together.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Collection::RenderFloaters</span><span class="hljs-params">()</span>
+</span>{
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> Renderable::Floater&amp; floater : mFloaters) {
+    <span class="hljs-comment">// Get all of the resources needed for rendering.</span>
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>* material = Rsl::TryGetRes&lt;Gfx::Material&gt;(floater.mMaterialId);
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>* mesh = Rsl::TryGetRes&lt;Gfx::Mesh&gt;(floater.mMeshId);
+    <span class="hljs-keyword">if</span> (material == <span class="hljs-literal">nullptr</span> || mesh == <span class="hljs-literal">nullptr</span>) {
+      <span class="hljs-keyword">return</span>;
+    }
+    Gfx::Shader* shader = Rsl::TryGetRes&lt;Gfx::Shader&gt;(material-&gt;mShaderId);
+    <span class="hljs-keyword">if</span> (shader == <span class="hljs-literal">nullptr</span>) {
+      <span class="hljs-keyword">return</span>;
+    }
+    shader-&gt;<span class="hljs-built_in">Use</span>();
+
+    <span class="hljs-comment">// Perform the render.</span>
+    <span class="hljs-keyword">int</span> textureIndex = <span class="hljs-number">0</span>;
+    mUniforms.<span class="hljs-built_in">Bind</span>(*shader, &amp;textureIndex);
+    material-&gt;mUniforms.<span class="hljs-built_in">Bind</span>(*shader, &amp;textureIndex);
+    floater.mUniforms.<span class="hljs-built_in">Bind</span>(*shader, &amp;textureIndex);
+    shader-&gt;<span class="hljs-built_in">SetUniform</span>(<span class="hljs-string">"uModel"</span>, floater.mTransform);
+    mesh-&gt;<span class="hljs-built_in">Render</span>();
+  }
+}
+</code></pre></div>
+<p>Before worrying about the sort, though, I am going to try something that I am certain will reduce the number of material binds for the test scene. The materials are already grouped up quite well, so I'm just going to ignore the sort for now. I want to see what kind of benefit I get if I don't sort and only bind a new material if the material changes. RenderFloaters becomes this.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Collection::RenderFloaters</span><span class="hljs-params">()</span>
+</span>{
+  ResId currentMaterialId;
+  <span class="hljs-keyword">int</span> currentTextureIndex;
+  Shader* currentShader = <span class="hljs-literal">nullptr</span>;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> Renderable::Floater&amp; floater : mFloaters) {
+    <span class="hljs-keyword">if</span> (floater.mMaterialId != currentMaterialId) {
+      <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>* nextMaterial =
+        Rsl::TryGetRes&lt;Gfx::Material&gt;(floater.mMaterialId);
+      <span class="hljs-keyword">if</span> (nextMaterial == <span class="hljs-literal">nullptr</span>) {
+        <span class="hljs-keyword">continue</span>;
+      }
+      Gfx::Shader* nextShader =
+        Rsl::TryGetRes&lt;Gfx::Shader&gt;(nextMaterial-&gt;mShaderId);
+      <span class="hljs-keyword">if</span> (nextShader == <span class="hljs-literal">nullptr</span>) {
+        <span class="hljs-keyword">continue</span>;
+      }
+      currentMaterialId = floater.mMaterialId;
+      currentTextureIndex = <span class="hljs-number">0</span>;
+      currentShader = nextShader;
+      currentShader-&gt;<span class="hljs-built_in">Use</span>();
+      mUniforms.<span class="hljs-built_in">Bind</span>(*currentShader, &amp;currentTextureIndex);
+      nextMaterial-&gt;mUniforms.<span class="hljs-built_in">Bind</span>(*currentShader, &amp;currentTextureIndex);
+    }
+    <span class="hljs-keyword">if</span> (currentShader == <span class="hljs-literal">nullptr</span>) {
+      <span class="hljs-keyword">continue</span>;
+    }
+
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>* mesh = Rsl::TryGetRes&lt;Gfx::Mesh&gt;(floater.mMeshId);
+    <span class="hljs-keyword">if</span> (mesh == <span class="hljs-literal">nullptr</span>) {
+      <span class="hljs-keyword">continue</span>;
+    }
+
+    <span class="hljs-comment">// Perform the render.</span>
+    <span class="hljs-keyword">int</span> textureIndex = currentTextureIndex;
+    floater.mUniforms.<span class="hljs-built_in">Bind</span>(*currentShader, &amp;textureIndex);
+    currentShader-&gt;<span class="hljs-built_in">SetUniform</span>(<span class="hljs-string">"uModel"</span>, floater.mTransform);
+    mesh-&gt;<span class="hljs-built_in">Render</span>();
+  }
+}
+</code></pre></div>
+<p>Wow. The performance difference is massive. Here are the new averages after 19344 runs.</p>
+<div class="code_box"><pre><code><span class="hljs-section">&lt;= Timings =&gt;</span>
+<span class="hljs-attribute">CollectRenderables</span>: <span class="hljs-number">2</span>.<span class="hljs-number">02</span>ms
+<span class="hljs-attribute">RenderFloaters</span>: <span class="hljs-number">3</span>.<span class="hljs-number">36</span>ms
+</code></pre></div>
+<p>That's about 3.4 times faster and that's quite a bit when we're dealing with an 11ms starting point.</p></div>
+  </div>
+
+
+</body></html>

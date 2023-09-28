@@ -13,7 +13,7 @@
       <div class="header">
         <div class="arrow_container">
           <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"></path>
           </svg>
         </div>
         <div class="header_text">Underdisc</div>
@@ -23,6 +23,7 @@
         <a class="sidebar_element index_link" href="../../index.html">Home</a>
         <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
         <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+        <a class="sidebar_element notes_link" href="../../notes/index.html">Notes</a>
       </div>
     </div>
     <div class="content_container"><h1>Shader Includes and Varkor Projects</h1>
@@ -31,36 +32,36 @@
 <p>After creating the first implementation for my renderer, I knew that I wanted abilitiy to apply custom shaders to objects. Using shaders to get interesting effects is a must have for me, so this was something I wanted to tackle early. To do this, Model components were given a <code>ShaderId</code>. This Id references the shader that should be used to draw the Model.</p>
 <div class="code_box"><pre><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Model</span>
 {</span>
-  Model();
+  <span class="hljs-built_in">Model</span>();
   <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">EditorHook</span><span class="hljs-params">()</span></span>;
 
   AssetLibrary::ShaderId mShaderId;
-  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> mAsset;
+  std::string mAsset;
 };
 </code></pre></div>
-<p>Now that the Model component stores this data, the renderer can use it to find the appropriate shader asset to be used in the next rendering operation. If the shader asset doesn&apos;t exist, a default shader is used instead.</p>
+<p>Now that the Model component stores this data, the renderer can use it to find the appropriate shader asset to be used in the next rendering operation. If the shader asset doesn't exist, a default shader is used instead.</p>
 <div class="code_box"><pre><code><span class="hljs-keyword">const</span> AssetLibrary::Shader* shaderAsset =
-  AssetLibrary::GetShader(modelComp.mShaderId);
+  AssetLibrary::<span class="hljs-built_in">GetShader</span>(modelComp.mShaderId);
 <span class="hljs-keyword">const</span> Shader* drawShader;
-<span class="hljs-keyword">if</span> (shaderAsset != <span class="hljs-literal">nullptr</span> &amp;&amp; shaderAsset-&gt;mShader.Live())
+<span class="hljs-keyword">if</span> (shaderAsset != <span class="hljs-literal">nullptr</span> &amp;&amp; shaderAsset-&gt;mShader.<span class="hljs-built_in">Live</span>())
 {
   drawShader = &amp;shaderAsset-&gt;mShader;
 } <span class="hljs-keyword">else</span>
 {
   drawShader = &amp;nDefaultShader;
 }
-drawShader-&gt;Use();
+drawShader-&gt;<span class="hljs-built_in">Use</span>();
 </code></pre></div>
-<p>Adding the ShaderId to the Model component and using that ShaderId in the renderer wasn&apos;t the bulk of the work here though. That award goes to the <code>AssetLibrary</code> and the editor interface for it. Using the AssetLibrary, a user can create a new shader, select its vertex and fragment files, and compile it. The best part is that all of this can be done in the editor without any restarts. Here&apos;s a small gif showing what that process looks like.</p>
+<p>Adding the ShaderId to the Model component and using that ShaderId in the renderer wasn't the bulk of the work here though. That award goes to the <code>AssetLibrary</code> and the editor interface for it. Using the AssetLibrary, a user can create a new shader, select its vertex and fragment files, and compile it. The best part is that all of this can be done in the editor without any restarts. Here's a small gif showing what that process looks like.</p>
 <p class="image_box"><img src="shader_pipeline.gif" alt="shader_pipeline" loading="lazy"></p>
 <h2>Include Statements Are Hard</h2>
 <p>At the moment, I have one shader that implements phong lighting called phong.fs. It feels limiting not being able to put the functions and structures used to perform that lighting into different files so I can use them in different shaders without having to duplicate code. Considering I have yet to use it, I am not sure if this was worthwhile, but I added the <code>#include</code> prepocessor macro to my shader implementation to avoid code duplication. It was really difficult to implement for reasons I did not expect.</p>
-<p>Implementing include statements by just copying the content of the included file and replacing the include statement with it is less than half of the battle. The real fight is making sure error reporting is still accurate. I don&apos;t want shader errors to display inaccurate file and line information becuase that&apos;s the most important information. I often fix errors by just looking at the line an error occurred on without even reading the error message. Sacrificing that would make includes more of a burden than a benefit, so I had to find a solution..</p>
+<p>Implementing include statements by just copying the content of the included file and replacing the include statement with it is less than half of the battle. The real fight is making sure error reporting is still accurate. I don't want shader errors to display inaccurate file and line information becuase that's the most important information. I often fix errors by just looking at the line an error occurred on without even reading the error message. Sacrificing that would make includes more of a burden than a benefit, so I had to find a solution..</p>
 <p>What I ended up doing is keeping track of where certain shader code comes from as the include preprocessing is performed using <code>SourceChunks</code>. Once the preprocessing is finished, an IncludeResult is returned from the function that handles the preprocessing and it contains a sorted vector of those SourceChunks.</p>
 <div class="code_box"><pre><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SourceChunk</span>
 {</span>
   <span class="hljs-comment">// The file that the chunk comes from.</span>
-  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> mFile;
+  std::string mFile;
   <span class="hljs-comment">// The line numbers that the chunk of source code starts and ends on.</span>
   <span class="hljs-comment">// [start, end). The start is inclusive and the end is not.</span>
   <span class="hljs-keyword">int</span> mStartLine;
@@ -72,23 +73,23 @@ drawShader-&gt;Use();
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">IncludeResult</span>
 {</span>
   <span class="hljs-keyword">bool</span> mSuccess;
-  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> mError;
+  std::string mError;
   Ds::Vector&lt;SourceChunk&gt; mChunks;
 };
-<span class="hljs-function">IncludeResult <span class="hljs-title">HandleIncludes</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* shaderFile, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&amp; content)</span></span>;
+<span class="hljs-function">IncludeResult <span class="hljs-title">HandleIncludes</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* shaderFile, std::string&amp; content)</span></span>;
 </code></pre></div>
-<p>Actually creating that sorted list of SourceChunks was the largest challenge I faced here. What made it immensely difficult was considering what happens when an included file includes another file. It&apos;s an obvious candidate for recursion, but it&apos;s not exactly fibonacci. Here&apos;s a little overview of how I accomplished it since it took me a few days to figure out and be reasonably satisfied with my solution.</p>
+<p>Actually creating that sorted list of SourceChunks was the largest challenge I faced here. What made it immensely difficult was considering what happens when an included file includes another file. It's an obvious candidate for recursion, but it's not exactly fibonacci. Here's a little overview of how I accomplished it since it took me a few days to figure out and be reasonably satisfied with my solution.</p>
 <div class="code_box"><pre><code><span class="hljs-comment">// The first source chunk is the file we are currently in.</span>
 SourceChunk chunk;
 chunk.mFile = shaderFile;
 chunk.mExcludedLines = <span class="hljs-number">0</span>;
 chunk.mStartLine = <span class="hljs-number">1</span>;
 IncludeResult result;
-result.mChunks.Push(chunk);
+result.mChunks.<span class="hljs-built_in">Push</span>(chunk);
 
-<span class="hljs-function"><span class="hljs-built_in">std</span>::regex <span class="hljs-title">expression</span><span class="hljs-params">(<span class="hljs-string">&quot;#include \&quot;([^\&quot;]*)\&quot;&quot;</span>)</span></span>;
-<span class="hljs-built_in">std</span>::smatch match;
-<span class="hljs-keyword">while</span> (<span class="hljs-built_in">std</span>::regex_search(content.cbegin(), content.cend(), match, expression))
+<span class="hljs-function">std::regex <span class="hljs-title">expression</span><span class="hljs-params">(<span class="hljs-string">"#include \"([^\"]*)\""</span>)</span></span>;
+std::smatch match;
+<span class="hljs-keyword">while</span> (std::<span class="hljs-built_in">regex_search</span>(content.<span class="hljs-built_in">cbegin</span>(), content.<span class="hljs-built_in">cend</span>(), match, expression))
 {
   <span class="hljs-comment">// ...</span>
   <span class="hljs-comment">// Everything else will be within this scope.</span>
@@ -96,16 +97,16 @@ result.mChunks.Push(chunk);
 }
 </code></pre></div>
 <p>Step one is to create the first SourceChunk and find an include statement. Since all I am doing here is implementing include statements and nothing else, regex is adequate.</p>
-<div class="code_box"><pre><code><span class="hljs-comment">// Find the backmost chunk&apos;s end line, and use it to find the number of</span>
+<div class="code_box"><pre><code><span class="hljs-comment">// Find the backmost chunk's end line, and use it to find the number of</span>
 <span class="hljs-comment">// lines excluded from the next chunk for the current file.</span>
-<span class="hljs-keyword">int</span> includeLine = GetLineNumber(match[<span class="hljs-number">0</span>].first - content.begin(), content);
-result.mChunks.Top().mEndLine = includeLine;
-chunk.mExcludedLines += includeLine - result.mChunks.Top().mStartLine + <span class="hljs-number">1</span>;
+<span class="hljs-keyword">int</span> includeLine = <span class="hljs-built_in">GetLineNumber</span>(match[<span class="hljs-number">0</span>].first - content.<span class="hljs-built_in">begin</span>(), content);
+result.mChunks.<span class="hljs-built_in">Top</span>().mEndLine = includeLine;
+chunk.mExcludedLines += includeLine - result.mChunks.<span class="hljs-built_in">Top</span>().mStartLine + <span class="hljs-number">1</span>;
 
-<span class="hljs-comment">// Remove the backmost chunk if it doesn&apos;t contain content.</span>
-<span class="hljs-keyword">if</span> (result.mChunks.Top().mStartLine == result.mChunks.Top().mEndLine)
+<span class="hljs-comment">// Remove the backmost chunk if it doesn't contain content.</span>
+<span class="hljs-keyword">if</span> (result.mChunks.<span class="hljs-built_in">Top</span>().mStartLine == result.mChunks.<span class="hljs-built_in">Top</span>().mEndLine)
 {
-  result.mChunks.Pop();
+  result.mChunks.<span class="hljs-built_in">Pop</span>();
 }
 
 <span class="hljs-comment">// Open and read the content of the included file.</span>
@@ -115,48 +116,48 @@ chunk.mExcludedLines += includeLine - result.mChunks.Top().mStartLine + <span cl
 <div class="code_box"><pre><code><span class="hljs-comment">// Handle any includes that show up within the included content and replace</span>
 <span class="hljs-comment">// the include statement in the content with the included content.</span>
 IncludeResult subResult =
-  HandleIncludes(includeFilename.c_str(), includeContent);
+  <span class="hljs-built_in">HandleIncludes</span>(includeFilename.<span class="hljs-built_in">c_str</span>(), includeContent);
 <span class="hljs-keyword">if</span> (!subResult.mSuccess)
 {
   <span class="hljs-keyword">return</span> subResult;
 }
-content.replace(
+content.<span class="hljs-built_in">replace</span>(
   match[<span class="hljs-number">0</span>].first,
   match[<span class="hljs-number">0</span>].second,
-  includeContent.begin(),
-  includeContent.end() - <span class="hljs-number">1</span>);
+  includeContent.<span class="hljs-built_in">begin</span>(),
+  includeContent.<span class="hljs-built_in">end</span>() - <span class="hljs-number">1</span>);
 </code></pre></div>
 <p>After reading the content of the included file, we need to preform the include preprocessing on that included content before replacing the include statement with it.</p>
 <div class="code_box"><pre><code><span class="hljs-comment">// Take the returned subchunks and offset both their start and end lines</span>
 <span class="hljs-comment">// by the line the chunk was included on.</span>
 <span class="hljs-keyword">for</span> (SourceChunk&amp; subChunk : subResult.mChunks)
 {
-  result.mChunks.Push(subChunk);
-  result.mChunks.Top().mStartLine += includeLine - <span class="hljs-number">1</span>;
-  result.mChunks.Top().mEndLine += includeLine - <span class="hljs-number">1</span>;
+  result.mChunks.<span class="hljs-built_in">Push</span>(subChunk);
+  result.mChunks.<span class="hljs-built_in">Top</span>().mStartLine += includeLine - <span class="hljs-number">1</span>;
+  result.mChunks.<span class="hljs-built_in">Top</span>().mEndLine += includeLine - <span class="hljs-number">1</span>;
 }
 </code></pre></div>
 <p>After handling the includes within the included content, we expect to get a sorted list of SourceChunks, but there is a problem with that list. The line numbers in the SourceChunks are relative to the content of the included file and not the content of the file that it was included in. To fix it, we take each of the sub SourceChunks and offset their start and end lines by the line number that the file was included on. One is subtracted because line numbers start at one and we need an offset.</p>
-<div class="code_box"><pre><code><span class="hljs-keyword">while</span> (<span class="hljs-built_in">std</span>::regex_search(content.cbegin(), content.cend(), match, expression))
+<div class="code_box"><pre><code><span class="hljs-keyword">while</span> (std::<span class="hljs-built_in">regex_search</span>(content.<span class="hljs-built_in">cbegin</span>(), content.<span class="hljs-built_in">cend</span>(), match, expression))
 {
   <span class="hljs-comment">// ...</span>
   <span class="hljs-comment">// All of the other steps except the first.</span>
   <span class="hljs-comment">// ...</span>
 
-  <span class="hljs-comment">// Now that we&apos;ve handled all the sub chunks, we make the current file the</span>
+  <span class="hljs-comment">// Now that we've handled all the sub chunks, we make the current file the</span>
   <span class="hljs-comment">// backmost chunk again.</span>
-  chunk.mStartLine = result.mChunks.Top().mEndLine;
-  result.mChunks.Push(chunk);
+  chunk.mStartLine = result.mChunks.<span class="hljs-built_in">Top</span>().mEndLine;
+  result.mChunks.<span class="hljs-built_in">Push</span>(chunk);
 }
 
 <span class="hljs-comment">// All of includes have been handled, so the end line of the topmost chunk</span>
 <span class="hljs-comment">// becomes the total line count of the preprocessed file.</span>
-result.mChunks.Top().mEndLine = GetLineNumber(content.size(), content);
+result.mChunks.<span class="hljs-built_in">Top</span>().mEndLine = <span class="hljs-built_in">GetLineNumber</span>(content.<span class="hljs-built_in">size</span>(), content);
 result.mSuccess = <span class="hljs-literal">true</span>;
 <span class="hljs-keyword">return</span> result;
 </code></pre></div>
-<p>And that&apos;s it. In hindsight, it doesn&apos;t seem to complex, but coming to this solution was not straightforward by any means. At one point SourceChunks contained their own vector of subchunks, but I couldn&apos;t figure out a way to get it to work and forced myself to rethink about my approach.</p>
-<p>All of this work wasn&apos;t for nothing either. The goal was to have shader errors accurately display file and line number information. To do this, the error log is parsed and any time a line number is stumbled upon, it is replaced with a file name and a line number within that file by using the data in the SourceChunk vector.</p>
+<p>And that's it. In hindsight, it doesn't seem to complex, but coming to this solution was not straightforward by any means. At one point SourceChunks contained their own vector of subchunks, but I couldn't figure out a way to get it to work and forced myself to rethink about my approach.</p>
+<p>All of this work wasn't for nothing either. The goal was to have shader errors accurately display file and line number information. To do this, the error log is parsed and any time a line number is stumbled upon, it is replaced with a file name and a line number within that file by using the data in the SourceChunk vector.</p>
 <div class="code_box"><pre><code><span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> SourceChunk&amp; chunk : includeResult.mChunks)
 {
   <span class="hljs-comment">// completeLine is the line number from the prepocessed source code.</span>
@@ -164,16 +165,16 @@ result.mSuccess = <span class="hljs-literal">true</span>;
   {
     <span class="hljs-keyword">int</span> chunkLineNumber = (completeLine - chunk.mStartLine) + <span class="hljs-number">1</span>;
     <span class="hljs-keyword">int</span> trueLine = chunk.mExcludedLines + chunkLineNumber;
-    error &lt;&lt; chunk.mFile &lt;&lt; <span class="hljs-string">&quot;(&quot;</span> &lt;&lt; trueLine &lt;&lt; <span class="hljs-string">&quot;)&quot;</span>;
+    error &lt;&lt; chunk.mFile &lt;&lt; <span class="hljs-string">"("</span> &lt;&lt; trueLine &lt;&lt; <span class="hljs-string">")"</span>;
     <span class="hljs-keyword">break</span>;
   }
 }
 </code></pre></div>
 <h2>Varkor Projects</h2>
-<p>Figuring out how project code and resources will be separated from Varkor has been a long time wonder of mine. Back in college, the engines I worked on went hand in hand with the games that were shipped with them. Even though there may have been a good deal of &quot;engine code&quot;, at the end of the day, compiling the project did not spit out an engine, it spit out a game. I am happy to say that I have finally taken my first stab at addressing this problem.</p>
-<p>When I was considering possible approaches, one of the core goals I had was not having to copy any files from Varkor. Instead, a user could do some form of inclusion and use all of Varkor&apos;s features without needing to do anything else. Unfortunately, I did not think of a way to acheive this because there are a few files that Varkor will always expect to exist: a dll and a few default shaders. This will expand to a default model and a default texture in the future to account for missing assets as well.</p>
-<p>The method I settled on was making Varkor into a static library. If Varkor is built on its own, it&apos;s built into a standalone executable. If Varkor is included within another project, it is built as a static library that a user can then link against. From Varkor&apos;s perspective, this process looks like this.</p>
-<div class="code_box"><pre><code><span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;${CMAKE_PROJECT_NAME}&quot;</span> <span class="hljs-keyword">STREQUAL</span> <span class="hljs-string">&quot;varkor&quot;</span>)
+<p>Figuring out how project code and resources will be separated from Varkor has been a long time wonder of mine. Back in college, the engines I worked on went hand in hand with the games that were shipped with them. Even though there may have been a good deal of "engine code", at the end of the day, compiling the project did not spit out an engine, it spit out a game. I am happy to say that I have finally taken my first stab at addressing this problem.</p>
+<p>When I was considering possible approaches, one of the core goals I had was not having to copy any files from Varkor. Instead, a user could do some form of inclusion and use all of Varkor's features without needing to do anything else. Unfortunately, I did not think of a way to acheive this because there are a few files that Varkor will always expect to exist: a dll and a few default shaders. This will expand to a default model and a default texture in the future to account for missing assets as well.</p>
+<p>The method I settled on was making Varkor into a static library. If Varkor is built on its own, it's built into a standalone executable. If Varkor is included within another project, it is built as a static library that a user can then link against. From Varkor's perspective, this process looks like this.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">if</span> (<span class="hljs-string">"${CMAKE_PROJECT_NAME}"</span> <span class="hljs-keyword">STREQUAL</span> <span class="hljs-string">"varkor"</span>)
   <span class="hljs-keyword">add_executable</span>(varkor)
   <span class="hljs-keyword">add_compile_definitions</span>(VarkorStandalone)
 <span class="hljs-keyword">else</span> ()
@@ -187,7 +188,7 @@ result.mSuccess = <span class="hljs-literal">true</span>;
 <span class="hljs-keyword">add_subdirectory</span>(src)
 <span class="hljs-keyword">target_link_libraries</span>(varkor_sample_project varkor)
 </code></pre></div>
-<p>So that&apos;s cool. Varkor is a static library and a dependant project can link against that static library, but what does using Varkor actually look like for a dependant project? At the moment, this involves setting a few function pointers within some of Varkor&apos;s namespaces. With these set, Varkor will call into a project&apos;s code and allow a user to perform whatever processing they want within their own callback functions.</p>
+<p>So that's cool. Varkor is a static library and a dependant project can link against that static library, but what does using Varkor actually look like for a dependant project? At the moment, this involves setting a few function pointers within some of Varkor's namespaces. With these set, Varkor will call into a project's code and allow a user to perform whatever processing they want within their own callback functions.</p>
 <div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CentralUpdate</span><span class="hljs-params">()</span></span>;
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">SpaceUpdate</span><span class="hljs-params">(<span class="hljs-keyword">const</span> World::Space&amp; space, World::SpaceRef spaceRef)</span></span>;
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">InspectComponents</span><span class="hljs-params">(<span class="hljs-keyword">const</span> World::Object&amp; selected)</span></span>;
@@ -199,10 +200,10 @@ result.mSuccess = <span class="hljs-literal">true</span>;
   World::SpaceUpdate = SpaceUpdate;
   Editor::InspectComponents = InspectComponents;
   Editor::AvailableComponents = AvailableComponents;
-  VarkorMain();
+  <span class="hljs-built_in">VarkorMain</span>();
 }
 </code></pre></div>
-<p>These four function pointers are the ones I am currently providing. Here&apos;s an overview of their purpose.</p>
+<p>These four function pointers are the ones I am currently providing. Here's an overview of their purpose.</p>
 <ul>
 <li><em>CentralUpdate:</em> This function is called once per frame after all of the Spaces currently in the World have been updated.</li>
 <li><em>SpaceUpdate:</em> This function is called once for every Space in the World per Frame. If there are currently four Spaces in the World, this will be called four times in frame: one call for each space.</li>
@@ -217,11 +218,11 @@ result.mSuccess = <span class="hljs-literal">true</span>;
   Object currentObject;
   currentObject.mSpace = spaceRef;
   Table::Visitor&lt;T&gt; visitor = space.CreateTableVisitor&lt;T&gt;();
-  <span class="hljs-keyword">while</span> (!visitor.End())
+  <span class="hljs-keyword">while</span> (!visitor.<span class="hljs-built_in">End</span>())
   {
-    currentObject.mMember = visitor.CurrentOwner();
-    visitor.CurrentComponent().Update(currentObject);
-    visitor.Next();
+    currentObject.mMember = visitor.<span class="hljs-built_in">CurrentOwner</span>();
+    visitor.<span class="hljs-built_in">CurrentComponent</span>().<span class="hljs-built_in">Update</span>(currentObject);
+    visitor.<span class="hljs-built_in">Next</span>();
   }
 }
 
@@ -234,11 +235,11 @@ result.mSuccess = <span class="hljs-literal">true</span>;
 }
 </code></pre></div>
 <p>Earlier on, I had wished that if a component defined an Update function, its Update function would get called without having to introduce any other code, but now I am on the fence about that wish. Because I am using an ECS structure for organizing component data, calling <code>UpdateComponentType&lt;T&gt;</code> will call the Update function for every component of type T within the current Space. In the example above, ComponentA::Update will be called for every ComponentA stored within the Space before the Update functions for the ComponentB and ComponentC components are called. Because of this, requiring the user to make it known that a component has an Update function and they want it called makes sense because it gives them control of the order their component updates are called in. Is it really neccessary though? Maybe. Maybe not. It depends on whether there is a game out there that would make use of this specificity or not.</p>
-<p>Another interesting benefit of this is that if a user adds their component type to this component update queue and that component type does not have an Update function, it won&apos;t compile.</p>
-<p>I am not 100% sure if this is the solution I will stick with. I&apos;ll need to see how it pans out to assess whether I actually like it or not. For now though, this direction achieves my current desires with a few minor downsides, so I am pretty optimistic about it.</p>
+<p>Another interesting benefit of this is that if a user adds their component type to this component update queue and that component type does not have an Update function, it won't compile.</p>
+<p>I am not 100% sure if this is the solution I will stick with. I'll need to see how it pans out to assess whether I actually like it or not. For now though, this direction achieves my current desires with a few minor downsides, so I am pretty optimistic about it.</p>
 <h2>Wrapping Up</h2>
-<p>Thanks for reading this update. I hope the next one comes soon. My girlfriend is now doing an internship during the day and we live in the same one room apartment. So when she&apos;s at work, I will be at work on Varkor and other projects. Even after just the first few days, I am accomplishing quite a bit just because of the lack of distractions. I am hoping to see some big productivity boosts and more discipline on my part because of this. I think Picasso said something about the importance that solitude serves. I think he was right.</p>
-<p>Oh, and as a parting gift, here&apos;s something I was able to make using this project structure and a ship model I finished making a few days ago.</p>
+<p>Thanks for reading this update. I hope the next one comes soon. My girlfriend is now doing an internship during the day and we live in the same one room apartment. So when she's at work, I will be at work on Varkor and other projects. Even after just the first few days, I am accomplishing quite a bit just because of the lack of distractions. I am hoping to see some big productivity boosts and more discipline on my part because of this. I think Picasso said something about the importance that solitude serves. I think he was right.</p>
+<p>Oh, and as a parting gift, here's something I was able to make using this project structure and a ship model I finished making a few days ago.</p>
 <p class="image_box"><img src="icepick.gif" alt="icepick" loading="lazy"></p></div>
   </div>
 

@@ -13,7 +13,7 @@
       <div class="header">
         <div class="arrow_container">
           <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"></path>
           </svg>
         </div>
         <div class="header_text">Underdisc</div>
@@ -23,10 +23,11 @@
         <a class="sidebar_element index_link" href="../../index.html">Home</a>
         <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
         <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+        <a class="sidebar_element notes_link" href="../../notes/index.html">Notes</a>
       </div>
     </div>
     <div class="content_container"><h1>A Needed Update</h1>
-<p>It has been 4 months since my last post. I should have written one a long time ago but doing so has been a challenge. It&apos;s not difficult to write a post, but my personal confidence has made it difficult. I keep saying to myself, &quot;I&apos;ll post once I get this done&quot; time after time thinking that what I have done is not worthy of being talked about or isn&apos;t enough. Though very few will read these, they still involve me exposing my work and that makes it hard to build up the courage to write them.</p>
+<p>It has been 4 months since my last post. I should have written one a long time ago but doing so has been a challenge. It's not difficult to write a post, but my personal confidence has made it difficult. I keep saying to myself, "I'll post once I get this done" time after time thinking that what I have done is not worthy of being talked about or isn't enough. Though very few will read these, they still involve me exposing my work and that makes it hard to build up the courage to write them.</p>
 <p>So for this blog post, I am just going to provide a brief overview of everything I did in the time since the last one. There are over 100 commits since then.</p>
 <h2>New Stuff</h2>
 <p>I streamlined the process used for building and running Varkor and the Varkor unit tests. I first created this system right after my previous post, but I have been iterating on it and improving it since then.</p>
@@ -41,53 +42,53 @@
 )
 <span class="hljs-comment">
 REM Run Varkor if requested.</span>
-<span class="hljs-keyword">if</span> &quot;%<span class="hljs-number">1</span>&quot; == &quot;r&quot; (
+<span class="hljs-keyword">if</span> "%<span class="hljs-number">1</span>" == "r" (
   varkor.exe
 )
 </code></pre></div>
-<p>It&apos;s pretty straight-forward, but the special thing to mention here are the <code>buildDir</code> and <code>generator</code> environment variables. There is another file called <code>buildSpecs.bat</code> that takes the responsibility of defining those variables and it&apos;s ignored by git. This makes it possible to swap out the generator and build directory without ever affecting the state of the repository. Changing the build directory in this file would be analogous to changing from release to debug in visual studio.</p>
-<p><code>btest.bat</code> is much more extensive than <code>bvarkor.bat</code>. It is responsible for building, running, and testing unit tests. It also shows differences when a unit test fails. The last task I accomplished before taking a small break from Varkor to write this and do some website general work was making it possible to run all tests with a single command to check if they are passing or failing. I used to go through tests one by one, but now it&apos;s just a matter of running <code>btest all t</code> and all tests are performed.</p>
+<p>It's pretty straight-forward, but the special thing to mention here are the <code>buildDir</code> and <code>generator</code> environment variables. There is another file called <code>buildSpecs.bat</code> that takes the responsibility of defining those variables and it's ignored by git. This makes it possible to swap out the generator and build directory without ever affecting the state of the repository. Changing the build directory in this file would be analogous to changing from release to debug in visual studio.</p>
+<p><code>btest.bat</code> is much more extensive than <code>bvarkor.bat</code>. It is responsible for building, running, and testing unit tests. It also shows differences when a unit test fails. The last task I accomplished before taking a small break from Varkor to write this and do some website general work was making it possible to run all tests with a single command to check if they are passing or failing. I used to go through tests one by one, but now it's just a matter of running <code>btest all t</code> and all tests are performed.</p>
 <p class="image_box"><img src="btest_all_t_output.png" alt="btest all t output" loading="lazy"></p>
 <hr>
-<p>I created a basic implementation for Varkor&apos;s core. The entire core of the engine is called the world and the world can contain spaces. A space is just a partition of the world that has the ability to contain members and these members can contain components. Essentially, in typical game engine lingo, spaces are equivalent to scenes and members are equivalent to objects.</p>
+<p>I created a basic implementation for Varkor's core. The entire core of the engine is called the world and the world can contain spaces. A space is just a partition of the world that has the ability to contain members and these members can contain components. Essentially, in typical game engine lingo, spaces are equivalent to scenes and members are equivalent to objects.</p>
 <p class="image_box"><img src="world_spaces_members.png" alt="world spaces members" loading="lazy"></p>
-<p>This technique allows for an easy way to have a UI. Unlike Unity where a giant canvas exists in the scene, there can be one space for the game world and another for the UI. The world is not limited to two spaces either. There can be any number of spaces, each with their own members and component tables. I was first introduced to this idea by the <a href="https://zero.digipen.edu/">Zero Engine</a> and it has been dissapointing to not see other engine&apos;s use it.</p>
-<p>The main work I have been pursuing with the core is the creation of an ecs. The idea is store components of the same type next to each other in a single array. This makes iteration over a single component efficient because it avoids cache misses. My current implementation tries to do this, but deleting components still creates gaps in the component tables. I also don&apos;t have the ability to align component types to make iterating over a set of component types fast. Here&apos;s a small sample of what using this ecs currently looks like. This snippet is from the renderer that I am currently working on.</p>
+<p>This technique allows for an easy way to have a UI. Unlike Unity where a giant canvas exists in the scene, there can be one space for the game world and another for the UI. The world is not limited to two spaces either. There can be any number of spaces, each with their own members and component tables. I was first introduced to this idea by the <a href="https://zero.digipen.edu/">Zero Engine</a> and it has been dissapointing to not see other engine's use it.</p>
+<p>The main work I have been pursuing with the core is the creation of an ecs. The idea is store components of the same type next to each other in a single array. This makes iteration over a single component efficient because it avoids cache misses. My current implementation tries to do this, but deleting components still creates gaps in the component tables. I also don't have the ability to align component types to make iterating over a set of component types fast. Here's a small sample of what using this ecs currently looks like. This snippet is from the renderer that I am currently working on.</p>
 <div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">RenderModels</span><span class="hljs-params">(<span class="hljs-keyword">const</span> Core::Space&amp; space, <span class="hljs-keyword">const</span> Shader&amp; shader)</span>
 </span>{
   <span class="hljs-comment">// Visit all of the model components within the space.</span>
   Core::Table::Visitor&lt;Comp::Model&gt; visitor =
     space.CreateTableVisitor&lt;Comp::Model&gt;();
-  <span class="hljs-keyword">while</span> (!visitor.End())
+  <span class="hljs-keyword">while</span> (!visitor.<span class="hljs-built_in">End</span>())
   {
     <span class="hljs-comment">// If the object whose model component is being visited has a transfrom</span>
     <span class="hljs-comment">// component, we use transformation matrix it provides.</span>
     Comp::Transform* transform =
-      space.GetComponent&lt;Comp::Transform&gt;(visitor.CurrentOwner());
+      space.GetComponent&lt;Comp::Transform&gt;(visitor.<span class="hljs-built_in">CurrentOwner</span>());
     <span class="hljs-keyword">if</span> (transform == <span class="hljs-literal">nullptr</span>)
     {
       Mat4 identity;
-      Math::Identity(&amp;identity);
-      shader.SetMat4(<span class="hljs-string">&quot;uModel&quot;</span>, identity.CData());
+      Math::<span class="hljs-built_in">Identity</span>(&amp;identity);
+      shader.<span class="hljs-built_in">SetMat4</span>(<span class="hljs-string">"uModel"</span>, identity.<span class="hljs-built_in">CData</span>());
     } <span class="hljs-keyword">else</span>
     {
-      shader.SetMat4(<span class="hljs-string">&quot;uModel&quot;</span>, transform-&gt;GetMatrix().CData());
+      shader.<span class="hljs-built_in">SetMat4</span>(<span class="hljs-string">"uModel"</span>, transform-&gt;<span class="hljs-built_in">GetMatrix</span>().<span class="hljs-built_in">CData</span>());
     }
 
     <span class="hljs-comment">// We render the model referenced by the model component if the model has</span>
     <span class="hljs-comment">// been added to the asset library.</span>
-    <span class="hljs-keyword">const</span> Comp::Model&amp; modelComp = visitor.CurrentComponent();
-    <span class="hljs-keyword">const</span> Gfx::Model* model = AssetLibrary::GetModel(modelComp.mAsset);
+    <span class="hljs-keyword">const</span> Comp::Model&amp; modelComp = visitor.<span class="hljs-built_in">CurrentComponent</span>();
+    <span class="hljs-keyword">const</span> Gfx::Model* model = AssetLibrary::<span class="hljs-built_in">GetModel</span>(modelComp.mAsset);
     <span class="hljs-keyword">if</span> (model != <span class="hljs-literal">nullptr</span>)
     {
-      model-&gt;Draw(shader);
+      model-&gt;<span class="hljs-built_in">Draw</span>(shader);
     }
-    visitor.Next();
+    visitor.<span class="hljs-built_in">Next</span>();
   }
 }
 </code></pre></div>
 <hr>
-<p>I implemented red-black trees and used that implementation to create the equivalent of std::map. This is a topic I feel like I should have had an assignment on in college, but never did. We implemented AVL trees instead. It&apos;s challenging to get all of the transformations right when implmenting red-black trees, but after doing it, I have gained a very good understanding of those transformations and why they are necessary. A lot of that came when I realized the assumptions that can and can&apos;t be made when a node is red or black. For example: if a node is red, it must be the case the its children and parents are black because there can&apos;t be two red nodes attached to each other. I don&apos;t want to dwell on this more because this is an extensively discussed topic, however, I do want to show off the output I created for my unit tests.</p>
+<p>I implemented red-black trees and used that implementation to create the equivalent of std::map. This is a topic I feel like I should have had an assignment on in college, but never did. We implemented AVL trees instead. It's challenging to get all of the transformations right when implmenting red-black trees, but after doing it, I have gained a very good understanding of those transformations and why they are necessary. A lot of that came when I realized the assumptions that can and can't be made when a node is red or black. For example: if a node is red, it must be the case the its children and parents are black because there can't be two red nodes attached to each other. I don't want to dwell on this more because this is an extensively discussed topic, however, I do want to show off the output I created for my unit tests.</p>
 <div class="code_box"><pre><code>B: 408
 | \B: 721
 |  | \B: 782
@@ -118,7 +119,7 @@ REM Run Varkor if requested.</span>
 <li>I am constantly cleaning up the code to make it consistent and hopefully easy to follow.</li>
 </ul>
 <hr>
-<p>It was quite a chunk of work. In the last four months, Varkor has gone from not being able to do much to having objects with custom models that can be moved around in a world of objects. Like previous posts, a lot of the work I accomplished has been glossed over and just downright ommitted from this post. This is not good because it makes me feel as though not much happened in the time since my last post when that&apos;s not actually the case. Going forward, it will be important for me to create these more often to hold myself accountable for the work I am doing and the work I want to do.</p>
+<p>It was quite a chunk of work. In the last four months, Varkor has gone from not being able to do much to having objects with custom models that can be moved around in a world of objects. Like previous posts, a lot of the work I accomplished has been glossed over and just downright ommitted from this post. This is not good because it makes me feel as though not much happened in the time since my last post when that's not actually the case. Going forward, it will be important for me to create these more often to hold myself accountable for the work I am doing and the work I want to do.</p>
 <p>As always, thanks for reading.</p></div>
   </div>
 

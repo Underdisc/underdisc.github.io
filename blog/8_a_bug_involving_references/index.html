@@ -13,7 +13,7 @@
       <div class="header">
         <div class="arrow_container">
           <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
-            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"/>
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"></path>
           </svg>
         </div>
         <div class="header_text">Underdisc</div>
@@ -23,44 +23,45 @@
         <a class="sidebar_element index_link" href="../../index.html">Home</a>
         <a class="sidebar_element blog_link" href="../../blog/index.html">Blog</a>
         <a class="sidebar_element projects_link" href="../../projects/index.html">Projects</a>
+        <a class="sidebar_element notes_link" href="../../notes/index.html">Notes</a>
       </div>
     </div>
     <div class="content_container"><h1>A Bug Involving References</h1>
-<p>Y&apos;know those bugs that result in some really strange behavior? You analyze its nature to figure what is happening and you finally find an explanation only to realize the problem was practically sitting in front of your face the entire time. This is about one of those.</p>
-<p>First, the premise. I made my own gizmos a while ago <a href="../6_gizmos/index.html">gizmo post</a>. There was a translate, scale, and rotate tool all packed into a single &quot;mega gizmo&quot; called the transform gizmo. Putting these all into a single structure was a blunder and I have tasked myself with separating them into 3 different structures; one for each of the tools. That way I don&apos;t need to provide modifiable scale and rotation parameters to a gizmo that will only be used for performing translation.</p>
-<p>In the original implementation, the transform gizmo structure held its own Space (<a href="https://github.com/Underdisc/Varkor/blob/b8fbe655dbb7706a18e80897b341e4b43030b9b0/src/editor/hook/Transform.h#L79">the space I speak of</a>). This is where gizmo handle information is stored: their transformations, model references, etc. The gizmo having its own space like this didn&apos;t feel quite right, so I decided to make a general editor Space. A gizmo could then just use that space rather than needing to hold its own. I still don&apos;t know if this is a good decision, but it gets rid of some boilerplate, so that&apos;s what I am doing. More importantly, this establishes the premise and leads me to what the bug even is. While testing the first separated gizmo, this ended up happening.</p>
-<video controls>
+<p>Y'know those bugs that result in some really strange behavior? You analyze its nature to figure what is happening and you finally find an explanation only to realize the problem was practically sitting in front of your face the entire time. This is about one of those.</p>
+<p>First, the premise. I made my own gizmos a while ago <a href="../6_gizmos/index.html">gizmo post</a>. There was a translate, scale, and rotate tool all packed into a single "mega gizmo" called the transform gizmo. Putting these all into a single structure was a blunder and I have tasked myself with separating them into 3 different structures; one for each of the tools. That way I don't need to provide modifiable scale and rotation parameters to a gizmo that will only be used for performing translation.</p>
+<p>In the original implementation, the transform gizmo structure held its own Space (<a href="https://github.com/Underdisc/Varkor/blob/b8fbe655dbb7706a18e80897b341e4b43030b9b0/src/editor/hook/Transform.h#L79">the space I speak of</a>). This is where gizmo handle information is stored: their transformations, model references, etc. The gizmo having its own space like this didn't feel quite right, so I decided to make a general editor Space. A gizmo could then just use that space rather than needing to hold its own. I still don't know if this is a good decision, but it gets rid of some boilerplate, so that's what I am doing. More importantly, this establishes the premise and leads me to what the bug even is. While testing the first separated gizmo, this ended up happening.</p>
+<video controls="">
   <source src="bug.mp4" type="video/mp4">
 </video>
-<p>The first time I open the <code>Transform</code> header, the gizmo handles show up as they should. However, the second time it is opened, only some of the gizmo handles work. The third time is even worse; only the &quot;all axes&quot; handle in the middle shows up as expected. The fourth time, though? Everything is normal again? k.</p>
-<p>What&apos;s happening here was not obvious to me and my brain lives here. To understand why this happens, we need to talk about what a Space is and how it deals with the things it contains. <em>Spaces contain members. Members own references to data in component tables.</em> To make sure we&apos;re on the same page, here is a usage example.</p>
+<p>The first time I open the <code>Transform</code> header, the gizmo handles show up as they should. However, the second time it is opened, only some of the gizmo handles work. The third time is even worse; only the "all axes" handle in the middle shows up as expected. The fourth time, though? Everything is normal again? k.</p>
+<p>What's happening here was not obvious to me and my brain lives here. To understand why this happens, we need to talk about what a Space is and how it deals with the things it contains. <em>Spaces contain members. Members own references to data in component tables.</em> To make sure we're on the same page, here is a usage example.</p>
 <div class="code_box"><pre><code>World::Space space;
-World::MemberId newMemberId = space.CreateMember();
+World::MemberId newMemberId = space.<span class="hljs-built_in">CreateMember</span>();
 </code></pre></div>
 <p>After we create an instance of a space, we can create a member in it. We get an identifier back from the space that allows us to find all of the information about that member.</p>
 <div class="code_box"><pre><code>ComponentType&amp; component = space.AddComponent&lt;ComponentType&gt;(newMemberId);
 </code></pre></div>
-<p>We can now add a component to that member. The member now owns a reference to some data that defines the member&apos;s <code>ComponentType</code> component.</p>
+<p>We can now add a component to that member. The member now owns a reference to some data that defines the member's <code>ComponentType</code> component.</p>
 <div class="code_box"><pre><code>component.mMemberValue = <span class="hljs-number">10</span>;
-component.mMemberString = <span class="hljs-string">&quot;hahadurdurfunnystring&quot;</span>;
+component.mMemberString = <span class="hljs-string">"hahadurdurfunnystring"</span>;
 </code></pre></div>
 <p>We can change that data directly by using the returned component reference, or can we? This is where the example ends and an explanation of the bug begins. To understand why the behavoir in the video from earlier occurs, we need to know about some things hidden behind this line.</p>
 <div class="code_box"><pre><code>ComponentType&amp; component = space.AddComponent&lt;ComponentType&gt;(newMemberId);
 </code></pre></div>
 <p>Spaces hold onto component data in component tables. A space will have one table for each unique component type it contains.</p>
 <p class="image_box"><img src="component_tables.png" alt="component tables" loading="lazy"></p>
-<p>So, the members of the above space collectively have 3 <code>A</code> components, 5 <code>B</code> components, and 1 <code>C</code> component. For the sake of clarity, we are completely ignoring the space&apos;s members. Just know that members somehow know about all of the components they own.</p>
+<p>So, the members of the above space collectively have 3 <code>A</code> components, 5 <code>B</code> components, and 1 <code>C</code> component. For the sake of clarity, we are completely ignoring the space's members. Just know that members somehow know about all of the components they own.</p>
 <p>When a component is added to a member, that member takes ownership of some data in the relevant component table. For example, continuing with the image above, if we made a new member and gave it an <code>A</code> component, the <code>A</code> table would have one more box and the data represented by that box would be owned by the new member.</p>
-<p>Ok. That&apos;s nice and all, but why does this explanation of how <code>AddComponent</code> works provide insight into the bug? Well, consider this.</p>
+<p>Ok. That's nice and all, but why does this explanation of how <code>AddComponent</code> works provide insight into the bug? Well, consider this.</p>
 <div class="code_box"><pre><code>A&amp; aComponent0 = space.AddComponent&lt;A&gt;(<span class="hljs-number">0</span>);
 A&amp; aComponent1 = space.AddComponent&lt;A&gt;(<span class="hljs-number">1</span>);
 A&amp; aComponent2 = space.AddComponent&lt;A&gt;(<span class="hljs-number">2</span>);
 </code></pre></div>
 <p>This code represents 3 members receiving <code>A</code> components. As we just established, all of these components will be stored within the <code>A</code> component table. Those of you that have any familiarity with [insert vector data structure flavor here], might have some alarm bells ringing right now.</p>
-<p>Like everything, memory is not infinite, and we typically don&apos;t want to waste it needlessly. At some point, the <code>A</code> component table isn&apos;t going to contain enough memory for a new component and it&apos;s going to need to grow. Say this growth happens when the member with the Id <code>2</code> receives its <code>A</code> component?</p>
+<p>Like everything, memory is not infinite, and we typically don't want to waste it needlessly. At some point, the <code>A</code> component table isn't going to contain enough memory for a new component and it's going to need to grow. Say this growth happens when the member with the Id <code>2</code> receives its <code>A</code> component?</p>
 <p class="image_box"><img src="growth.png" alt="growth" loading="lazy"></p>
-<p>The component data for the <code>0</code> and <code>1</code> members will be copied, or more accurately, moved, into the table&apos;s new allocation and then member <code>2</code> will take ownership of some of the newly available data. Since we tossed out the previous allocation for the <code>A</code> component table, though, we&apos;ve invalidated anything referencing that memory. This means that <code>A&amp; aComponent0</code> and <code>A&amp; aComponent1</code> are no longer valid because they reference memory we have given up control over.</p>
-<p>You&apos;ve already seen the manifestation of this problem. It was the video at the start. What&apos;s the offending code then? I now present you with utter trash (some of which has been removed to address unnecessary redundancy).</p>
+<p>The component data for the <code>0</code> and <code>1</code> members will be copied, or more accurately, moved, into the table's new allocation and then member <code>2</code> will take ownership of some of the newly available data. Since we tossed out the previous allocation for the <code>A</code> component table, though, we've invalidated anything referencing that memory. This means that <code>A&amp; aComponent0</code> and <code>A&amp; aComponent1</code> are no longer valid because they reference memory we have given up control over.</p>
+<p>You've already seen the manifestation of this problem. It was the video at the start. What's the offending code then? I now present you with utter trash (some of which has been removed to address unnecessary redundancy).</p>
 <div class="code_box"><pre><code>Comp::Model&amp; xM = nSpace.AddComponent&lt;Comp::Model&gt;(mX);
 Comp::Model&amp; yM = nSpace.AddComponent&lt;Comp::Model&gt;(mY);
 Comp::Model&amp; zM = nSpace.AddComponent&lt;Comp::Model&gt;(mZ);
@@ -95,13 +96,13 @@ yM.mShaderId = AssLib::nColorShaderId;
 
 <span class="hljs-comment">// ...</span>
 </code></pre></div>
-<p>This does raise some concerns about the state of Space&apos;s interface. Should it really be returning a reference if it&apos;s possible for the reference to become garbage within the same scope? Returing a component reference type would be the utopic solution, but I don&apos;t fully know what that would look like and it&apos;s not my priority right now.</p>
-<p>You may be wondering, &quot;Why didn&apos;t you reuse the memory that was made available when you destroyed the gizmo?&quot; That&apos;s a great question and the only answer I can give you is, &quot;I haven&apos;t needed to yet.&quot; I&apos;m not even joking. The implementation for spaces and tables makes next to <em>0</em> effort to perform any sort of garbage collection. This is the first time I have used them in a context where members and components are being continuously added and removed. In the beginning, I just needed objects and components, so I wrote a way to do that. I am now at a point where the holes are more opaque, though, so patching them up just becomes more a priority now.</p>
-<h3>Unrelated stuff you probably don&apos;t care about.</h3>
-<p>I haven&apos;t posted in a while. Part depression. Part not having some complete system to talk about. Part decreased output over the last months. This was just a way for me to write about <em>something</em> and it&apos;s pretty liberating. The last posts about Valkor and Gizmos were so large and took quite a long time to put together. Making something bite-sized was much more approachable and doable in reasonably short amount of time.</p>
-<p>Looking back through my posts, it feels like nothing happened after and around the last 2. That&apos;s definitely not the case, though. Many little steps and challenges have been passed during that time. I guess this serves as a reminder that the things I am working on are worth talking about, even if I feel as though they are too little. <em>A large thing is nothing but a combination of many small things, right?</em></p>
+<p>This does raise some concerns about the state of Space's interface. Should it really be returning a reference if it's possible for the reference to become garbage within the same scope? Returing a component reference type would be the utopic solution, but I don't fully know what that would look like and it's not my priority right now.</p>
+<p>You may be wondering, "Why didn't you reuse the memory that was made available when you destroyed the gizmo?" That's a great question and the only answer I can give you is, "I haven't needed to yet." I'm not even joking. The implementation for spaces and tables makes next to <em>0</em> effort to perform any sort of garbage collection. This is the first time I have used them in a context where members and components are being continuously added and removed. In the beginning, I just needed objects and components, so I wrote a way to do that. I am now at a point where the holes are more opaque, though, so patching them up just becomes more a priority now.</p>
+<h3>Unrelated stuff you probably don't care about.</h3>
+<p>I haven't posted in a while. Part depression. Part not having some complete system to talk about. Part decreased output over the last months. This was just a way for me to write about <em>something</em> and it's pretty liberating. The last posts about Valkor and Gizmos were so large and took quite a long time to put together. Making something bite-sized was much more approachable and doable in reasonably short amount of time.</p>
+<p>Looking back through my posts, it feels like nothing happened after and around the last 2. That's definitely not the case, though. Many little steps and challenges have been passed during that time. I guess this serves as a reminder that the things I am working on are worth talking about, even if I feel as though they are too little. <em>A large thing is nothing but a combination of many small things, right?</em></p>
 <p style="text-align: center;">
-RIP Lucas &apos;Kaybox&apos; Koester. Thank you for spending time with me. We&apos;ll meet again in the Wilderzone.
+RIP Lucas 'Kaybox' Koester. Thank you for spending time with me. We'll meet again in the Wilderzone.
 </p></div>
   </div>
 
