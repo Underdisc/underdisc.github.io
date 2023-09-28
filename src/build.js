@@ -1,21 +1,12 @@
-function GetOccurrenceCount(string, search) {
-  let count = 0;
-  let fromIndex = -1;
-  while (true) {
-    fromIndex = string.indexOf(search, fromIndex + 1);
-    if (fromIndex === -1) {
-      return count;
-    }
-    ++count;
-  }
+let rebuild = false;
+let makeTests = false;
+if (process.argv.length > 2) {
+  rebuild = process.argv[2] === 'r';
+  makeTests = process.argv[2] === 't';
 }
 
 const fs = require('fs');
-function GetFileContent(filename) {
-  return fs.readFileSync(filename, 'utf8')
-}
-
-let templateHtml = GetFileContent('template.html');
+let templateHtml = fs.readFileSync('template.html', 'utf8');
 const cheerio = require('cheerio');
 let showdown = require('showdown');
 showdown.setOption('noHeaderId', 'true');
@@ -23,17 +14,17 @@ showdown.setOption('simpleLineBreaks', 'true');
 const showdownHighlight = require('showdown-highlight');
 const converter = new showdown.Converter({extensions: [showdownHighlight]});
 
-function CorrectLink(html, selector, attribute, correction) {
-  let linkElement = html(selector);
-  let filePath = linkElement.attr(attribute);
-  filePath = correction + filePath;
-  linkElement.attr(attribute, filePath);
-}
-
 // Retrieves the content of the template html and modifies the links to have
 // the correct relative paths.
 function RelativeTemplate(linkCorrection) {
   let template = cheerio.load(templateHtml);
+
+  function CorrectLink(html, selector, attribute, correction) {
+    let linkElement = html(selector);
+    let filePath = linkElement.attr(attribute);
+    filePath = correction + filePath;
+    linkElement.attr(attribute, filePath);
+  }
   CorrectLink(template, 'link.favicon', 'href', linkCorrection);
   CorrectLink(template, 'link.main_style', 'href', linkCorrection);
   CorrectLink(template, 'link.hljs_style', 'href', linkCorrection);
@@ -50,7 +41,6 @@ function IsBuildNeeded(inputFile, outputFile) {
   if (!exists) {
     return true;
   }
-
   let inputStats = fs.statSync(inputFile);
   let outputStats = fs.statSync(outputFile);
   let inputModifiedDate = inputStats.mtime;
@@ -65,7 +55,7 @@ function MakeRequiredDirectories(outputFile) {
   fs.mkdirSync(dirPath, options);
 }
 
-// Render markdown text into html.
+// Render markdown text into the provided html template.
 function RenderMarkdownIntoTemplate(template, markdown) {
   let html = converter.makeHtml(markdown);
   template('div.content_container').append(html);
@@ -86,27 +76,34 @@ function RenderMarkdownIntoTemplate(template, markdown) {
   });
 }
 
-function RenderLocalMarkdown(inputFile, destination, rebuild) {
-  // Before rendering a markdown document to html, we first check to see if
-  // the output html document is already up to date with the current markdown
-  // document. If it is up to date and we are not rebuilding, then no rendering
-  // is required.
+function RenderLocalMarkdown(inputFile) {
   let exists = fs.existsSync(inputFile);
   if (!exists) {
     console.error(inputFile + ' does not exist');
     return;
   }
+
+  // Only render the markdown if it's out of date or a rebuild is happening.
   let filenameEnd = inputFile.indexOf('.');
   let outputFile = inputFile.slice(0, filenameEnd);
-  outputFile = destination + outputFile + '.html';
+  outputFile = '../' + outputFile + '.html';
   if (!rebuild && !IsBuildNeeded(inputFile, outputFile)) {
     return;
   }
   MakeRequiredDirectories(outputFile);
 
-  // Before rendering the markdown document, we first fix all the links
-  // contained in the template html if the output html will exist in a
-  // directory below the root.
+  // Get the template html with correct relative links.
+  function GetOccurrenceCount(string, search) {
+    let count = 0;
+    let fromIndex = -1;
+    while (true) {
+      fromIndex = string.indexOf(search, fromIndex + 1);
+      if (fromIndex === -1) {
+        return count;
+      }
+      ++count;
+    }
+  }
   let depth = GetOccurrenceCount(inputFile, '/');
   let linkCorrection = ''
   for (let i = 0; i < depth; ++i) {
@@ -121,25 +118,26 @@ function RenderLocalMarkdown(inputFile, destination, rebuild) {
   console.log('Built ' + inputFile);
 }
 
-function RenderRecursively(directory, destination, rebuild) {
+function RenderRecursively(directory) {
   let options = {withFileTypes: true};
-  let files = fs.readdirSync(directory, options);
-  for (let i = 0; i < files.length; ++i) {
-    let file = files[i];
-    if (file.isDirectory()) {
-      RenderRecursively(directory + file.name + '/', destination, rebuild);
+  let entries = fs.readdirSync(directory, options);
+  for (let i = 0; i < entries.length; ++i) {
+    let entry = entries[i];
+    if (entry.isDirectory()) {
+      RenderRecursively(directory + entry.name + '/', rebuild);
     }
 
-    if (file.name.length >= 3) {
-      let end = file.name.slice(file.name.length - 3);
-      if (end === '.md') {
-        RenderLocalMarkdown(directory + file.name, destination, rebuild);
-      }
+    if (entry.name.length < 3) {
+      continue;
+    }
+    let extension = entry.name.slice(entry.name.length - 3);
+    if (extension === '.md') {
+      RenderLocalMarkdown(directory + entry.name, rebuild);
     }
   }
 }
 
-function RenderNotes(rebuild) {
+function RenderNotes() {
   let notesIndexMarkdown = fs.readFileSync('notes/index.md');
   fs.readdirSync('notes/').forEach(filename => {
     if (filename == 'index.md') {
@@ -178,17 +176,12 @@ function RenderNotes(rebuild) {
   fs.writeFileSync('../notes/index.html', template.html(), 'utf-8');
 }
 
-let rebuild = false;
-let makeTests = false;
-if (process.argv.length > 2) {
-  rebuild = process.argv[2] === 'r';
-  makeTests = process.argv[2] === 't';
-}
 if (makeTests) {
-  RenderLocalMarkdown('index.md', '../', true);
+  RenderLocalMarkdown('index.md', true);
 }
 
-RenderLocalMarkdown('index.md', '../', rebuild);
-RenderRecursively('blog/', '../', rebuild);
-RenderRecursively('projects/', '../', rebuild);
-RenderNotes(rebuild);
+// Render all of the markdown files into html files.
+RenderLocalMarkdown('index.md');
+RenderRecursively('blog/');
+RenderRecursively('projects/');
+RenderNotes();
