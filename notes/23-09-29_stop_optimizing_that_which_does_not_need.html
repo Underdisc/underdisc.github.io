@@ -1,0 +1,152 @@
+<html><head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"></path>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../projects/index.html">Projects</a>
+        <a class="sidebar_element candy_link" href="../candy/index.html">Candy</a>
+        <a class="sidebar_element notes_link" href="../notes/index.html">Notes</a>
+      </div>
+    </div>
+    <div class="content_container"><h1>stop optimizing that which does not need</h1>
+<p>Now that I have a way to sort things, I need to sort my renderables, so I can render them efficiently. A large concern of mine here is that sorting the renderables will take so long that it will nullify the benefit gained from rendering performance. This concern arises from the current implementation of materials. Materials contain a shader ID. The sort needs to account for material ID and shader ID. So, in order to do a comparison, a lookup for the material in the asset library must be done before the shader ID can be acquired. I am worried about the cost of these lookups. Only one way to find out what it actually is.</p>
+<p>Before doing that, my sort function needs to be able to take a generic comparison function. When I implemented quicksort, I made sure to only use one comparison operator type for exactly this reason.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">void</span> Vector&lt;T&gt;::<span class="hljs-built_in">Sort</span>()
+{
+  <span class="hljs-keyword">auto</span> greaterThan = [](<span class="hljs-keyword">const</span> T&amp; a, <span class="hljs-keyword">const</span> T&amp; b) -&gt; <span class="hljs-keyword">bool</span>
+  {
+    <span class="hljs-keyword">return</span> a &gt; b;
+  };
+  <span class="hljs-built_in">Quicksort</span>(<span class="hljs-number">0</span>, mSize - <span class="hljs-number">1</span>, greaterThan);
+}
+
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">void</span> Vector&lt;T&gt;::<span class="hljs-built_in">Sort</span>(<span class="hljs-keyword">const</span> std::function&lt;<span class="hljs-built_in"><span class="hljs-keyword">bool</span></span>(<span class="hljs-keyword">const</span> T&amp;, <span class="hljs-keyword">const</span> T&amp;)&gt;&amp; greaterThan)
+{
+  <span class="hljs-built_in">Quicksort</span>(<span class="hljs-number">0</span>, mSize - <span class="hljs-number">1</span>, greaterThan);
+}
+</code></pre></div>
+<p>I am not 100% if this has any performance implications. I don't believe it does, but I'll do the 1000000 integer test again to see if there is any change in numbers.</p>
+<div class="code_box"><pre><code>{
+  <span class="hljs-comment">//...</span>
+  <span class="hljs-built_in">srand</span>(<span class="hljs-number">34</span>);
+  Ds::Vector&lt;<span class="hljs-keyword">int</span>&gt; stress[<span class="hljs-number">10</span>];
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">1000000</span>; ++j) {
+      stress[i].<span class="hljs-built_in">Push</span>(<span class="hljs-built_in">rand</span>());
+    }
+  }
+  <span class="hljs-built_in">TracyCZone</span>(allSorts, <span class="hljs-literal">true</span>)
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+    <span class="hljs-built_in">TracyCZone</span>(sort, <span class="hljs-literal">true</span>);
+    stress[i].<span class="hljs-built_in">Sort</span>();
+    <span class="hljs-built_in">TracyCZoneEnd</span>(sort);
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> wut = <span class="hljs-number">0</span>;
+    std::cout &lt;&lt; wut++ &lt;&lt; std::endl;
+  }
+  <span class="hljs-built_in">TracyCZoneEnd</span>(allSorts);
+}
+</code></pre></div>
+<p>This is a bit unfortunate, because I don't have an exact copy of my stress test code from last time. However, if my memory is serving me well, I think this implementation does actually cause a bit of a slow-down. Here is the average after sorting 1000000 integers 10 times. I ran it a couple of times, and it's consistently there.</p>
+<div class="code_box"><pre><code><span class="hljs-attribute">sort</span>: <span class="hljs-number">108</span>.<span class="hljs-number">34</span>ms
+</code></pre></div>
+<p>Yep, I just removed the calling <code>greaterThan</code> from my quicksort's partition function and the run time is back to down.</p>
+<div class="code_box"><pre><code><span class="hljs-attribute">sort</span>: <span class="hljs-number">74</span>.<span class="hljs-number">41</span>ms
+</code></pre></div>
+<p>So std::function appears to introduce enough overhead to make the sort <code>1.45</code> times slower. While researching if there is some way to 'inline' a, I came across <a href="https://vittorioromeo.info/index/blog/passing_functions_to_functions.html">this</a>. The idea of 'inlining' a <code>std::function</code> seems pretty absurd, but it did lead me to exactly what I want.</p>
+<p>From this article, I have gathered that I want to use a function pointer instead of a <code>std::function</code>. It's not going to be as fast as using a template parameter, but it should be much faster than <code>std::function</code>. I don't want to use a template parameter because it does not allow me to specify the function signature and I am definitely putting way more effort into making sure this is fast than I need to be.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">void</span> Vector&lt;T&gt;::<span class="hljs-built_in">Sort</span>(<span class="hljs-built_in"><span class="hljs-keyword">bool</span></span> (*greaterThan)(<span class="hljs-keyword">const</span> T&amp;, <span class="hljs-keyword">const</span> T&amp;))
+{
+  <span class="hljs-built_in">Quicksort</span>(<span class="hljs-number">0</span>, mSize - <span class="hljs-number">1</span>, greaterThan);
+}
+</code></pre></div>
+<p>This may have resulted in a slight improvement, but it's unclear.</p>
+<div class="code_box"><pre><code><span class="hljs-attribute">sort</span>: <span class="hljs-number">100</span>.<span class="hljs-number">89</span>ms
+</code></pre></div>
+<p>Now I wonder if it's the fact that I am using a lambda to create the function pointer that's making it slower. I doubt it, but there is only one way to find out.</p>
+<div class="code_box"><pre><code><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">bool</span> <span class="hljs-title">greaterThan</span><span class="hljs-params">(<span class="hljs-keyword">const</span> T&amp; a, <span class="hljs-keyword">const</span> T&amp; b)</span>
+</span>{
+  <span class="hljs-keyword">return</span> a &gt; b;
+};
+
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">void</span> Vector&lt;T&gt;::<span class="hljs-built_in">Sort</span>()
+{
+  <span class="hljs-built_in">Quicksort</span>(<span class="hljs-number">0</span>, mSize - <span class="hljs-number">1</span>, greaterThan);
+}
+</code></pre></div>
+<p>Survey says!</p>
+<div class="code_box"><pre><code><span class="hljs-attribute">sort</span>: <span class="hljs-number">102</span>.<span class="hljs-number">76</span>ms
+</code></pre></div>
+<p>Nope. There's no real difference. They all perform the same. I am going to go forward with the function pointer impl because I like it more than <code>std::function</code> on a surface level. If this proves to be a performance bottleneck, it can be handled once I know it's a problem.</p>
+<p>Ew, I had a bug in my sort.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">while</span> (<span class="hljs-built_in">greaterThan</span>(pivot, mData[i]) &amp;&amp; i &lt;= end) {
+  ++i;
+}
+</code></pre></div>
+<p>The condition <code>i &lt;= end</code> needs to come before the array access <code>mData[i]</code>. It's probably a good idea to add a test vector that creates this exact problem.</p>
+<p>Oh boy. So I ran the sort on renderables before worrying about instancing, and boy was my hunch on point. It's actually worse than I expected.</p>
+<div class="code_box"><pre><code><span class="hljs-keyword">auto</span> greaterThan =
+  [](<span class="hljs-keyword">const</span> Renderable::Floater&amp; a, <span class="hljs-keyword">const</span> Renderable::Floater&amp; b) -&gt; <span class="hljs-keyword">bool</span>
+{
+  <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>* aMaterial = Rsl::TryGetRes&lt;Gfx::Material&gt;(a.mMaterialId);
+  <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>* bMaterial = Rsl::TryGetRes&lt;Gfx::Material&gt;(b.mMaterialId);
+  <span class="hljs-keyword">if</span> (aMaterial == <span class="hljs-literal">nullptr</span> &amp;&amp; bMaterial == <span class="hljs-literal">nullptr</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  }
+  <span class="hljs-keyword">if</span> (aMaterial == <span class="hljs-literal">nullptr</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  }
+  <span class="hljs-keyword">if</span> (bMaterial == <span class="hljs-literal">nullptr</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  }
+  <span class="hljs-keyword">if</span> (aMaterial-&gt;mShaderId.mId &gt; bMaterial-&gt;mShaderId.mId) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  }
+  <span class="hljs-keyword">if</span> (a.mMaterialId.mId &gt; b.mMaterialId.mId) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  }
+  <span class="hljs-keyword">if</span> (a.mMeshId.mId &gt; b.mMeshId.mId) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+};
+</code></pre></div>
+<p>Just sorting the Floaters is taking around <code>25ms</code>. Rendering the floaters was faster than the sort alone. The time I have written down from my old notes is <code>3.36ms</code>. The question now is where the bottleneck is. I am relatively certain that it's the material lookups, because that's what I was scared of earlier.</p>
+<div class="code_box"><pre><code><span class="hljs-built_in">TracyCZoneN</span>(materialLookup, <span class="hljs-string">"materialLookup"</span>, <span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>* aMaterial = Rsl::TryGetRes&lt;Gfx::Material&gt;(a.mMaterialId);
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>* bMaterial = Rsl::TryGetRes&lt;Gfx::Material&gt;(b.mMaterialId);
+<span class="hljs-built_in">TracyCZoneEnd</span>(materialLookup);
+</code></pre></div>
+<p>Of that, it looks like the material lookups are taking around <code>20ms</code>. That's bad, but multiple milliseconds are being spent just doing string comparisons. Performing the sort on a large scene with a lot of similar objects results in <code>35,000</code> material comparisons. Additionally, this sort is redundant work. It's the same sort repeated every frame because renderables are collected in the same order every frame.</p>
+<p>I have some new thoughts after this exploration. Though I think instanced rendering is an important optimization, I have a bigger problem right now. The same work is being done every frame. It would be more important to get rid of that redundancy before treating instancing as a priority.</p>
+<p>There are multiple problems that need to be solved in order to get rid of that redundant work. Firstly, I should only collect a renderable once when it is first added. Second, I need to update the transform of that renderable every frame if it's a dynamic renderable (it moves). Updating that transform is hard though. I need to somehow connect a mesh component with the renderable that it added to the renderer, and that access needs to be quick.</p>
+<p>Also, I am trying to optimize something that is fast enough at the moment. I want to put this optimization work aside and focus on physics now. I should really save this optimization work for when I am actively encountering performance issues that are reducing the framerate, or I am actively optimizing something more than just an experiment.</p>
+<p>To further establish why I am working on stupid stuff. I am hoping to dramatically reduce the number of objects in the scene I am currently trying to optimize, but I need a bounding volume hierarchy in order to reduce the number of objects and add the polish that I have in mind. In other words, I am trying to optimize an unrealistic use case.</p>
+<p>With that said, and this path explored far enough, I am off to read Real-time Collision Detection.</p></div>
+  </div>
+
+
+</body></html>
