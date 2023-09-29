@@ -53,7 +53,7 @@ div.links {
   background-color: var(--color-black);
   padding-top: 1em;
   padding-bottom: 1em;
-  --element-count: 4;
+  --element-count: 5;
   --element-height: 1.8em;
   display: grid;
   grid-template-rows: repeat(var(--element-count), var(--element-height))
@@ -299,6 +299,8 @@ p.image_box {
 
 video {
   display: block;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
   margin-left: auto;
   margin-right: auto;
   max-width: calc(100% - 0.8em);

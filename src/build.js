@@ -32,6 +32,7 @@ function RelativeTemplate(linkCorrection) {
   CorrectLink(template, 'a.blog_link', 'href', linkCorrection);
   CorrectLink(template, 'a.projects_link', 'href', linkCorrection);
   CorrectLink(template, 'a.notes_link', 'href', linkCorrection);
+  CorrectLink(template, 'a.candy_link', 'href', linkCorrection);
   CorrectLink(template, 'script.main_script', 'src', linkCorrection);
   return template;
 }
@@ -115,7 +116,7 @@ function RenderLocalMarkdown(inputFile) {
   let markdown = fs.readFileSync(inputFile, 'utf8');
   RenderMarkdownIntoTemplate(template, markdown)
   fs.writeFileSync(outputFile, template.html(), 'utf8');
-  console.log('Built ' + inputFile);
+  console.log('Built ' + outputFile);
 }
 
 function RenderRecursively(directory) {
@@ -168,12 +169,45 @@ function RenderNotes() {
     let template = RelativeTemplate('../');
     RenderMarkdownIntoTemplate(template, notesMarkdown.toString());
     fs.writeFileSync(htmlFilename, template.html(), 'utf-8');
-    console.log('Built ' + markdownFilename);
+    console.log('Built ' + htmlFilename);
   })
 
   let template = RelativeTemplate('../');
   RenderMarkdownIntoTemplate(template, notesIndexMarkdown);
-  fs.writeFileSync('../notes/index.html', template.html(), 'utf-8');
+  let htmlFilename = '../notes/index.html';
+  fs.writeFileSync(htmlFilename, template.html(), 'utf-8');
+  console.log('Built ' + htmlFilename);
+}
+
+function RenderCandy() {
+  // Render the markdown file.
+  let candyIndexMarkdown = fs.readFileSync('candy/index.md');
+  let template = RelativeTemplate('../');
+  RenderMarkdownIntoTemplate(template, candyIndexMarkdown.toString());
+
+  // Reference all images and videos in the root candy directory in the html.
+  let entries = fs.readdirSync('../candy');
+  let content = '<p class="image_box">'
+  for (let i = entries.length - 1; i >= 0; --i) {
+    let filename = entries[i];
+    let extensionStart = filename.indexOf('.') + 1;
+    let extension = filename.slice(extensionStart);
+    if (extension == 'gif') {
+      content +=
+        '<img src="' + filename + '" alt="' + filename + '" loading="lazy">';
+    }
+    else if (extension == 'mp4') {
+      content += '<video controls autoplay loop muted><source src="' +
+        filename + '" type="video/mp4"></video>'
+    }
+  }
+  content += '</p>';
+
+  // Write the html file.
+  template('div.content_container').append(content);
+  let htmlFilename = '../candy/index.html';
+  fs.writeFileSync(htmlFilename, template.html(), 'utf8');
+  console.log('Built ' + htmlFilename);
 }
 
 if (makeTests) {
@@ -185,3 +219,4 @@ RenderLocalMarkdown('index.md');
 RenderRecursively('blog/');
 RenderRecursively('projects/');
 RenderNotes();
+RenderCandy();
