@@ -197,7 +197,8 @@ function RenderCandy() {
         '<img src="' + filename + '" alt="' + filename + '" loading="lazy">';
     }
     else if (extension == 'mp4') {
-      content += '<video controls autoplay loop muted><source src="' +
+      content +=
+        '<video controls autoplay loop muted loading="lazy"><source src="' +
         filename + '" type="video/mp4"></video>'
     }
   }
