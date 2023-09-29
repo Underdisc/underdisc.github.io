@@ -140,12 +140,10 @@ function RenderRecursively(directory) {
 
 function RenderNotes() {
   let notesIndexMarkdown = fs.readFileSync('notes/index.md');
-  fs.readdirSync('notes/').forEach(filename => {
-    if (filename == 'index.md') {
-      return;
-    }
-
+  let entries = fs.readdirSync('notes/');
+  for (let i = entries.length - 2; i >= 0; --i) {
     // Create the entry on the notes index.
+    filename = entries[i];
     let dateEnd = filename.indexOf('_');
     let date = filename.slice(0, dateEnd);
     let titleEnd = filename.indexOf('.');
@@ -160,7 +158,7 @@ function RenderNotes() {
     let markdownFilename = 'notes/' + filename;
     htmlFilename = '../notes/' + htmlFilename
     if (!IsBuildNeeded(markdownFilename, htmlFilename) && !rebuild) {
-      return;
+      continue;
     }
 
     // Render the file.
@@ -170,7 +168,7 @@ function RenderNotes() {
     RenderMarkdownIntoTemplate(template, notesMarkdown.toString());
     fs.writeFileSync(htmlFilename, template.html(), 'utf-8');
     console.log('Built ' + htmlFilename);
-  })
+  }
 
   let template = RelativeTemplate('../');
   RenderMarkdownIntoTemplate(template, notesIndexMarkdown);
