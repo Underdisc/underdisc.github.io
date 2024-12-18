@@ -196,7 +196,7 @@ function RenderCandy() {
     }
     else if (extension == 'mp4') {
       content +=
-        '<video controls autoplay loop muted loading="lazy"><source src="' +
+        '<video playsinline autoplay loop muted preload=none loading="lazy"><source src="' +
         filename + '" type="video/mp4"></video>'
     }
   }
