@@ -1,5 +1,10 @@
 # Blog
 
+#### 24-12-18 [Refactoring an Old ECS](10_refactoring_an_old_ecs/index.html)
+An overview of a refactor that takes a poor first ECS implementation to new heights. This discusses how the system evolved, core techniques used, and performance differences between the old and refactored implementations.
+
+---
+
 #### 23-02-08 [Bloom Problems](9_bloom_problems/index.html)
 Rambling in a file as I work on my bloom implementation.
 
