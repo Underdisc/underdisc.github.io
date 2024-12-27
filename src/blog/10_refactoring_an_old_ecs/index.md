@@ -1,6 +1,6 @@
 # Refactoring an Old ECS
 
-When I started working on Varkor 4 years ago, the first thing I built was the ECS. Considering that I've used it ever since, it was wise to build this system first, but for years it has had deficiencies that I have avoided fixing. After a long break from Varkor due to the ebb and flow of life, I'm working on it again. A good way to get back into it involved addressing glaring problems with my ECS implementation. In this post I'll talk about the state of my ECS before refactoring it, my problems with that original implementation, the steps taken to evolve it, and performance comparisons showing just how necessary a refactor was. Along the way, I will dive deep into the nitty-gritty. Doing so makes it easier to explain my thoughts, and it's much more valuable for a reader as a means of learning from my mistakes. Without further ado, let's kick it.
+When I started working on Varkor 4 years ago, the first thing I built was the ECS (Entity Component System). Considering that I've used it ever since, it was wise to build this system first, but for years it has had deficiencies that I have avoided fixing. After a long break from Varkor due to the ebb and flow of life, I'm working on it again. A good way to get back into it involved addressing glaring problems with my ECS implementation. In this post I'll talk about the state of my ECS before refactoring it, my problems with that original implementation, the steps taken to evolve it, and performance comparisons showing just how necessary a refactor was. Along the way, I will dive deep into the nitty-gritty. Doing so makes it easier to explain my thoughts, and it's much more valuable for a reader as a means of learning from my mistakes. Without further ado, let's kick it.
 
 ## Terminology
 
@@ -10,7 +10,7 @@ It is necessary to cover the general meaning of the implemented constructs such 
 
 ## The Original Implementation
 
-This section is a dense description of how things worked. Here is a [link to the commit that contains the original implementation](https://github.com/Underdisc/Varkor/tree/24-12-17_old_0). I will be looking at my old implementation as I write my description of it. Relevant files can be found in the _src_ directory: _world/Space.\*_, _world/Table.\*_, _test/world/Space.cc_, _test/world/Table.cc_.
+This section is a dense description of how things worked. A link to the commit containing the old implementation can in the _Performance Comparisons_ section; It's revision _old\_0_. I will be looking at it as I write my description of it. Relevant files can be found in the _src_ directory: _world/Space.\*_, _world/Table.\*_, _test/world/Space.cc_, _test/world/Table.cc_.
 
 Originally a space contained the following members.
 
@@ -121,7 +121,7 @@ This is where [EnTT](https://github.com/skypjack/entt) takes the spotlight. I've
 
 ## Sparse Sets
 
-There are plenty of resources explaining this data structure. [Here](https://manenko.com/2021/05/23/sparse-sets.html) is one very minimal explanation. [Here](https://dl.acm.org/doi/pdf/10.1145/176454.176484) is what I believe to be the first paper discussing the technique. Despite this existing material, I'd like to present my own explanation and implementation. I opted to do something different from other implementations in order to provide an extra feature. The inclusion of this certainly has a performance cost, but this isn't a concern of mine since that's not an active bottleneck.
+There are plenty of resources explaining this data structure. Here is one very [minimal explanation](https://manenko.com/2021/05/23/sparse-sets.html). Here is what I believe to be the [first paper discussing the technique](https://dl.acm.org/doi/pdf/10.1145/176454.176484). Despite this existing material, I'd like to present my own explanation and implementation. I opted to do something different from other implementations in order to provide an extra feature. The inclusion of this certainly has a performance cost, but this isn't a concern of mine since that's not an active bottleneck.
 
 The high level idea is thus, there exists a sparse array whose elements point to indices within a dense array. An element within the dense array points back to the element in the sparse array that points to it. The relationship is bidirectional. The goal is that in-use elements in the _dense_ array stay tightly packed while elements in the _sparse_ array can be spread out. The following image is an example state of this set. The top array is the dense and the bottom array is the sparse. An empty box indicates uninitialized or irrelevant memory.
 
@@ -271,7 +271,7 @@ struct Table {
 }
 ```
 
-The use of nearly everything here is the same as the old implementation except for the `mMemberIdToIndexMap` sparse set. Its use is thus; the sparse array is indexed by member IDs. A sparse element contains the index of the component owned by the member represented by that sparse element. The elements of the `mData` array, which contain component data, are 1 to 1 with the dense array of the sparse set. When two elements of the dense array undergo one of the aforementioned swaps, the `mData` array elements undergo the same swap. This guarantees that the elements from the start of the component data array have no gaps and that the memory is always reused when components are removed. With only that little trick, the perpetually growing memory overhead of the original implementation is eliminated.
+The use of nearly everything here is the same as the old implementation except for the `mMemberIdToIndexMap` sparse set. Its use is thus; The sparse array is indexed by member IDs. A sparse element contains the index of the component owned by the member represented by that sparse element. The elements of the `mData` array, which contain component data, are 1 to 1 with the dense array of the sparse set. When two elements of the dense array undergo one of the aforementioned swaps, the `mData` array elements undergo the same swap. This guarantees that the elements from the start of the component data array have no gaps and that the memory is always reused when components are removed. With only that little trick, the perpetually growing memory overhead of the original implementation is eliminated.
 
 ## Performance Comparisons
 
