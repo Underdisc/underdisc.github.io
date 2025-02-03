@@ -217,9 +217,9 @@
 <p>These are contrived tests. They do not represent real use cases. That doesn't mean the performance changes demonstrated by these tests are meaningless, but that that their implications are limited to test behavior. There is without a doubt performance benefit for real applications.</p>
 <h4>Revision Descriptions</h4>
 <p>Every revision is a link to the commit containing that revision. All relevant files can be found in the <em>src</em> directory and are the following: <em>world/Space.*</em>, <em>world/Table.*</em>, <em>ds/SparseSet.*</em>, <em>test/world/Space.cc</em>, <em>test/world/Table.cc</em>, and <em>test/perf/Space.cc</em>. The performance tests are almost exactly the same in every revision, but <em>old_0</em> required modifying <em>RelationshipAddWriteDelete</em> and <em>Random</em> slightly.</p>
-<p><a href="https://github.com/Underdisc/Varkor/tree/24-12-17_old_0"><em>old_0</em></a>: The original implementation as described at the start of this post.</p>
-<p><a href="https://github.com/Underdisc/Varkor/tree/24-12-17_new_0"><em>new_0</em></a>: The new implementation described in the previous section. The implementation of SparseSet uses 2 vectors to store the sparse and dense arrays.</p>
-<p><a href="https://github.com/Underdisc/Varkor/tree/24-12-17_new_1"><em>new_1</em></a>: The sparse set uses a single allocation to store the sparse and dense arrays.</p>
+<p><a href="https://github.com/Underdisc/Varkor/tree/24-12-17_ecs_refactor_old_0"><em>old_0</em></a>: The original implementation as described at the start of this post.</p>
+<p><a href="https://github.com/Underdisc/Varkor/tree/24-12-17_ecs_refactor_new_0"><em>new_0</em></a>: The new implementation described in the previous section. The implementation of SparseSet uses 2 vectors to store the sparse and dense arrays.</p>
+<p><a href="https://github.com/Underdisc/Varkor/tree/24-12-17_ecs_refactor_new_1"><em>new_1</em></a>: The sparse set uses a single allocation to store the sparse and dense arrays.</p>
 <p>The numbers in parentheses to the left of every value is the ratio of the value to the value from revision <em>old_0</em>.</p>
 <div class="code_box"><pre><code><span class="hljs-symbol">*</span> TestName ----------------------------------------------------------------<span class="hljs-symbol">*</span>
 |<span class="hljs-string"> Revision </span>|<span class="hljs-string">               Time </span>|<span class="hljs-string">    Max Memory Usage </span>|<span class="hljs-string">        Allocations </span>|

@@ -299,11 +299,11 @@ These are contrived tests. They do not represent real use cases. That doesn't me
 
 Every revision is a link to the commit containing that revision. All relevant files can be found in the _src_ directory and are the following: _world/Space.\*_, _world/Table.\*_, _ds/SparseSet.\*_, _test/world/Space.cc_, _test/world/Table.cc_, and _test/perf/Space.cc_. The performance tests are almost exactly the same in every revision, but _old\_0_ required modifying _RelationshipAddWriteDelete_ and _Random_ slightly.
 
-[_old\_0_](https://github.com/Underdisc/Varkor/tree/24-12-17_old_0): The original implementation as described at the start of this post.
+[_old\_0_](https://github.com/Underdisc/Varkor/tree/24-12-17_ecs_refactor_old_0): The original implementation as described at the start of this post.
 
-[_new\_0_](https://github.com/Underdisc/Varkor/tree/24-12-17_new_0): The new implementation described in the previous section. The implementation of SparseSet uses 2 vectors to store the sparse and dense arrays.
+[_new\_0_](https://github.com/Underdisc/Varkor/tree/24-12-17_ecs_refactor_new_0): The new implementation described in the previous section. The implementation of SparseSet uses 2 vectors to store the sparse and dense arrays.
 
-[_new\_1_](https://github.com/Underdisc/Varkor/tree/24-12-17_new_1): The sparse set uses a single allocation to store the sparse and dense arrays.
+[_new\_1_](https://github.com/Underdisc/Varkor/tree/24-12-17_ecs_refactor_new_1): The sparse set uses a single allocation to store the sparse and dense arrays.
 
 The numbers in parentheses to the left of every value is the ratio of the value to the value from revision _old\_0_.
 ```
