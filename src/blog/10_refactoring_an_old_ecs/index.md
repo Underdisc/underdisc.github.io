@@ -10,7 +10,7 @@ It is necessary to cover the general meaning of the implemented constructs such 
 
 ## The Original Implementation
 
-This section is a dense description of how things worked. A link to the commit containing the old implementation can in the _Performance Comparisons_ section; It's revision _old\_0_. I will be looking at it as I write my description of it. Relevant files can be found in the _src_ directory: _world/Space.\*_, _world/Table.\*_, _test/world/Space.cc_, _test/world/Table.cc_.
+This section is a dense description of how things worked. A link to the commit containing the old implementation can be found in the _Performance Comparisons_ section; It's revision _old\_0_. I will be looking at it as I write my description of it. Relevant files can be found in the _src_ directory: _world/Space.\*_, _world/Table.\*_, _test/world/Space.cc_, _test/world/Table.cc_.
 
 Originally a space contained the following members.
 
@@ -243,7 +243,7 @@ bool SparseSet::Valid(SparseId id) const
 
 The removed check is `mDense[mSparse[id]] == id`. This is removed because every dense element is bound to only one sparse element when using the constraint. There is no opportunity for a many to one relationship to form between sparse elements and a dense element, so if the index of dense element containing _id_ is less than dense usage, nothing else needs to be checked.
 
-As said early, code has been removed from all of these functions to focus purely on the sparse set and my modifications to it. [My complete implementation can be found here](https://github.com/Underdisc/Varkor/blob/24-12-17_new_1/src/ds/SparseSet.cc) if you'd like to see it.
+As said early, code has been removed from all of these functions to focus purely on the sparse set and my modifications to it. [My complete implementation can be found here](https://github.com/Underdisc/Varkor/blob/24-12-17_ecs_refactor_new_1/src/ds/SparseSet.cc) if you'd like to see it.
 
 ## The New Implementation
 
@@ -365,7 +365,7 @@ Regarding the performance tests, I didn't absolutely guarantee that they have co
 
 Another topic I keep coming back to while reviewing this work is the impact of the changes I made to the existing sparse set structure. What kind of performance impact does holding my constraint concur? These operations are very much _on the hot path_ and having just one more assignment will affect performance, but I can't know how drastic that effect is without bumming instructions and running performance tests again. The most important thing to recognize is that there are clear potential performance improvements that can be explored: removing correct usage verification in release builds, removing dynamic resizing, and using the already established sparse set implementation by separating the structure I have created into its own construct.
 
-I didn't touch on in this entire post, but it's important to say nonetheless; I didn't need to do this refactor yet. When I wrote my initial implementation, I needed entities and components, so I built a crude system to do just that. I have legitimately been using the old smelly implementation since I wrote it and I've never had a situation where it wasn't able to suffice my needs. That's great evidence that the capabilities of a system can be far from perfect and still be useful. They just need to be able to solve the current problem on the table. In the same sense, the system after this refactor is vastly better, but there might come a day when I need it to be better. I suppose what I want to establish by entertaining this is that chasing perfection is a way to get held up on things that aren't important yet. I'm of the opinion that one should face problems once doing so brings substantial or necessary benefit.
+I didn't touch on this in the entire post, but it's important to say nonetheless; I didn't need to do this refactor yet. When I wrote my initial implementation, I needed entities and components, so I built a crude system to do just that. I have legitimately been using the old smelly implementation since I wrote it and I've never had a situation where it wasn't able to suffice my needs. That's great evidence that the capabilities of a system can be far from perfect and still be useful. They just need to be able to solve the current problem on the table. In the same sense, the system after this refactor is vastly better, but there might come a day when I need it to be better. I suppose what I want to establish by entertaining this is that chasing perfection is a way to get held up on things that aren't important yet. I'm of the opinion that one should face problems once doing so brings substantial or necessary benefit.
 
 Oh, and one last small thing, because I don't want to have not said it. _Member_ needs to be renamed to _Entity_. For the sake of readability and conformity with the current language used to describe these systems, this rename is only a benefit.
 
