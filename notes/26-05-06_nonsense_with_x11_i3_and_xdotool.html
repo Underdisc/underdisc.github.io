@@ -1,0 +1,81 @@
+<html><head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link class="favicon" rel="icon" href="../favicon.ico">
+  <link class="main_style" rel="stylesheet" href="../main_style.css">
+  <link class="hljs_style" rel="stylesheet" href="../hljs_style.css">
+  <script class="main_script" type="text/javascript" src="../main.js"></script>
+  <title>Underdisc</title>
+</head>
+
+<body>
+  <div class="main_grid">
+    <div class="sidebar">
+      <div class="header">
+        <div class="arrow_container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 26.5 26.5">
+            <path fill="#fff" paint-order="stroke markers fill" d="M13.2 0A13.2 13.2 0 000 13.2a13.2 13.2 0 0013.2 13.3 13.2 13.2 0 0013.3-13.3A13.2 13.2 0 0013.2 0zm-2.6 5.3h5.3v9.3h5.3l-8 7.9-8-8h5.4z"></path>
+          </svg>
+        </div>
+        <div class="header_text">Underdisc</div>
+        <div></div>
+      </div>
+      <div class="links">
+        <a class="sidebar_element index_link" href="../index.html">Home</a>
+        <a class="sidebar_element blog_link" href="../blog/index.html">Blog</a>
+        <a class="sidebar_element projects_link" href="../projects/index.html">Projects</a>
+        <a class="sidebar_element candy_link" href="../candy/index.html">Candy</a>
+        <a class="sidebar_element notes_link" href="../notes/index.html">Notes</a>
+      </div>
+    </div>
+    <div class="content_container"><h1>nonsense with x11 i3 and xdotool</h1>
+<h1>Nonsense with x11, i3, and xdotool</h1>
+<p>Please consider the following line in my i3 configuration.</p>
+<div class="code_box"><pre><code>set $alt Mod1
+bindsym $alt+d <span class="hljs-keyword">exec</span> xdotool type --clearmodifiers --delay <span class="hljs-number">1</span>ms abcd$(<span class="hljs-keyword">date</span> +%y-%m-%d)
+</code></pre></div>
+<p>If you want to find out what <code>bindsym $alt+d exec</code> does, look at the i3 user guide. If you want to find out what <code>xdotool type --clearmodifiers --delay 1ms</code> does, look at xdotool(1). If <em>you know</em> what the <code>abcd</code> in <code>abcd$(date +%y-%m-%d)</code> does, enlighten me.</p>
+<h1>Why Do I Need This?</h1>
+<p>I often prefix filenames with the current date, e.g. 26-05-06. There are reasons for this, but that's not the point of this note. I often need to type the current date and this is rather annoying, hence I like to have a hotkey which instantly types the date for me (preferably <code>alt+d</code>). I used AutoHotkey to achieve this during my windows years. After many months of using i3/X11/arch, I've finally grown tired of not having it.</p>
+<h1>Getting this to Work</h1>
+<p>… was and is a headache. In the beginning, I started with a line much like the one above. I don't have a record of it, but I believe it looked like this.</p>
+<div class="code_box"><pre><code>bindsym $alt+d <span class="hljs-keyword">exec</span> xdotool type --clearmodifiers $(<span class="hljs-keyword">date</span> +%y-%m-%d)
+</code></pre></div>
+<p>Though this seems very sensible, it doesn't work. In fact, nothing is typed upon pressing <code>alt+d</code>. I then tried a multitude of things: …</p>
+<div class="code_box"><pre><code><span class="hljs-comment"># ... sending an alt keyup event.</span>
+bindsym $alt+d <span class="hljs-keyword">exec</span> xdotool keyup alt type --clearmodifiers $(date +%y-%m-%d)
+
+<span class="hljs-comment"># ... saving the date to clipboard and using the standard method to paste it. </span>
+bindsym $alt+d <span class="hljs-keyword">exec</span> sh -c <span class="hljs-string">'printf "$(date +%y-%m-%d)" | xclip -selection clipboard &amp;&amp; xdotool key ctrl+v'</span>
+
+<span class="hljs-comment"># ... saving to a different xclip selection and using a different paste method.</span>
+<span class="hljs-comment">#bindsym $alt+d exec sh -c 'printf "$(date +%y-%m-%d)" | xclip -selection primary &amp;&amp; xdotool keyup alt click 2'</span>
+
+<span class="hljs-comment"># ... running a shellscript containing the xdotool command.</span>
+bindsym $alt+d <span class="hljs-keyword">exec</span> type-date.sh
+<span class="hljs-comment"># Contents of type-date.sh</span>
+current_date=$(date +%y-%m-%d)
+xdotool type --clearmodifiers --delay <span class="hljs-number">1</span>ms abcd$current_date
+
+<span class="hljs-comment"># ...using the bindsym --release flag.</span>
+bindsym --release $alt+d <span class="hljs-keyword">exec</span> xdotool type --clearmodifiers --delay <span class="hljs-number">1</span>ms $(date +%y-%m-%d)
+</code></pre></div>
+<p>Some of these don't work at all; Some work with caveats. Going through the details of what does and doesn't work would be a waste of our time.</p>
+<h1>ABCD</h1>
+<p>At a loss, I then just tried printing the alphabet.</p>
+<div class="code_box"><pre><code>bindsym <span class="hljs-variable">$alt</span>+d <span class="hljs-built_in">exec</span> xdotool <span class="hljs-built_in">type</span> --clearmodifiers abcdefghijklmnop
+</code></pre></div>
+<p>This somewhat works; The caveat is that only <code>efghi...</code> is printed <em>consistently</em>, yes, <em>consistently</em>. I have yet to see a case where more or less than the first four characters are eliminated, hence the line I started this note with.</p>
+<div class="code_box"><pre><code>bindsym $alt+d <span class="hljs-keyword">exec</span> xdotool type --clearmodifiers --delay <span class="hljs-number">1</span>ms abcd$(<span class="hljs-keyword">date</span> +%y-%m-%d)
+</code></pre></div>
+<p><em>Even more strangely</em>, using <code>aaaa</code> instead of <code>abcd</code> doesn't work.</p>
+<h1>Another Hack</h1>
+<p>Some searching lead me to using sleep, which does indeed allow the first characters to be printed.</p>
+<div class="code_box"><pre><code>bindsym $alt+d <span class="hljs-keyword">exec</span> sleep <span class="hljs-number">0.1</span> &amp;&amp; xdotool type --clearmodifiers --delay <span class="hljs-number">1</span>ms $(<span class="hljs-keyword">date</span> +%y-%m-%d)
+</code></pre></div>
+<p>However, if I hold down atl+d, nothing is ever printed. So, even though this does somewhat work, the consistency and responsiveness of the <code>abcd</code> nonsense makes the sleep based solution less appealing.</p>
+<h1>An Update</h1>
+<p>As of 26-08-21, I'm still successfully using this hack. The datestamp in the previous sentence is evidence.</p></div>
+  </div>
+
+
+</body></html>
